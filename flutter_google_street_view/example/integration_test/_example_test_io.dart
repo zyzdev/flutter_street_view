@@ -488,7 +488,7 @@ void main() {
 
       // test radius param, panorama should be null in this test
       await _controller.setPosition(
-          target: LatLng(25.074382, 121.590397), radius: 1);
+          position: LatLng(25.074382, 121.590397), radius: 1);
       location = await _location.future;
       expect(location.position, isNull);
       expect(location.panoId, isNull);
@@ -497,7 +497,7 @@ void main() {
 
       // test source param, panoId should be 'UD7fj-uddXH_l-B4uXlukg' in this test
       await _controller.setPosition(
-          target: LatLng(25.0780892, 121.5753234),
+          position: LatLng(25.0780892, 121.5753234),
           source: StreetViewSource.outdoor);
       location = await _location.future;
       expect(location.panoId, 'UD7fj-uddXH_l-B4uXlukg');

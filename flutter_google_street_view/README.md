@@ -75,9 +75,13 @@ You can control street view by `StreetViewController` that is received at `onStr
 
 ### Sample Usage
 
+* Android only.
+
 For more usage, please run `example` to get complete sample app. 
 
 The code shown below is how to init `FlutterGoogleStreetView`, and you can find it at `example/lib/demo/street_view_panorama_init.dart`
+
+Before you run `example`, fellow [Getting Started](#Getting Started) to specify your API key first!
 
 ```
 class StreetViewPanoramaInitDemo extends StatelessWidget {
