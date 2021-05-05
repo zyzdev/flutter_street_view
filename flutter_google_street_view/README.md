@@ -81,7 +81,7 @@ For more usage, please run `example` to get complete sample app.
 
 The code shown below is how to init `FlutterGoogleStreetView`, and you can find it at `example/lib/demo/street_view_panorama_init.dart`
 
-Before you run `example`, fellow [Getting Started](#getting-started) to specify your API key first!
+Before you run `example`, follow [Getting Started](#getting-started) to specify your API key first!
 
 ```
 class StreetViewPanoramaInitDemo extends StatelessWidget {
@@ -106,9 +106,8 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  * choice one of initPos or initPanoId
                  * do not feed param to both of them, or you should get assert error
                  */
-                initPos: SAN_FRAN,
-                //initPos: LatLng(25.0780892, 121.5753234),
-                //initPanoId: SANTORINI,
+                initPos: LatLng(37.769263, -122.450727),
+                //initPanoId: "WddsUw1geEoAAAQIt9RnsQ",
 
                 /**
                  *  It is worked while you set initPos or initPanoId.
