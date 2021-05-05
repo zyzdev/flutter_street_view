@@ -1,3 +1,8 @@
+## 0.0.5
+
+* fix typo in README.md
+* fine tune code of Sample Usage in README.md  
+
 ## 0.0.4
 
 * Same as version 0.0.3, just fix typo. 
