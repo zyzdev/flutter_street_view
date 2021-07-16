@@ -1,3 +1,7 @@
+## 0.0.6
+
+* Modify plugin description.
+
 ## 0.0.5
 
 * fix typo in README.md
