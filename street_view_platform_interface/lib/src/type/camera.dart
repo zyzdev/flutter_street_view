@@ -10,19 +10,19 @@ class StreetViewCameraPosition {
       : assert(position != null || panoId != null);
 
   /// The position of target panorama.
-  final LatLng position;
+  final LatLng? position;
 
   /// The panorama ID of target panorama.
-  final String panoId;
+  final String? panoId;
 
   /// The radius to filter panorama.
-  final int radius;
+  final int? radius;
 
   /// Specific the panorama source, can be [StreetViewSource.def] or [StreetViewSource.outdoor].
   /// more info see,
   /// for [android] https://developers.google.com/android/reference/com/google/android/gms/maps/model/StreetViewSource
   /// for [iOS] https://developers.google.com/maps/documentation/ios-sdk/reference/group___panorama_source
-  final StreetViewSource source;
+  final StreetViewSource? source;
 
   /// Put all param to a map
   dynamic toMap() {
@@ -39,22 +39,22 @@ class StreetViewPanoramaCamera {
   StreetViewPanoramaCamera({this.bearing, this.tilt, this.zoom});
 
   ///Direction of the orientation, in degrees clockwise from north.
-  final double bearing;
+  final double? bearing;
 
   /// The angle in degrees from horizon of the panorama, range -90 to 90
-  final double tilt;
+  final double? tilt;
 
   /// The zoom level of current panorama.
   /// more info see,
   /// for [android] https://developers.google.com/android/reference/com/google/android/gms/maps/model/StreetViewPanoramaCamera.Builder#zoom
   /// for [iOS] https://developers.google.com/maps/documentation/ios-sdk/reference/interface_g_m_s_panorama_camera#adb2250d57b30987cd2d13e52fa03833d
-  final double zoom;
+  final double? zoom;
 
   factory StreetViewPanoramaCamera.fromMap(dynamic map) {
     return new StreetViewPanoramaCamera(
-      bearing: map['bearing'] as double,
-      tilt: map['tilt'] as double,
-      zoom: map['zoom'] as double,
+      bearing: map['bearing'] as double?,
+      tilt: map['tilt'] as double?,
+      zoom: map['zoom'] as double?,
     );
   }
 
@@ -86,28 +86,28 @@ class StreetViewPanoramaCamera {
 
 class StreetViewPanoramaLocation {
   /// Array [StreetViewPanoramaLink] includes information about near panoramas of current panorama.
-  final List<StreetViewPanoramaLink> links;
+  final List<StreetViewPanoramaLink>? links;
 
   /// The location of current panorama.
-  final LatLng position;
+  final LatLng? position;
 
   /// The panorama Id of current panorama.
-  final String panoId;
+  final String? panoId;
 
   StreetViewPanoramaLocation({this.links, this.position, this.panoId});
 
   factory StreetViewPanoramaLocation.fromMap(dynamic map) {
     if (map == null) return StreetViewPanoramaLocation();
 
-    var linksTmp = List<StreetViewPanoramaLink>();
-    (map['links'] as List)?.forEach((e) {
+    List<StreetViewPanoramaLink> linksTmp = [];
+    (map['links'] as List?)?.forEach((e) {
       linksTmp.add(StreetViewPanoramaLink(panoId: e[0], bearing: e[1]));
     });
     final tmp = new StreetViewPanoramaLocation(
       links: linksTmp,
       position:
           LatLng(map['position'][0] as double, map['position'][1] as double),
-      panoId: map['panoId'] as String,
+      panoId: map['panoId'] as String?,
     );
     return tmp;
   }

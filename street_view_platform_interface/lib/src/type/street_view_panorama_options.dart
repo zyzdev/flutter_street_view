@@ -7,32 +7,32 @@ import '../../street_view_platform_interface.dart';
 class StreetViewPanoramaOptions {
   /// Set initialization location by panorama ID.
   /// [position] should be null if [panoId] is given.
-  final String panoId;
+  final String? panoId;
 
   /// Set initialization location by latitude and longitude.
   /// [panoId] should be null if [position] is given.
-  final LatLng position;
+  final LatLng? position;
 
   /// Set radius to filter initialization panorama.
-  final double radius;
+  final double? radius;
 
   /// Set panorama source filter to search initialization panorama.
-  final StreetViewSource source;
+  final StreetViewSource? source;
 
   /// Sets whether the user is able to use panning gestures
-  final bool panningGesturesEnabled;
+  final bool? panningGesturesEnabled;
 
   /// Sets whether the user is able to see street names on panoramas
-  final bool streetNamesEnabled;
+  final bool? streetNamesEnabled;
 
   /// Sets whether the user is able to move to another panorama
-  final bool userNavigationEnabled;
+  final bool? userNavigationEnabled;
 
   /// Sets whether the user is able to use zoom gestures
-  final bool zoomGesturesEnabled;
+  final bool? zoomGesturesEnabled;
 
   /// Sets initialization position of camera.
-  final StreetViewPanoramaCamera panoramaCamera;
+  final StreetViewPanoramaCamera? panoramaCamera;
 
   StreetViewPanoramaOptions(
       {this.panoId,
@@ -49,15 +49,15 @@ class StreetViewPanoramaOptions {
   /// Create [StreetViewPanoramaOptions] and put data by [map].
   factory StreetViewPanoramaOptions.fromMap(Map<String, dynamic> map) {
     return new StreetViewPanoramaOptions(
-      panoId: map['panoId'] as String,
-      position: map['position'] as LatLng,
-      radius: map['radius'] as double,
-      source: map['source'] as StreetViewSource,
-      panningGesturesEnabled: map['panningGesturesEnabled'] as bool,
-      streetNamesEnabled: map['streetNamesEnabled'] as bool,
-      userNavigationEnabled: map['userNavigationEnabled'] as bool,
-      zoomGesturesEnabled: map['zoomGesturesEnabled'] as bool,
-      panoramaCamera: map['panoramaCamera'] as StreetViewPanoramaCamera,
+      panoId: map['panoId'] as String?,
+      position: map['position'] as LatLng?,
+      radius: map['radius'] as double?,
+      source: map['source'] as StreetViewSource?,
+      panningGesturesEnabled: map['panningGesturesEnabled'] as bool?,
+      streetNamesEnabled: map['streetNamesEnabled'] as bool?,
+      userNavigationEnabled: map['userNavigationEnabled'] as bool?,
+      zoomGesturesEnabled: map['zoomGesturesEnabled'] as bool?,
+      panoramaCamera: map['panoramaCamera'] as StreetViewPanoramaCamera?,
     );
   }
 
@@ -73,7 +73,7 @@ class StreetViewPanoramaOptions {
     putToMapIfNonNull(map, 'streetNamesEnabled', streetNamesEnabled);
     putToMapIfNonNull(map, 'userNavigationEnabled', userNavigationEnabled);
     putToMapIfNonNull(map, 'zoomGesturesEnabled', zoomGesturesEnabled);
-    map.addAll(panoramaCamera.toMap());
+    map.addAll(panoramaCamera!.toMap());
     return map;
   }
 
@@ -83,12 +83,12 @@ class StreetViewPanoramaOptions {
     return newOptions.toMap()
       ..removeWhere((String key, dynamic value) {
         if (key == "position") {
-          List<double> pPos = prevOptionsMap[key];
+          List<double>? pPos = prevOptionsMap[key];
           List<double> nPos = value;
-          if (pPos != null && nPos != null) {
+          if (pPos != null) {
             return pPos[0] == nPos[0] && pPos[1] == nPos[1];
           } else
-            return (pPos == null && nPos == null);
+            return (pPos == null);
         } else
           return prevOptionsMap[key] == value;
       });

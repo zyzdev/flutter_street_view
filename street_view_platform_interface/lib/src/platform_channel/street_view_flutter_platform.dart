@@ -37,7 +37,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   ///
   /// Return [Future] while the change has been started on the platform side.
   Future<void> animateTo(int viewId,
-      {StreetViewPanoramaCamera camera, int duration}) {
+      {StreetViewPanoramaCamera? camera, int? duration}) {
     throw UnimplementedError('animateTo() has not been implemented.');
   }
 
@@ -73,13 +73,13 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
 
   /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
   Future<Point> orientationToPoint(int viewId,
-      {StreetViewPanoramaOrientation orientation}) {
+      {StreetViewPanoramaOrientation? orientation}) {
     throw UnimplementedError('orientationToPoint() has not been implemented.');
   }
 
   /// Return the orientation[StreetViewPanoramaOrientation] that corresponds to a screen location.
   Future<StreetViewPanoramaOrientation> pointToOrientation(int viewId,
-      {Point point}) {
+      {Point? point}) {
     throw UnimplementedError('pointToOrientation() has not been implemented.');
   }
 
@@ -87,14 +87,14 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPosition(int viewId,
-      {LatLng position, String panoId, int radius, StreetViewSource source}) {
+      {LatLng? position, String? panoId, int? radius, StreetViewSource? source}) {
     throw UnimplementedError('setPosition() has not been implemented.');
   }
 
   /// Sets street view to allow using panning gesture or not.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setPanningGesturesEnabled(int viewId, {bool enable}) {
+  Future<void> setPanningGesturesEnabled(int viewId, {bool? enable}) {
     throw UnimplementedError(
         'setPanningGesturesEnabled() has not been implemented.');
   }
@@ -102,7 +102,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to display street name or not.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setStreetNamesEnabled(int viewId, {bool enable}) {
+  Future<void> setStreetNamesEnabled(int viewId, {bool? enable}) {
     throw UnimplementedError(
         'setStreetNamesEnabled() has not been implemented.');
   }
@@ -110,7 +110,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to allow moving to another panorama.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setUserNavigationEnabled(int viewId, {bool enable}) {
+  Future<void> setUserNavigationEnabled(int viewId, {bool? enable}) {
     throw UnimplementedError(
         'setUserNavigationEnabled() has not been implemented.');
   }
@@ -118,35 +118,35 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to allow using zoom gestures or not.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setZoomGesturesEnabled(int viewId, {bool enable}) {
+  Future<void> setZoomGesturesEnabled(int viewId, {bool? enable}) {
     throw UnimplementedError(
         'setZoomGesturesEnabled() has not been implemented.');
   }
 
   /// Dispose of whatever resources the `mapId` is holding on to.
-  void dispose({@required int viewId}) {
+  void dispose({required int viewId}) {
     throw UnimplementedError('dispose() has not been implemented.');
   }
 
   /// The Camera change.
-  Stream<CameraChangeEvent> onCameraChange({@required int viewId}) {
+  Stream<CameraChangeEvent> onCameraChange({required int viewId}) {
     throw UnimplementedError(
         'onCameraChangeListener() has not been implemented.');
   }
 
   /// The Panorama change.
-  Stream<PanoramaChangeEvent> onPanoramaChange({@required int viewId}) {
+  Stream<PanoramaChangeEvent> onPanoramaChange({required int viewId}) {
     throw UnimplementedError(
         'onPanoramaChangeListener() has not been implemented.');
   }
 
   /// The Panorama was clicked.
-  Stream<PanoramaClickEvent> onPanoramaClick({@required int viewId}) {
+  Stream<PanoramaClickEvent> onPanoramaClick({required int viewId}) {
     throw UnimplementedError('onPanoramaClick() has not been implemented.');
   }
 
   /// The Panorama was long clicked.
-  Stream<PanoramaLongClickEvent> onPanoramaLongClick({@required int viewId}) {
+  Stream<PanoramaLongClickEvent> onPanoramaLongClick({required int viewId}) {
     throw UnimplementedError('onPanoramaLongClick() has not been implemented.');
   }
 
@@ -158,7 +158,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// The returned [Future] completes after listeners have been notified.
   Future<dynamic> updateStreetViewOptions(
     Map<String, dynamic> optionsUpdate, {
-    @required int viewId,
+    required int viewId,
   }) {
     throw UnimplementedError(
         'updateStreetViewOptions() has not been implemented.');

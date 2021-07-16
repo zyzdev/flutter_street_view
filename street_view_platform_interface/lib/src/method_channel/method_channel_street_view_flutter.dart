@@ -13,10 +13,10 @@ import 'package:street_view_platform_interface/src/type/camera.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
-  final Map<int, MethodChannel> _channels = {};
+  final Map<int, MethodChannel?> _channels = {};
 
   /// Accesses the MethodChannel associated to the passed viewId.
-  MethodChannel channel(int viewId) {
+  MethodChannel? channel(int viewId) {
     return _channels[viewId];
   }
 
@@ -25,14 +25,14 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   /// This method is called when the plugin is first initialized.
   @override
   Future<dynamic> init(int viewId) {
-    MethodChannel channel;
+    MethodChannel? channel;
     if (!_channels.containsKey(viewId)) {
       channel = MethodChannel('flutter_google_street_view_$viewId');
       channel.setMethodCallHandler(
           (MethodCall call) => _handleMethodCall(call, viewId));
       _channels[viewId] = channel;
     }
-    return channel.invokeMethod<void>('streetView#waitForStreetView');
+    return channel!.invokeMethod<void>('streetView#waitForStreetView');
   }
 
   // The controller we need to broadcast the different events coming
@@ -50,7 +50,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
 
   /// Dispose of the native resources.
   @override
-  void dispose({int viewId}) {
+  void dispose({int? viewId}) {
     // Noop!
     _streetViewEventStreamController.close();
   }
@@ -60,23 +60,23 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   /// Return [Future] while the change has been started on the platform side.
   @override
   Future<void> animateTo(int viewId,
-      {StreetViewPanoramaCamera camera, int duration}) {
-    return channel(viewId).invokeMethod("streetView#animateTo",
-        camera.toMap()..putIfAbsent("duration", () => duration.toDouble()));
+      {StreetViewPanoramaCamera? camera, int? duration}) {
+    return channel(viewId)!.invokeMethod("streetView#animateTo",
+        camera!.toMap()..putIfAbsent("duration", () => duration!.toDouble()));
   }
 
   /// Return position of current panorama and information of near panoramas
   @override
   Future<StreetViewPanoramaLocation> getLocation(int viewId) async {
     return StreetViewPanoramaLocation.fromMap(
-        await channel(viewId).invokeMethod("streetView#getLocation"));
+        await channel(viewId)!.invokeMethod("streetView#getLocation"));
   }
 
   /// Return camera setting, bearing, tilt and zoom.
   @override
   Future<StreetViewPanoramaCamera> getPanoramaCamera(int viewId) async {
     return StreetViewPanoramaCamera.fromMap(
-        await channel(viewId).invokeMethod("streetView#getPanoramaCamera"));
+        await channel(viewId)!.invokeMethod("streetView#getPanoramaCamera"));
   }
 
 /*  Future<bool> isPanningGesturesEnabled(int viewId) {
@@ -98,18 +98,18 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
   @override
   Future<Point> orientationToPoint(int viewId,
-      {StreetViewPanoramaOrientation orientation}) async {
-    final point = await channel(viewId)
-        .invokeMethod("streetView#orientationToPoint", orientation.toMap());
+      {StreetViewPanoramaOrientation? orientation}) async {
+    final point = await channel(viewId)!
+        .invokeMethod("streetView#orientationToPoint", orientation!.toMap());
     return Point(point["x"], point["y"]);
   }
 
   /// Return the orientation[StreetViewPanoramaOrientation] that corresponds to a screen location.
   @override
   Future<StreetViewPanoramaOrientation> pointToOrientation(int viewId,
-      {Point point}) async {
-    return StreetViewPanoramaOrientation.fromMap(await channel(viewId)
-        .invokeMethod("streetView#pointToOrientation", [point.x, point.y]));
+      {Point? point}) async {
+    return StreetViewPanoramaOrientation.fromMap(await channel(viewId)!
+        .invokeMethod("streetView#pointToOrientation", [point!.x, point.y]));
   }
 
   /// Sets panorama by given location
@@ -117,8 +117,11 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   /// Return [Future] while the change has been made on the platform side.
   @override
   Future<void> setPosition(int viewId,
-      {LatLng position, String panoId, int radius, StreetViewSource source}) {
-    return channel(viewId).invokeMethod(
+      {LatLng? position,
+      String? panoId,
+      int? radius,
+      StreetViewSource? source}) {
+    return channel(viewId)!.invokeMethod(
         "streetView#movePos",
         StreetViewCameraPosition(
                 position: position,
@@ -132,9 +135,9 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setPanningGesturesEnabled(int viewId, {bool enable}) {
+  Future<void> setPanningGesturesEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
-    return channel(viewId)
+    return channel(viewId)!
         .invokeListMethod("streetView#setPanningGesturesEnabled", enable);
   }
 
@@ -142,9 +145,9 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setStreetNamesEnabled(int viewId, {bool enable}) {
+  Future<void> setStreetNamesEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
-    return channel(viewId)
+    return channel(viewId)!
         .invokeListMethod("streetView#setStreetNamesEnabled", enable);
   }
 
@@ -152,9 +155,9 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setUserNavigationEnabled(int viewId, {bool enable}) {
+  Future<void> setUserNavigationEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
-    return channel(viewId)
+    return channel(viewId)!
         .invokeListMethod("streetView#setUserNavigationEnabled", enable);
   }
 
@@ -162,33 +165,33 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setZoomGesturesEnabled(int viewId, {bool enable}) {
+  Future<void> setZoomGesturesEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
-    return channel(viewId)
+    return channel(viewId)!
         .invokeListMethod("streetView#setZoomGesturesEnabled", enable);
   }
 
   /// The Camera was changed.
   @override
-  Stream<CameraChangeEvent> onCameraChange({@required int viewId}) {
+  Stream<CameraChangeEvent> onCameraChange({required int viewId}) {
     return _events(viewId).whereType<CameraChangeEvent>();
   }
 
   /// The Panorama was changed.
   @override
-  Stream<PanoramaChangeEvent> onPanoramaChange({@required int viewId}) {
+  Stream<PanoramaChangeEvent> onPanoramaChange({required int viewId}) {
     return _events(viewId).whereType<PanoramaChangeEvent>();
   }
 
   /// The Panorama was clicked.
   @override
-  Stream<PanoramaClickEvent> onPanoramaClick({@required int viewId}) {
+  Stream<PanoramaClickEvent> onPanoramaClick({required int viewId}) {
     return _events(viewId).whereType<PanoramaClickEvent>();
   }
 
   /// The Panorama was long clicked.
   @override
-  Stream<PanoramaLongClickEvent> onPanoramaLongClick({@required int viewId}) {
+  Stream<PanoramaLongClickEvent> onPanoramaLongClick({required int viewId}) {
     return _events(viewId).whereType<PanoramaLongClickEvent>();
   }
 
@@ -201,10 +204,9 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   @override
   Future<dynamic> updateStreetViewOptions(
     Map<String, dynamic> optionsUpdate, {
-    @required int viewId,
+    required int viewId,
   }) {
-    assert(optionsUpdate != null);
-    return channel(viewId)
+    return channel(viewId)!
         .invokeMethod("streetView#updateOptions", optionsUpdate);
   }
 

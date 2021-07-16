@@ -4,16 +4,16 @@ class StreetViewPanoramaOrientation {
   StreetViewPanoramaOrientation({this.bearing, this.tilt});
 
   /// Direction of the orientation, in degrees clockwise from north.
-  final double bearing;
+  final double? bearing;
 
   /// The angle, in degrees, of the orientation.
-  final double tilt;
+  final double? tilt;
 
   /// Create [StreetViewPanoramaOrientation] and put data by [map].
   factory StreetViewPanoramaOrientation.fromMap(dynamic map) {
     return new StreetViewPanoramaOrientation(
-      bearing: map['bearing'] as double,
-      tilt: map['tilt'] as double,
+      bearing: map['bearing'] as double?,
+      tilt: map['tilt'] as double?,
     );
   }
 

@@ -4,16 +4,16 @@ class StreetViewPanoramaLink {
   StreetViewPanoramaLink({this.bearing, this.panoId});
 
   /// The direction of the linked panorama, in degrees clockwise from north.
-  final double bearing;
+  final double? bearing;
 
   /// The panorama ID of the linked panorama.
-  final String panoId;
+  final String? panoId;
 
   /// Create a [StreetViewPanoramaLink] and init data by a map.
   factory StreetViewPanoramaLink.fromMap(Map<String, dynamic> map) {
     return new StreetViewPanoramaLink(
-      bearing: map['bearing'] as double,
-      panoId: map['panoId'] as String,
+      bearing: map['bearing'] as double?,
+      panoId: map['panoId'] as String?,
     );
   }
 
