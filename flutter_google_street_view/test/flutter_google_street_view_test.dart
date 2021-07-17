@@ -46,7 +46,7 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle(Duration(seconds: 5));
-    final FakePlatformStreetView platformGoogleMap =
+    final FakePlatformStreetView? platformGoogleMap =
         fakePlatformViewsController.lastCreatedView;
   });
 }

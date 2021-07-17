@@ -17,6 +17,7 @@ class _StreetViewPanoramaNavigationDemoState
   StreetViewController _controller;
   var animateFraction = 0.3;
   final int animateMaxDuration = 2000;
+
   int get animateDuration =>
       max((animateFraction * animateMaxDuration), 1).toInt();
 
@@ -272,14 +273,14 @@ class _StreetViewPanoramaNavigationDemoState
   }
 
   Widget _moveButton(String locationName, VoidCallback onClick) {
-    return FlatButton(
-      height: 60,
-      onPressed: onClick,
-      child: Text(locationName),
-      color: Colors.white.withOpacity(0.8),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          side: BorderSide(width: 1, color: Colors.grey)),
-    );
+    return OutlinedButton(
+        onPressed: onClick,
+        child: Text(locationName),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.white.withOpacity(0.8),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              side: BorderSide(width: 1, color: Colors.grey)),
+        ));
   }
 }

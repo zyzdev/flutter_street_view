@@ -1,3 +1,7 @@
+## 0.1.0-nullsafety.1
+
+* Migrating to null safety.
+
 ## 0.0.7
 
 * Remove iOS user guide.

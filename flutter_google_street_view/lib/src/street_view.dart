@@ -8,7 +8,7 @@ typedef void StreetViewCreatedCallback(StreetViewController controller);
 
 class FlutterGoogleStreetView extends StatefulWidget {
   const FlutterGoogleStreetView(
-      {Key key,
+      {Key? key,
       this.onStreetViewCreated,
       this.onCameraChangeListener,
       this.onPanoramaChangeListener,
@@ -33,28 +33,28 @@ class FlutterGoogleStreetView extends StatefulWidget {
 
   /// Specifies initialization position by panoramaID.
   /// [initPos] should be null while [initPanoId] was set.
-  final String initPanoId;
+  final String? initPanoId;
 
   /// Specifies initialization position by latitude and longitude.
   /// [initPanoId] should be null while [initPos] was set.
-  final LatLng initPos;
+  final LatLng? initPos;
 
   /// Specifies radius used to search for a Street View panorama
-  final double initRadius;
+  final double? initRadius;
 
   /// Specifies the source filter used to search for a Street View panorama,
   /// or DEFAULT if unspecified.
-  final StreetViewSource initSource;
+  final StreetViewSource? initSource;
 
   /// Specifies bearing for initialization position,
   /// it worked while [initPos] or [initPanoId] was specified.
   /// Sets the direction that the camera is pointing in, in degrees clockwise from north.
-  final double initBearing;
+  final double? initBearing;
 
   /// Specifies tilt for initialization position,
   /// it worked while [initPos] or [initPanoId] was specified.
   /// This value is restricted to being between -90 (directly down) and 90 (directly up).
-  final double initTilt;
+  final double? initTilt;
 
   /// Specifies zoom for initialization position,
   /// it worked while [initPos] or [initPanoId] was specified.
@@ -66,7 +66,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// Another example: If the maximum zoom for the panorama is 19,
   /// and the value is given as 20, it will be set to 19.
   /// Note that the camera zoom need not be an integer value.
-  final double initZoom;
+  final double? initZoom;
 
   /// Sets whether the user is able to use panning gestures
   final bool panningGesturesEnabled;
@@ -83,11 +83,11 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// Callback method for when the street view is ready to be used.
   ///
   /// Used to receive a [StreetViewController] for this [FlutterGoogleStreetView].
-  final StreetViewCreatedCallback onStreetViewCreated;
-  final CameraChangeListener onCameraChangeListener;
-  final PanoramaChangeListener onPanoramaChangeListener;
-  final PanoramaClickListener onPanoramaClickListener;
-  final PanoramaLongClickListener onPanoramaLongClickListener;
+  final StreetViewCreatedCallback? onStreetViewCreated;
+  final CameraChangeListener? onCameraChangeListener;
+  final PanoramaChangeListener? onPanoramaChangeListener;
+  final PanoramaClickListener? onPanoramaClickListener;
+  final PanoramaLongClickListener? onPanoramaLongClickListener;
 
   /// Which gestures should be consumed by the streetView.
   ///
@@ -98,7 +98,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
   ///
   /// When this set is empty or null, the street view will only handle pointer events for gestures that
   /// were not claimed by any other gesture recognizer.
-  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
+  final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
 
   @override
   State<StatefulWidget> createState() {
@@ -110,7 +110,7 @@ class _StreetViewState extends State<FlutterGoogleStreetView> {
   get _onStreetViewCreated => widget.onStreetViewCreated;
   final Completer<StreetViewController> _controller =
       Completer<StreetViewController>();
-  StreetViewPanoramaOptions _streetViewOptions;
+  late StreetViewPanoramaOptions _streetViewOptions;
 
   @override
   void initState() {
@@ -161,6 +161,6 @@ class _StreetViewState extends State<FlutterGoogleStreetView> {
         await StreetViewController.init(id, this);
     _controller.complete(controller);
     if (widget.onStreetViewCreated != null)
-      widget.onStreetViewCreated(controller);
+      widget.onStreetViewCreated!(controller);
   }
 }

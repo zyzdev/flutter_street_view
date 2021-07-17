@@ -5,26 +5,24 @@ StreetViewFlutterPlatform _streetViewFlutterPlatform =
 
 class StreetViewController {
   final int viewId;
-  var _isPanningGesturesEnabled = true;
-  var _isStreetNamesEnabled = true;
-  var _isUserNavigationEnabled = true;
-  var _isZoomGesturesEnabled = true;
+  bool _isPanningGesturesEnabled = true;
+  bool _isStreetNamesEnabled = true;
+  bool _isUserNavigationEnabled = true;
+  bool _isZoomGesturesEnabled = true;
 
   final _StreetViewState _streetViewState;
 
   StreetViewController._(this._streetViewState,
-      {@required this.viewId, dynamic initSetting})
-      : assert(_streetViewFlutterPlatform != null) {
+      {required this.viewId, required dynamic initSetting}) {
     _connectStreams(viewId);
     if (initSetting['isPanningGesturesEnabled'] != null)
-      _isPanningGesturesEnabled =
-          initSetting['isPanningGesturesEnabled'] as bool;
+      _isPanningGesturesEnabled = initSetting['isPanningGesturesEnabled']!;
     if (initSetting['isStreetNamesEnabled'] != null)
-      _isStreetNamesEnabled = initSetting['isStreetNamesEnabled'] as bool;
+      _isStreetNamesEnabled = initSetting['isStreetNamesEnabled']!;
     if (initSetting['isUserNavigationEnabled'] != null)
-      _isUserNavigationEnabled = initSetting['isUserNavigationEnabled'] as bool;
+      _isUserNavigationEnabled = initSetting['isUserNavigationEnabled']!;
     if (initSetting['isZoomGesturesEnabled'] != null)
-      _isZoomGesturesEnabled = initSetting['isZoomGesturesEnabled'] as bool;
+      _isZoomGesturesEnabled = initSetting['isZoomGesturesEnabled']!;
   }
 
   /// Initialize control of a [FlutterGoogleStreetView] with [id].
@@ -33,7 +31,6 @@ class StreetViewController {
   /// in [FlutterGoogleStreetView.onStreetViewCreated] callback.
   static Future<StreetViewController> init(
       int id, _StreetViewState _streetViewState) async {
-    assert(id != null);
     final dynamic initSetting = await _streetViewFlutterPlatform.init(id);
     return StreetViewController._(_streetViewState,
         viewId: id, initSetting: initSetting);
@@ -43,9 +40,8 @@ class StreetViewController {
   /// [duration] unit is ms
   /// Return [Future] while the change has been started on the platform side.
   Future<void> animateTo(
-      {StreetViewPanoramaCamera camera, @required int duration}) {
-    assert(camera != null);
-    assert(duration > 0 && duration != null);
+      {required StreetViewPanoramaCamera camera, required int duration}) {
+    assert(duration > 0);
     return _streetViewFlutterPlatform.animateTo(viewId,
         camera: camera, duration: duration);
   }
@@ -61,16 +57,16 @@ class StreetViewController {
   }
 
   /// Return street view is able to use panning gestures.
-  bool get isPanningGesturesEnabled => _isPanningGesturesEnabled;
+  bool? get isPanningGesturesEnabled => _isPanningGesturesEnabled;
 
   /// Return street view is displaying street name or not.
-  bool get isStreetNamesEnabled => _isStreetNamesEnabled;
+  bool? get isStreetNamesEnabled => _isStreetNamesEnabled;
 
   /// Return street view is able user move to another panorama.
-  bool get isUserNavigationEnabled => _isUserNavigationEnabled;
+  bool? get isUserNavigationEnabled => _isUserNavigationEnabled;
 
   /// Return street view is able to use zoom gestures.
-  bool get isZoomGesturesEnabled => _isZoomGesturesEnabled;
+  bool? get isZoomGesturesEnabled => _isZoomGesturesEnabled;
 
 /*  Future<bool> isPanningGesturesEnabled() {
     return _streetViewFlutterPlatform.isPanningGesturesEnabled(viewId);
@@ -103,7 +99,10 @@ class StreetViewController {
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPosition(
-      {LatLng position, String panoId, int radius, StreetViewSource source}) {
+      {LatLng? position,
+      String? panoId,
+      int? radius,
+      StreetViewSource? source}) {
     assert(position != null || panoId != null);
     assert(position == null || panoId == null);
     return _streetViewFlutterPlatform.setPosition(viewId,
@@ -159,7 +158,6 @@ class StreetViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<dynamic> _updateStreetView(Map<String, dynamic> optionsUpdate) {
-    assert(optionsUpdate != null);
     return _streetViewFlutterPlatform.updateStreetViewOptions(optionsUpdate,
         viewId: viewId);
   }
@@ -168,21 +166,21 @@ class StreetViewController {
     if (_streetViewState.widget.onCameraChangeListener != null)
       _streetViewFlutterPlatform.onCameraChange(viewId: viewId).listen(
           (CameraChangeEvent e) =>
-              _streetViewState.widget.onCameraChangeListener(e.value));
+              _streetViewState.widget.onCameraChangeListener!(e.value));
 
     if (_streetViewState.widget.onPanoramaChangeListener != null)
       _streetViewFlutterPlatform.onPanoramaChange(viewId: viewId).listen((e) {
-        _streetViewState.widget.onPanoramaChangeListener(e.value);
+        _streetViewState.widget.onPanoramaChangeListener!(e.value);
       });
     if (_streetViewState.widget.onPanoramaClickListener != null)
       _streetViewFlutterPlatform.onPanoramaClick(viewId: viewId).listen((e) {
-        _streetViewState.widget.onPanoramaClickListener(e.value);
+        _streetViewState.widget.onPanoramaClickListener!(e.value);
       });
     if (_streetViewState.widget.onPanoramaLongClickListener != null)
       _streetViewFlutterPlatform
           .onPanoramaLongClick(viewId: viewId)
           .listen((e) {
-        _streetViewState.widget.onPanoramaLongClickListener(e.value);
+        _streetViewState.widget.onPanoramaLongClickListener!(e.value);
       });
   }
 }

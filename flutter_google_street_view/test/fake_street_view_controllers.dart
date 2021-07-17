@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class FakePlatformStreetView {
-  FakePlatformStreetView(int id, Map<dynamic, dynamic> params) {}
+  FakePlatformStreetView(int? id, Map<dynamic, dynamic>? params) {}
 
-  MethodChannel channel;
+  MethodChannel? channel;
 
   var isPanningGesturesEnabled = true;
   var isStreetNamesEnabled = true;
@@ -29,13 +29,13 @@ class FakePlatformStreetView {
 }
 
 class FakePlatformViewsController {
-  FakePlatformStreetView lastCreatedView;
+  FakePlatformStreetView? lastCreatedView;
 
   Future<dynamic> fakePlatformViewsMethodHandler(MethodCall call) {
     switch (call.method) {
       case 'create':
         final Map<dynamic, dynamic> args = call.arguments;
-        final Map<dynamic, dynamic> params = _decodeParams(args['params']);
+        final Map<dynamic, dynamic>? params = _decodeParams(args['params']);
         lastCreatedView = FakePlatformStreetView(
           args['id'],
           params,
@@ -51,7 +51,7 @@ class FakePlatformViewsController {
   }
 }
 
-Map<dynamic, dynamic> _decodeParams(Uint8List paramsMessage) {
+Map<dynamic, dynamic>? _decodeParams(Uint8List paramsMessage) {
   final ByteBuffer buffer = paramsMessage.buffer;
   final ByteData messageBytes = buffer.asByteData(
     paramsMessage.offsetInBytes,
