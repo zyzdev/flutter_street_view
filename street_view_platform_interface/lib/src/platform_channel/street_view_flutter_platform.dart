@@ -87,7 +87,10 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPosition(int viewId,
-      {LatLng? position, String? panoId, int? radius, StreetViewSource? source}) {
+      {LatLng? position,
+      String? panoId,
+      int? radius,
+      StreetViewSource? source}) {
     throw UnimplementedError('setPosition() has not been implemented.');
   }
 
@@ -167,7 +170,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Returns a widget displaying the street view
   Widget buildView(
       Map<String, dynamic> creationParams,
-      Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
+      Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
       PlatformViewCreatedCallback onPlatformViewCreated) {
     throw UnimplementedError('buildView() has not been implemented.');
   }

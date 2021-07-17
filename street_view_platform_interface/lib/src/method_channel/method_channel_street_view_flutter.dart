@@ -244,7 +244,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   @override
   Widget buildView(
       Map<String, dynamic> creationParams,
-      Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers,
+      Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
       PlatformViewCreatedCallback onPlatformViewCreated) {
     // This is used in the platform side to register the view.
     final String viewType = 'my_street_view';
