@@ -1,6 +1,6 @@
-## 0.1.1-dev.1
+## 0.1.1
 
-* Trying remove IOS support info tag
+* Trying to remove IOS support info tag
 
 ## 0.1.0
 
