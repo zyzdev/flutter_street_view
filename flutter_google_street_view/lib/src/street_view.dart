@@ -26,7 +26,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
       this.userNavigationEnabled = true,
       this.zoomGesturesEnabled = true,
       this.gestureRecognizers})
-      : assert(initPanoId == null || initPos == null),
+      : assert((initPanoId != null) ^ (initPos != null)),
         assert((initTilt != null && initTilt >= -90 && initTilt <= 90) ||
             initTilt == null),
         super(key: key);

@@ -4,7 +4,7 @@ import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
 
 class StreetViewPanoramaEventsDemo extends StatefulWidget {
-  StreetViewPanoramaEventsDemo({Key key}) : super(key: key);
+  StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
 
   @override
   _StreetViewPanoramaEventsDemoState createState() =>
@@ -13,7 +13,7 @@ class StreetViewPanoramaEventsDemo extends StatefulWidget {
 
 class _StreetViewPanoramaEventsDemoState
     extends State<StreetViewPanoramaEventsDemo> {
-  StreetViewController _controller;
+  StreetViewController? _controller;
 
   var _onPanoramaClickListenerCnt = 0;
   var _onPanoramaLongClickListenerCnt = 0;
@@ -49,18 +49,18 @@ class _StreetViewPanoramaEventsDemoState
                 onCameraChangeListener: (camera) {
                   setState(() {
                     _onCameraChangeListenerInfo =
-                        "Camera Change:\nbearing: ${camera.bearing.toStringAsFixed(3)}, tilt: ${camera.tilt.toStringAsFixed(3)}, zoom: ${camera.zoom.toStringAsFixed(3)}";
+                        "Camera Change:\nbearing: ${camera.bearing!.toStringAsFixed(3)}, tilt: ${camera.tilt!.toStringAsFixed(3)}, zoom: ${camera.zoom!.toStringAsFixed(3)}";
                   });
                 },
                 onPanoramaChangeListener: (location) {
                   setState(() {
                     _onPanoramaChangeListenerInfo =
-                        "Pano Change position:\n${location.position.latitude.toStringAsFixed(7)}, ${location.position.longitude.toStringAsFixed(7)}\nPanoId: ${location.panoId}";
+                        "Pano Change position:\n${location.position!.latitude.toStringAsFixed(7)}, ${location.position!.longitude.toStringAsFixed(7)}\nPanoId: ${location.panoId}";
                   });
                 },
                 onPanoramaClickListener: (orientation) {
                   _onPanoramaClickListenerCnt++;
-                  _controller
+                  _controller!
                       .orientationToPoint(orientation)
                       .then((value) => setState(() {
                             _onPanoramaClickListenerInfo =
@@ -69,7 +69,7 @@ class _StreetViewPanoramaEventsDemoState
                 },
                 onPanoramaLongClickListener: (orientation) {
                   _onPanoramaLongClickListenerCnt++;
-                  _controller
+                  _controller!
                       .orientationToPoint(orientation)
                       .then((value) => setState(() {
                             _onPanoramaLongClickListenerInfo =

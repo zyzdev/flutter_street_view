@@ -5,7 +5,7 @@ import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
 
 class StreetViewPanoramaNavigationDemo extends StatefulWidget {
-  StreetViewPanoramaNavigationDemo({Key key}) : super(key: key);
+  StreetViewPanoramaNavigationDemo({Key? key}) : super(key: key);
 
   @override
   _StreetViewPanoramaNavigationDemoState createState() =>
@@ -14,7 +14,7 @@ class StreetViewPanoramaNavigationDemo extends StatefulWidget {
 
 class _StreetViewPanoramaNavigationDemoState
     extends State<StreetViewPanoramaNavigationDemo> {
-  StreetViewController _controller;
+  StreetViewController? _controller;
   var animateFraction = 0.3;
   final int animateMaxDuration = 2000;
 
@@ -64,14 +64,14 @@ class _StreetViewPanoramaNavigationDemoState
                                     child: SizedBox(),
                                   ),
                                   _arrowButton(Icons.arrow_back, () {
-                                    _controller
+                                    _controller!
                                         .getPanoramaCamera()
                                         .then((camera) {
                                       final double bearing =
-                                          camera.bearing - PAN_BY_DEG;
-                                      final double tilt = camera.tilt;
-                                      final double zoom = camera.zoom;
-                                      _controller.animateTo(
+                                          camera.bearing! - PAN_BY_DEG;
+                                      final double? tilt = camera.tilt;
+                                      final double? zoom = camera.zoom;
+                                      _controller!.animateTo(
                                           camera: StreetViewPanoramaCamera(
                                               bearing: bearing,
                                               tilt: tilt,
@@ -85,14 +85,14 @@ class _StreetViewPanoramaNavigationDemoState
                                   Column(
                                     children: [
                                       _arrowButton(Icons.arrow_upward, () {
-                                        _controller
+                                        _controller!
                                             .getPanoramaCamera()
                                             .then((camera) {
-                                          final double bearing = camera.bearing;
+                                          final double? bearing = camera.bearing;
                                           final double tilt =
-                                              camera.tilt + PAN_BY_DEG;
-                                          final double zoom = camera.zoom;
-                                          _controller.animateTo(
+                                              camera.tilt! + PAN_BY_DEG;
+                                          final double? zoom = camera.zoom;
+                                          _controller!.animateTo(
                                               camera: StreetViewPanoramaCamera(
                                                   bearing: bearing,
                                                   tilt: tilt,
@@ -104,14 +104,14 @@ class _StreetViewPanoramaNavigationDemoState
                                         height: 8,
                                       ),
                                       _arrowButton(Icons.arrow_downward, () {
-                                        _controller
+                                        _controller!
                                             .getPanoramaCamera()
                                             .then((camera) {
-                                          final double bearing = camera.bearing;
+                                          final double? bearing = camera.bearing;
                                           final double tilt =
-                                              camera.tilt - PAN_BY_DEG;
-                                          final double zoom = camera.zoom;
-                                          _controller.animateTo(
+                                              camera.tilt! - PAN_BY_DEG;
+                                          final double? zoom = camera.zoom;
+                                          _controller!.animateTo(
                                               camera: StreetViewPanoramaCamera(
                                                   bearing: bearing,
                                                   tilt: tilt,
@@ -125,14 +125,14 @@ class _StreetViewPanoramaNavigationDemoState
                                     width: 8,
                                   ),
                                   _arrowButton(Icons.arrow_forward_rounded, () {
-                                    _controller
+                                    _controller!
                                         .getPanoramaCamera()
                                         .then((camera) {
                                       final double bearing =
-                                          camera.bearing + PAN_BY_DEG;
-                                      final double tilt = camera.tilt;
-                                      final double zoom = camera.zoom;
-                                      _controller.animateTo(
+                                          camera.bearing! + PAN_BY_DEG;
+                                      final double? tilt = camera.tilt;
+                                      final double? zoom = camera.zoom;
+                                      _controller!.animateTo(
                                           camera: StreetViewPanoramaCamera(
                                               bearing: bearing,
                                               tilt: tilt,
@@ -149,13 +149,13 @@ class _StreetViewPanoramaNavigationDemoState
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   _arrowButton(Icons.add, () {
-                                    _controller
+                                    _controller!
                                         .getPanoramaCamera()
                                         .then((camera) {
-                                      final double bearing = camera.bearing;
-                                      final double tilt = camera.tilt;
-                                      final double zoom = camera.zoom + ZOOM_BY;
-                                      _controller.animateTo(
+                                      final double? bearing = camera.bearing;
+                                      final double? tilt = camera.tilt;
+                                      final double zoom = camera.zoom! + ZOOM_BY;
+                                      _controller!.animateTo(
                                           camera: StreetViewPanoramaCamera(
                                               bearing: bearing,
                                               tilt: tilt,
@@ -167,13 +167,13 @@ class _StreetViewPanoramaNavigationDemoState
                                     height: 8,
                                   ),
                                   _arrowButton(Icons.remove, () {
-                                    _controller
+                                    _controller!
                                         .getPanoramaCamera()
                                         .then((camera) {
-                                      final double bearing = camera.bearing;
-                                      final double tilt = camera.tilt;
-                                      final double zoom = camera.zoom - ZOOM_BY;
-                                      _controller.animateTo(
+                                      final double? bearing = camera.bearing;
+                                      final double? tilt = camera.tilt;
+                                      final double zoom = camera.zoom! - ZOOM_BY;
+                                      _controller!.animateTo(
                                           camera: StreetViewPanoramaCamera(
                                               bearing: bearing,
                                               tilt: tilt,
@@ -218,14 +218,14 @@ class _StreetViewPanoramaNavigationDemoState
                         ),
                         Expanded(
                             child: _moveButton("GO TO SYDNEY", () {
-                          _controller.setPosition(position: SYDNEY);
+                          _controller!.setPosition(position: SYDNEY);
                         })),
                         SizedBox(
                           width: 4,
                         ),
                         Expanded(
                           child: _moveButton("GO TO SANFRAN", () {
-                            _controller.setPosition(position: SAN_FRAN);
+                            _controller!.setPosition(position: SAN_FRAN);
                           }),
                         ),
                         SizedBox(
@@ -233,14 +233,14 @@ class _StreetViewPanoramaNavigationDemoState
                         ),
                         Expanded(
                             child: _moveButton("GO TO SANTORINI", () {
-                          _controller.setPosition(panoId: SANTORINI);
+                          _controller!.setPosition(panoId: SANTORINI);
                         })),
                         SizedBox(
                           width: 4,
                         ),
                         Expanded(
                             child: _moveButton("GO TO INVALID POINT", () {
-                          _controller.setPosition(position: INVALID);
+                          _controller!.setPosition(position: INVALID);
                         })),
                         SizedBox(
                           width: 4,

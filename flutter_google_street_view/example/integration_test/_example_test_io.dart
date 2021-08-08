@@ -38,6 +38,7 @@ void main() {
         textDirection: TextDirection.ltr,
         child: FlutterGoogleStreetView(
           key: k,
+          initPos: SAN_FRAN,
           onStreetViewCreated: (controller) {
             c.complete(controller);
           },
@@ -51,11 +52,13 @@ void main() {
     await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: FlutterGoogleStreetView(
+          initPos: SAN_FRAN,
           onStreetViewCreated: (controller) {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     expect(_controller, isNotNull);
   });
 
@@ -92,6 +95,7 @@ void main() {
     await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: FlutterGoogleStreetView(
+          initPos: SAN_FRAN,
           onStreetViewCreated: (controller) {
             c.complete(controller);
           },
@@ -99,7 +103,8 @@ void main() {
             l.complete(location);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     _controller.setPosition(position: SAN_FRAN);
     final result = await l.future;
     expect(result, isNotNull);
@@ -145,9 +150,7 @@ void main() {
     expect(result, isNotNull);
   });
 
-  testWidgets(
-      'Test street view init by position. But we can\'t check LatLng,'
-      ' so we just check the [StreetViewController] is not null.',
+  testWidgets('Test street view init by position.',
       (WidgetTester tester) async {
     await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
@@ -157,7 +160,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     expect(_controller, isNotNull);
   });
 
@@ -171,9 +175,20 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final initPanoId = (await _controller.getLocation()).panoId;
     expect(initPanoId, SANTORINI);
+  });
+
+  testWidgets(
+      "Test street view init should get assertException while both initPos and initPanoId is null.",
+      (WidgetTester tester) async {
+    try {
+      FlutterGoogleStreetView();
+    } catch (e) {
+      expect(e, isAssertionError);
+    }
   });
 
   testWidgets(
@@ -201,7 +216,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final location = (await _controller.getLocation());
     expect(location.position, isNull);
     expect(location.panoId, isNull);
@@ -221,7 +237,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final location = (await _controller.getLocation());
     expect(location.panoId, 'WnPiArhSmefF0m0WUAAElA');
   });
@@ -238,7 +255,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final camera = (await _controller.getPanoramaCamera());
     expect(camera.bearing, 30);
   });
@@ -255,7 +273,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final camera = (await _controller.getPanoramaCamera());
     expect(camera.tilt, 40);
   });
@@ -293,7 +312,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final camera = (await _controller.getPanoramaCamera());
     expect(camera.zoom, 5);
   });
@@ -310,7 +330,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final isPanningGesturesEnabled = _controller.isPanningGesturesEnabled;
     expect(isPanningGesturesEnabled, isFalse);
   });
@@ -327,7 +348,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final isStreetNamesEnabled = _controller.isStreetNamesEnabled;
     expect(isStreetNamesEnabled, isFalse);
   });
@@ -344,7 +366,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final isUserNavigationEnabled = _controller.isUserNavigationEnabled;
     expect(isUserNavigationEnabled, isFalse);
   });
@@ -361,7 +384,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final isZoomGesturesEnabled = _controller.isZoomGesturesEnabled;
     expect(isZoomGesturesEnabled, isFalse);
   });
@@ -381,7 +405,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final result = await _controller.getPanoramaCamera();
     expect(result, testSetting);
   });
@@ -399,7 +424,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
 
     // test param duration should not be null, otherwise, getting assert exception.
     try {
@@ -412,7 +438,8 @@ void main() {
     _controller.animateTo(duration: 1, camera: testSetting);
     await tester.pump(Duration(milliseconds: 100));
     _camera.complete(await _controller.getPanoramaCamera());
-    StreetViewPanoramaCamera svpc = await _camera.future;
+    StreetViewPanoramaCamera svpc =
+        await (_camera.future as FutureOr<StreetViewPanoramaCamera>);
     expect(svpc == testSetting, isTrue);
   });
 
@@ -421,6 +448,7 @@ void main() {
     await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
         child: FlutterGoogleStreetView(
+          initPos: SAN_FRAN,
           onStreetViewCreated: (controller) {
             c.complete(controller);
           },
@@ -428,23 +456,25 @@ void main() {
             _location.complete(location);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     // feed LatLng data only
     await _controller.setPosition(position: SYDNEY);
-    StreetViewPanoramaLocation location = await _location.future;
-    expect(location.panoId, "GSRp1-ZQ3dJHaeK9NOgXYg");
+    StreetViewPanoramaLocation location =
+        await (_location.future as FutureOr<StreetViewPanoramaLocation>);
+    expect(location.panoId, "RZMA-2C_TabsKgohTr3hOw");
     _location = Completer<StreetViewPanoramaLocation>();
 
     // feed panoId data only
     await _controller.setPosition(panoId: SANTORINI);
-    location = await _location.future;
+    location = await (_location.future as FutureOr<StreetViewPanoramaLocation>);
     expect(location.panoId, SANTORINI);
     _location = Completer<StreetViewPanoramaLocation>();
 
     // test radius param, panorama should be null in this test
     await _controller.setPosition(
         position: LatLng(25.074382, 121.590397), radius: 1);
-    location = await _location.future;
+    location = await (_location.future as FutureOr<StreetViewPanoramaLocation>);
     expect(location.position, isNull);
     expect(location.panoId, isNull);
     expect(location.links, isNull);
@@ -454,7 +484,7 @@ void main() {
     await _controller.setPosition(
         position: LatLng(25.0780892, 121.5753234),
         source: StreetViewSource.outdoor);
-    location = await _location.future;
+    location = await (_location.future as FutureOr<StreetViewPanoramaLocation>);
     expect(location.panoId, 'WnPiArhSmefF0m0WUAAElA');
     _location = Completer<StreetViewPanoramaLocation>();
   });
@@ -468,7 +498,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final location = await _controller.getLocation();
     expect(location.panoId, SANTORINI);
   });
@@ -484,7 +515,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     await _controller.setPanningGesturesEnabled(false);
     final result = _controller.isPanningGesturesEnabled;
     expect(result, isFalse);
@@ -501,7 +533,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     await _controller.setStreetNamesEnabled(false);
     final result = _controller.isStreetNamesEnabled;
     expect(result, isFalse);
@@ -518,7 +551,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     await _controller.setUserNavigationEnabled(false);
     final result = _controller.isUserNavigationEnabled;
     expect(result, isFalse);
@@ -535,7 +569,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     await _controller.setZoomGesturesEnabled(false);
     final result = _controller.isZoomGesturesEnabled;
     expect(result, isFalse);
@@ -552,7 +587,8 @@ void main() {
             c.complete(controller);
           },
         )));
-    StreetViewController _controller = await c.future;
+    StreetViewController _controller =
+        await (c.future as FutureOr<StreetViewController>);
     final point = await _controller.orientationToPoint(
         StreetViewPanoramaOrientation(bearing: 45, tilt: 10));
     expect(point.x, greaterThanOrEqualTo(0));
@@ -561,8 +597,8 @@ void main() {
 
   testWidgets("Test pointToOrientation is workable.",
       (WidgetTester tester) async {
-    StreetViewController _controller;
-    StreetViewPanoramaOrientation wish;
+    late StreetViewController _controller;
+    StreetViewPanoramaOrientation? wish;
     Completer target = Completer<StreetViewPanoramaOrientation>();
     Key k = GlobalKey();
     await tester.pumpWidget(Directionality(
@@ -581,7 +617,7 @@ void main() {
             target.complete(await _controller.pointToOrientation(point));
           },
         )));
-    _controller = await c.future;
+    _controller = await (c.future as FutureOr<StreetViewController>);
     await tester.longPress(find.byKey(k));
     final result = await target.future;
     expect(result == wish, isTrue);

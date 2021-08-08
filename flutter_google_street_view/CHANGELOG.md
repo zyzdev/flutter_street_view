@@ -1,3 +1,8 @@
+## 0.1.2
+
+* fix bugs that FlutterGoogleStreetView assert logic of param `initPanoId` & `initPanoId` is wrong.
+* migrate example to null-safety.
+
 ## 0.1.1
 
 * Trying to remove IOS support info tag

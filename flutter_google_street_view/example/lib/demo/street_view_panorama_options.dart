@@ -3,7 +3,7 @@ import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
 
 class StreetViewPanoramaOptionsDemo extends StatefulWidget {
-  StreetViewPanoramaOptionsDemo({Key key}) : super(key: key);
+  StreetViewPanoramaOptionsDemo({Key? key}) : super(key: key);
 
   @override
   _StreetViewPanoramaOptionsDemoState createState() =>
@@ -12,7 +12,7 @@ class StreetViewPanoramaOptionsDemo extends StatefulWidget {
 
 class _StreetViewPanoramaOptionsDemoState
     extends State<StreetViewPanoramaOptionsDemo> {
-  StreetViewController _controller;
+  StreetViewController? _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +51,12 @@ class _StreetViewPanoramaOptionsDemoState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(
-                                  value: _controller.isStreetNamesEnabled,
+                                  value: _controller!.isStreetNamesEnabled,
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   onChanged: (newValue) {
-                                    _controller
-                                        .setStreetNamesEnabled(newValue)
+                                    _controller!
+                                        .setStreetNamesEnabled(newValue!)
                                         .then((value) {
                                       setState(() {});
                                     });
@@ -71,12 +71,12 @@ class _StreetViewPanoramaOptionsDemoState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(
-                                  value: _controller.isUserNavigationEnabled,
+                                  value: _controller!.isUserNavigationEnabled,
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   onChanged: (newValue) {
-                                    _controller
-                                        .setUserNavigationEnabled(newValue)
+                                    _controller!
+                                        .setUserNavigationEnabled(newValue!)
                                         .then((value) {
                                       setState(() {});
                                     });
@@ -91,12 +91,12 @@ class _StreetViewPanoramaOptionsDemoState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(
-                                  value: _controller.isZoomGesturesEnabled,
+                                  value: _controller!.isZoomGesturesEnabled,
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   onChanged: (newValue) {
-                                    _controller
-                                        .setZoomGesturesEnabled(newValue)
+                                    _controller!
+                                        .setZoomGesturesEnabled(newValue!)
                                         .then((value) {
                                       setState(() {});
                                     });
@@ -111,13 +111,13 @@ class _StreetViewPanoramaOptionsDemoState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(
-                                  value: _controller.isPanningGesturesEnabled,
+                                  value: _controller!.isPanningGesturesEnabled,
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   onChanged: (newValue) {
                                     print("newValue:$newValue");
-                                    _controller
-                                        .setPanningGesturesEnabled(newValue)
+                                    _controller!
+                                        .setPanningGesturesEnabled(newValue!)
                                         .then((value) {
                                       setState(() {});
                                     });
