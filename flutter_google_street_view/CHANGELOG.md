@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Add iOS support.
+
 ## 0.1.2
 
 * fix bugs that FlutterGoogleStreetView assert logic of param `initPanoId` & `initPanoId` is wrong.

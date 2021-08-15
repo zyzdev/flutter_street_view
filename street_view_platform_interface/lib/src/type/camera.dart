@@ -36,7 +36,7 @@ class StreetViewCameraPosition {
 }
 
 class StreetViewPanoramaCamera {
-  StreetViewPanoramaCamera({this.bearing, this.tilt, this.zoom});
+  StreetViewPanoramaCamera({this.bearing, this.tilt, this.zoom, this.fov});
 
   ///Direction of the orientation, in degrees clockwise from north.
   final double? bearing;
@@ -50,11 +50,18 @@ class StreetViewPanoramaCamera {
   /// for [iOS] https://developers.google.com/maps/documentation/ios-sdk/reference/interface_g_m_s_panorama_camera#adb2250d57b30987cd2d13e52fa03833d
   final double? zoom;
 
+  /// **iOS only**
+  /// The field of view (FOV) encompassed by the larger dimension (width or height) of the view in degrees at zoom 1.
+  /// This is clamped to the range [1, 160] degrees, and has a default value of 90.
+  /// more info see, [iOS] https://developers.google.com/maps/documentation/ios-sdk/reference/interface_g_m_s_panorama_camera#a64dcd1302c83a54f2d068cbb19ea5cef
+  final double? fov;
+
   factory StreetViewPanoramaCamera.fromMap(dynamic map) {
     return new StreetViewPanoramaCamera(
       bearing: map['bearing'] as double?,
       tilt: map['tilt'] as double?,
       zoom: map['zoom'] as double?,
+      fov: map['fov'] as double?,
     );
   }
 
@@ -63,6 +70,7 @@ class StreetViewPanoramaCamera {
     putToMapIfNonNull(map, 'bearing', this.bearing);
     putToMapIfNonNull(map, 'tilt', this.tilt);
     putToMapIfNonNull(map, 'zoom', this.zoom);
+    putToMapIfNonNull(map, 'fov', this.fov);
     return map;
   }
 
@@ -73,14 +81,16 @@ class StreetViewPanoramaCamera {
           runtimeType == other.runtimeType &&
           bearing == other.bearing &&
           tilt == other.tilt &&
-          zoom == other.zoom;
+          zoom == other.zoom &&
+          fov == other.fov;
 
   @override
-  int get hashCode => bearing.hashCode ^ tilt.hashCode ^ zoom.hashCode;
+  int get hashCode =>
+      bearing.hashCode ^ tilt.hashCode ^ zoom.hashCode ^ fov.hashCode;
 
   @override
   String toString() {
-    return 'StreetViewPanoramaCamera{bearing: $bearing, tilt: $tilt, zoom: $zoom}';
+    return 'StreetViewPanoramaCamera{bearing: $bearing, tilt: $tilt, zoom: $zoom, fov: $fov}';
   }
 }
 
@@ -97,19 +107,23 @@ class StreetViewPanoramaLocation {
   StreetViewPanoramaLocation({this.links, this.position, this.panoId});
 
   factory StreetViewPanoramaLocation.fromMap(dynamic map) {
-    if (map == null) return StreetViewPanoramaLocation();
-
-    List<StreetViewPanoramaLink> linksTmp = [];
-    (map['links'] as List?)?.forEach((e) {
-      linksTmp.add(StreetViewPanoramaLink(panoId: e[0], bearing: e[1]));
-    });
-    final tmp = new StreetViewPanoramaLocation(
-      links: linksTmp,
-      position:
-          LatLng(map['position'][0] as double, map['position'][1] as double),
-      panoId: map['panoId'] as String?,
-    );
-    return tmp;
+    List<StreetViewPanoramaLink>? linksTmp;
+    LatLng? position;
+    String? panoId;
+    if (map != null) {
+      if (map['links'] != null) {
+        linksTmp = [];
+        (map['links'] as List?)?.forEach((e) {
+          linksTmp!.add(StreetViewPanoramaLink(panoId: e[0], bearing: e[1]));
+        });
+      }
+      position = map['position'][0] != null && map['position'][1] != null
+          ? LatLng(map['position'][0] as double, map['position'][1] as double)
+          : null;
+      panoId = map['panoId'] as String?;
+    }
+    return StreetViewPanoramaLocation(
+        links: linksTmp, position: position, panoId: panoId);
   }
 
   Map<String, dynamic> toMap() {
@@ -129,6 +143,9 @@ class StreetViewPanoramaLocation {
           links == other.links &&
           position == other.position &&
           panoId == other.panoId;
+
+  bool isNull() =>
+      this.links == null && this.position == null && this.panoId == null;
 
   @override
   int get hashCode => links.hashCode ^ position.hashCode ^ panoId.hashCode;

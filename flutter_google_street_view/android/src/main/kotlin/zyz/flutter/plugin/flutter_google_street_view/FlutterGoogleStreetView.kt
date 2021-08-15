@@ -577,7 +577,11 @@ class FlutterGoogleStreetView(
         methodChannel.invokeMethod(
             "pano#onClick", Convert.streetViewPanoramaOrientationToJson(
                 orientation
-            )
+            ).apply {
+                streetViewPanorama?.orientationToPoint(orientation)?.let {
+                    putAll(Convert.pointToJson(it)!!)
+                }
+            }
         )
     }
 
@@ -585,7 +589,11 @@ class FlutterGoogleStreetView(
         methodChannel.invokeMethod(
             "pano#onLongClick", Convert.streetViewPanoramaOrientationToJson(
                 orientation
-            )
+            ).apply {
+                streetViewPanorama?.orientationToPoint(orientation)?.let {
+                    putAll(Convert.pointToJson(it)!!)
+                }
+            }
         )
     }
 

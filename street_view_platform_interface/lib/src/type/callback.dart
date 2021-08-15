@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:street_view_platform_interface/src/type/camera.dart';
 import 'package:street_view_platform_interface/src/type/street_view_panorama_orientation.dart';
 
@@ -7,6 +9,7 @@ import 'package:street_view_platform_interface/src/type/street_view_panorama_ori
 /// street view was changed.
 ///
 /// This is set at [FlutterGoogleStreetView.onCameraChangeListener].
+/// [camera], current panorama camera info.
 typedef void CameraChangeListener(StreetViewPanoramaCamera camera);
 
 /// Callback that receiving last panorama location and information near panoramas.
@@ -15,15 +18,22 @@ typedef void CameraChangeListener(StreetViewPanoramaCamera camera);
 /// street view was changed.
 ///
 /// This is set at [FlutterGoogleStreetView.onPanoramaChangeListener].
-typedef void PanoramaChangeListener(StreetViewPanoramaLocation location);
+/// [location], Current location of this panorama.
+/// [e], panorama changing fail if not null.
+typedef PanoramaChangeListener = void Function(
+    StreetViewPanoramaLocation? location, Exception? e);
 
 /// Callback that receiving last tap event on current panorama.
 ///
-/// The callback receive [StreetViewPanoramaOrientation] while the panorama of the platform
+/// The callback receive [StreetViewPanoramaOrientation] & [Point]while the panorama of the platform
 /// street view was tapped.
 ///
 /// This is set at [FlutterGoogleStreetView.onPanoramaClickListener].
-typedef void PanoramaClickListener(StreetViewPanoramaOrientation orientation);
+/// [orientation], The tilt and bearing values corresponding to the point on the screen where the user tapped.
+/// These values have an absolute value within a specific panorama, and are independent of the current orientation of the camera.
+/// [point], The point on the screen where the user tapped.
+typedef PanoramaClickListener = void Function(
+    StreetViewPanoramaOrientation orientation, Point point);
 
 /// Callback that receiving last long tap event on current panorama.
 ///
@@ -31,5 +41,8 @@ typedef void PanoramaClickListener(StreetViewPanoramaOrientation orientation);
 /// street view was long tapped.
 ///
 /// This is set at [FlutterGoogleStreetView.onPanoramaClickListener].
-typedef void PanoramaLongClickListener(
-    StreetViewPanoramaOrientation orientation);
+/// [orientation], The tilt and bearing values corresponding to the point on the screen where the user tapped.
+/// These values have an absolute value within a specific panorama, and are independent of the current orientation of the camera.
+/// [point], The point on the screen where the user tapped.
+typedef PanoramaLongClickListener = void Function(
+    StreetViewPanoramaOrientation orientation, Point point);

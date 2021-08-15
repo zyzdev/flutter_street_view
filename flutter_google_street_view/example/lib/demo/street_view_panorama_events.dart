@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
@@ -20,9 +23,9 @@ class _StreetViewPanoramaEventsDemoState
 
   var _onCameraChangeListenerInfo =
       "Camera Change, bearing: N/A, tilt: N/A, zoom: N/A";
-  var _onPanoramaChangeListenerInfo = "Pano Change, position: N/A";
-  var _onPanoramaClickListenerInfo = "Click cnt:0";
-  var _onPanoramaLongClickListenerInfo = "Long click cnt:0";
+  var _onPanoramaChangeListenerInfo = "Pano Change: position: N/A, PanoId:N/A";
+  var _onPanoramaClickListenerInfo = "onClick cnt:0";
+  var _onPanoramaLongClickListenerInfo = "onLongClick cnt:0";
 
   @override
   Widget build(BuildContext context) {
@@ -49,32 +52,29 @@ class _StreetViewPanoramaEventsDemoState
                 onCameraChangeListener: (camera) {
                   setState(() {
                     _onCameraChangeListenerInfo =
-                        "Camera Change:\nbearing: ${camera.bearing!.toStringAsFixed(3)}, tilt: ${camera.tilt!.toStringAsFixed(3)}, zoom: ${camera.zoom!.toStringAsFixed(3)}";
+                        "Camera Change:\nbearing: ${camera.bearing!.toStringAsFixed(2)}, tilt: ${camera.tilt!.toStringAsFixed(2)}, zoom: ${camera.zoom!.toStringAsFixed(2)}${Platform.isIOS ? ", fov: ${camera.fov?.toStringAsFixed(2)}" : ""}";
                   });
                 },
-                onPanoramaChangeListener: (location) {
+                onPanoramaChangeListener: (location, e) {
                   setState(() {
-                    _onPanoramaChangeListenerInfo =
-                        "Pano Change position:\n${location.position!.latitude.toStringAsFixed(7)}, ${location.position!.longitude.toStringAsFixed(7)}\nPanoId: ${location.panoId}";
+                    _onPanoramaChangeListenerInfo = e == null
+                        ? "Pano Change:\npos:${location!.position!.latitude.toStringAsFixed(7)}, ${location.position!.longitude.toStringAsFixed(7)}\npanoId: ${location.panoId}"
+                        : "Pano Change:$e";
                   });
                 },
-                onPanoramaClickListener: (orientation) {
+                onPanoramaClickListener: (orientation, point) {
                   _onPanoramaClickListenerCnt++;
-                  _controller!
-                      .orientationToPoint(orientation)
-                      .then((value) => setState(() {
-                            _onPanoramaClickListenerInfo =
-                                "Click cnt:$_onPanoramaClickListenerCnt, click point:$value";
-                          }));
+                  setState(() {
+                    _onPanoramaClickListenerInfo =
+                        "onClick:\ncnt:$_onPanoramaClickListenerCnt\norientation:[tilt:${orientation.tilt}, bearing:${orientation.bearing}]\npoint:[x:${point.x}, y:${point.y}]";
+                  });
                 },
-                onPanoramaLongClickListener: (orientation) {
+                onPanoramaLongClickListener: (orientation, point) {
                   _onPanoramaLongClickListenerCnt++;
-                  _controller!
-                      .orientationToPoint(orientation)
-                      .then((value) => setState(() {
-                            _onPanoramaLongClickListenerInfo =
-                                "Long click cnt:$_onPanoramaLongClickListenerCnt, click point:$value";
-                          }));
+                  setState(() {
+                    _onPanoramaLongClickListenerInfo =
+                        "onLongClick:\ncnt:$_onPanoramaLongClickListenerCnt\norientation:[tilt:${orientation.tilt}, bearing:${orientation.bearing}]\npoint:[x:${point.x}, y:${point.y}]";
+                  });
                 },
               ),
               if (_controller != null)

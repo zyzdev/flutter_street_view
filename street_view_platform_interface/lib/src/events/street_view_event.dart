@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 class StreetViewEvent<T> {
@@ -24,30 +26,43 @@ class CameraChangeEvent extends StreetViewEvent<StreetViewPanoramaCamera> {
 }
 
 /// An event fired when the Panorama of a [viewId] changed.
-class PanoramaChangeEvent extends StreetViewEvent<StreetViewPanoramaLocation> {
+class PanoramaChangeEvent extends StreetViewEvent<PanoramaChangeData> {
   /// Build a CameraMoveStarted Event triggered from the map represented by `mapId`.
   ///
-  /// The `value` of this event is a [StreetViewPanoramaLocation] object with the current position of the Panorama.
-  PanoramaChangeEvent(int viewId, StreetViewPanoramaLocation location)
-      : super(viewId, location);
+  /// The `value` of this event is a [PanoramaChangeData] object with the current position of the Panorama.
+  PanoramaChangeEvent(int viewId, PanoramaChangeData data)
+      : super(viewId, data);
+}
+
+/// An data structure to save feedback data of PanoramaChangeEvent.
+class PanoramaChangeData {
+  final StreetViewPanoramaLocation? location;
+  final Exception? exception;
+
+  PanoramaChangeData(this.location, this.exception);
 }
 
 /// An event fired when the Panorama of a [viewId] was clicked.
-class PanoramaClickEvent
-    extends StreetViewEvent<StreetViewPanoramaOrientation> {
+class PanoramaClickEvent extends StreetViewEvent<PanoramaClickData> {
   /// Build a CameraMoveStarted Event triggered from the map represented by `mapId`.
   ///
-  /// The `value` of this event is a [StreetViewPanoramaOrientation] object with the position was clicked by user.
-  PanoramaClickEvent(int viewId, StreetViewPanoramaOrientation orientation)
-      : super(viewId, orientation);
+  /// The `value` of this event is a [PanoramaClickData] object with the position was clicked by user.
+  PanoramaClickEvent(int viewId, PanoramaClickData data) : super(viewId, data);
 }
 
 /// An event fired when the Panorama of a [viewId] was clicked by long press.
-class PanoramaLongClickEvent
-    extends StreetViewEvent<StreetViewPanoramaOrientation> {
+class PanoramaLongClickEvent extends StreetViewEvent<PanoramaClickData> {
   /// Build a CameraMoveStarted Event triggered from the map represented by `mapId`.
   ///
-  /// The `value` of this event is a [StreetViewPanoramaOrientation] object with the position was long clicked by user.
-  PanoramaLongClickEvent(int viewId, StreetViewPanoramaOrientation orientation)
-      : super(viewId, orientation);
+  /// The `value` of this event is a [PanoramaClickData] object with the position was long clicked by user.
+  PanoramaLongClickEvent(int viewId, PanoramaClickData data)
+      : super(viewId, data);
+}
+
+/// An data structure to save feedback data of PanoramaC147hangeEvent.
+class PanoramaClickData {
+  final StreetViewPanoramaOrientation orientation;
+  final Point point;
+
+  PanoramaClickData(this.orientation, this.point);
 }

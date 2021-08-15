@@ -67,9 +67,10 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
 
   /// Return position of current panorama and information of near panoramas
   @override
-  Future<StreetViewPanoramaLocation> getLocation(int viewId) async {
-    return StreetViewPanoramaLocation.fromMap(
+  Future<StreetViewPanoramaLocation?> getLocation(int viewId) async {
+    final tmp = StreetViewPanoramaLocation.fromMap(
         await channel(viewId)!.invokeMethod("streetView#getLocation"));
+    return tmp.isNull() ? null : tmp;
   }
 
   /// Return camera setting, bearing, tilt and zoom.
@@ -98,9 +99,9 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
   @override
   Future<Point> orientationToPoint(int viewId,
-      {StreetViewPanoramaOrientation? orientation}) async {
+      {required StreetViewPanoramaOrientation orientation}) async {
     final point = await channel(viewId)!
-        .invokeMethod("streetView#orientationToPoint", orientation!.toMap());
+        .invokeMethod("streetView#orientationToPoint", orientation.toMap());
     return Point(point["x"], point["y"]);
   }
 
@@ -138,7 +139,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   Future<void> setPanningGesturesEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
     return channel(viewId)!
-        .invokeListMethod("streetView#setPanningGesturesEnabled", enable);
+        .invokeMethod("streetView#setPanningGesturesEnabled", enable);
   }
 
   /// Sets street view to display street name or not.
@@ -148,7 +149,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   Future<void> setStreetNamesEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
     return channel(viewId)!
-        .invokeListMethod("streetView#setStreetNamesEnabled", enable);
+        .invokeMethod("streetView#setStreetNamesEnabled", enable);
   }
 
   /// Sets street view to allow moving to another panorama.
@@ -158,7 +159,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   Future<void> setUserNavigationEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
     return channel(viewId)!
-        .invokeListMethod("streetView#setUserNavigationEnabled", enable);
+        .invokeMethod("streetView#setUserNavigationEnabled", enable);
   }
 
   /// Sets street view to allow using zoom gestures or not.
@@ -168,7 +169,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   Future<void> setZoomGesturesEnabled(int viewId, {bool? enable}) {
     assert(enable != null);
     return channel(viewId)!
-        .invokeListMethod("streetView#setZoomGesturesEnabled", enable);
+        .invokeMethod("streetView#setZoomGesturesEnabled", enable);
   }
 
   /// The Camera was changed.
@@ -219,18 +220,34 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         break;
       case 'pano#onChange':
         //print("pano#onChange:${call.arguments}");
-        _streetViewEventStreamController.add(PanoramaChangeEvent(
-            viewId, StreetViewPanoramaLocation.fromMap(call.arguments)));
+        String? errorMsg =
+            call.arguments['error'] is String ? call.arguments['error'] : null;
+        Exception? e = errorMsg != null ? Exception(errorMsg) : null;
+        final data = PanoramaChangeData(
+            e == null
+                ? StreetViewPanoramaLocation.fromMap(call.arguments)
+                : null,
+            e);
+        _streetViewEventStreamController.add(PanoramaChangeEvent(viewId, data));
         break;
       case 'pano#onClick':
-        //print("pano#onClick:${call.arguments}");
-        _streetViewEventStreamController.add(PanoramaClickEvent(
-            viewId, StreetViewPanoramaOrientation.fromMap(call.arguments)));
+        final map = call.arguments;
+        final orientation = StreetViewPanoramaOrientation.fromMap(map);
+        final point = Point(map['x'] as int, map['y'] as int);
+/*        print(
+            "pano#onClick:${call.arguments}, orientation:$orientation, point:$point");*/
+        _streetViewEventStreamController.add(
+            PanoramaClickEvent(viewId, PanoramaClickData(orientation, point)));
         break;
       case 'pano#onLongClick':
-        //print("pano#onLongClick:${call.arguments}");
+        final map = call.arguments;
+        final orientation =
+            StreetViewPanoramaOrientation.fromMap(call.arguments);
+        final point = Point(map['x'] as int, map['y'] as int);
+        /*print(
+            "pano#onLongClick:${call.arguments}, orientation:$orientation, point:$point");*/
         _streetViewEventStreamController.add(PanoramaLongClickEvent(
-            viewId, StreetViewPanoramaOrientation.fromMap(call.arguments)));
+            viewId, PanoramaClickData(orientation, point)));
         break;
       default:
         throw MissingPluginException();

@@ -42,7 +42,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   }
 
   /// Return position of current panorama and information of near panoramas
-  Future<StreetViewPanoramaLocation> getLocation(int viewId) {
+  Future<StreetViewPanoramaLocation?> getLocation(int viewId) {
     throw UnimplementedError('getLocation() has not been implemented.');
   }
 
@@ -73,7 +73,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
 
   /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
   Future<Point> orientationToPoint(int viewId,
-      {StreetViewPanoramaOrientation? orientation}) {
+      {required StreetViewPanoramaOrientation orientation}) {
     throw UnimplementedError('orientationToPoint() has not been implemented.');
   }
 

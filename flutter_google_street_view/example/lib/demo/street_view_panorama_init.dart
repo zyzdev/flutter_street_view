@@ -53,6 +53,13 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                 initZoom: 1.5,
 
                 /**
+                 *  iOS Only
+                 *  It is worked while you set initPos or initPanoId.
+                 *  initFov can set default fov of camera.
+                 */
+                //initFov: 120,
+
+                /**
                  *  Set street view can panning gestures or not.
                  *  default setting is true
                  */

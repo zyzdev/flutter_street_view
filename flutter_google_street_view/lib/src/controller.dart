@@ -47,7 +47,7 @@ class StreetViewController {
   }
 
   /// Return position of current panorama and information of near panoramas
-  Future<StreetViewPanoramaLocation> getLocation() {
+  Future<StreetViewPanoramaLocation?> getLocation() {
     return _streetViewFlutterPlatform.getLocation(viewId);
   }
 
@@ -170,17 +170,20 @@ class StreetViewController {
 
     if (_streetViewState.widget.onPanoramaChangeListener != null)
       _streetViewFlutterPlatform.onPanoramaChange(viewId: viewId).listen((e) {
-        _streetViewState.widget.onPanoramaChangeListener!(e.value);
+        _streetViewState.widget.onPanoramaChangeListener!(
+            e.value.location, e.value.exception);
       });
     if (_streetViewState.widget.onPanoramaClickListener != null)
       _streetViewFlutterPlatform.onPanoramaClick(viewId: viewId).listen((e) {
-        _streetViewState.widget.onPanoramaClickListener!(e.value);
+        _streetViewState.widget.onPanoramaClickListener!(
+            e.value.orientation, e.value.point);
       });
     if (_streetViewState.widget.onPanoramaLongClickListener != null)
       _streetViewFlutterPlatform
           .onPanoramaLongClick(viewId: viewId)
           .listen((e) {
-        _streetViewState.widget.onPanoramaLongClickListener!(e.value);
+        _streetViewState.widget.onPanoramaLongClickListener!(
+            e.value.orientation, e.value.point);
       });
   }
 }

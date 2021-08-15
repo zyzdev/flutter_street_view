@@ -1,3 +1,11 @@
+## 0.2.1
+
+* Fine tune.
+
+## 0.2.0
+
+* Add iOS support.
+
 ## 0.1.0
 
 * Fine tune

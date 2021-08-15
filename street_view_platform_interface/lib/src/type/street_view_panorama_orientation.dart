@@ -11,7 +11,7 @@ class StreetViewPanoramaOrientation {
 
   /// Create [StreetViewPanoramaOrientation] and put data by [map].
   factory StreetViewPanoramaOrientation.fromMap(dynamic map) {
-    return new StreetViewPanoramaOrientation(
+    return StreetViewPanoramaOrientation(
       bearing: map['bearing'] as double?,
       tilt: map['tilt'] as double?,
     );

@@ -18,6 +18,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
       this.initPos,
       this.initRadius,
       this.initSource,
+      this.initFov = 90, //iOS only
       this.initBearing,
       this.initTilt,
       this.initZoom,
@@ -67,6 +68,12 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// and the value is given as 20, it will be set to 19.
   /// Note that the camera zoom need not be an integer value.
   final double? initZoom;
+
+  /// **iOS only**
+  /// The field of view (FOV) encompassed by the larger dimension (width or height) of the view in degrees at zoom 1.
+  /// This is clamped to the range [1, 160] degrees, and has a default value of 90.
+  /// Lower FOV values produce a zooming in effect; larger FOV values produce an fisheye effect.
+  final double? initFov;
 
   /// Sets whether the user is able to use panning gestures
   final bool panningGesturesEnabled;
@@ -138,7 +145,8 @@ class _StreetViewState extends State<FlutterGoogleStreetView> {
       panoramaCamera: StreetViewPanoramaCamera(
           bearing: widget.initBearing,
           tilt: widget.initTilt,
-          zoom: widget.initZoom),
+          zoom: widget.initZoom,
+          fov: widget.initFov),
       panningGesturesEnabled: widget.panningGesturesEnabled,
       streetNamesEnabled: widget.streetNamesEnabled,
       userNavigationEnabled: widget.userNavigationEnabled,
