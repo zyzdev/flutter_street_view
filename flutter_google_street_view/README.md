@@ -28,6 +28,45 @@ Specify your API key in the application manifest `android/app/src/main/AndroidMa
                android:value="YOUR KEY HERE"/>
 ```
 
+### iOS
+
+Specify your API key in the application delegate `ios/Runner/AppDelegate.m`:
+
+```objectivec
+#include "AppDelegate.h"
+#include "GeneratedPluginRegistrant.h"
+#import "GoogleMaps/GoogleMaps.h"
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [GMSServices provideAPIKey:@"YOUR KEY HERE"];
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+@end
+```
+
+Or in your swift code, specify your API key in the application delegate `ios/Runner/AppDelegate.swift`:
+
+```swift
+import UIKit
+import Flutter
+import GoogleMaps
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    GMSServices.provideAPIKey("YOUR KEY HERE")
+    GeneratedPluginRegistrant.register(with: self)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+}
+```
 ### Control street view widget
 
 Add FlutterGoogleStreetView widget to your widget tree.
@@ -93,7 +132,14 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  *  initZoom can set default zoom of camera.
                  */
                 initZoom: 1.5,
-
+                
+                /**
+                 *  iOS Only
+                 *  It is worked while you set initPos or initPanoId.
+                 *  initFov can set default fov of camera.
+                 */
+                //initFov: 120,
+                
                 /**
                  *  Set street view can panning gestures or not.
                  *  default setting is true

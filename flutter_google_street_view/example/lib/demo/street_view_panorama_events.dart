@@ -79,7 +79,7 @@ class _StreetViewPanoramaEventsDemoState
               ),
               if (_controller != null)
                 Container(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.topCenter,
                   child: Card(
                     color: Colors.white.withOpacity(0.8),
                     child: Padding(
