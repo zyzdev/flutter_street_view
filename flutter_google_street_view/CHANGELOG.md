@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Remove `Android only.` in README
+
 ## 1.0.0
 
 * Add iOS support.
