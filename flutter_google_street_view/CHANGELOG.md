@@ -1,3 +1,7 @@
+## 1.0.2
+
+* fix bug that onPanoramaChangeListener doesn't response on Android side, if setPosition can't find a valid panorama.
+
 ## 1.0.1
 
 * Remove `Android only.` in README

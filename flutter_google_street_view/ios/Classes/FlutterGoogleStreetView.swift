@@ -25,7 +25,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         methodChannel.setMethodCallHandler(handle)
         // iOS views can be created here
         let initParam = args as? NSDictionary
-        setupListemer()
+        setupListener()
         createNativeView(initParam)
     }
     
@@ -54,7 +54,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         }
     }
     
-    private func setupListemer() {
+    private func setupListener() {
         streetViewPanorama.delegate = self
         let gestureDetector = UILongPressGestureRecognizer(target: self, action: #selector(self.onStreetViewPanoramaLongClick(_:)))
         streetViewPanorama.addGestureRecognizer(gestureDetector)
@@ -116,7 +116,7 @@ extension FlutterGoogleStreetView {
     
     private func debug(_ log:Any?,_ debug:Bool = false) {
         if(!DEBUG && !debug) {return}
-        //os_log("flutter_google_street_view: \((log is String ? log as! String : self.toS(log)))")
+        methodChannel.invokeMethod("log#onSend", arguments: "iOS flutter_google_street_view: \((log is String ? log as! String : self.toS(log)))")
     }
     
     private func streetViewIsReady(_ result:FlutterResult) {
@@ -330,7 +330,7 @@ extension FlutterGoogleStreetView {
 extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerDelegate{
     
     func panoramaView(_ view: GMSPanoramaView, willMoveToPanoramaID panoramaID: String) {
-        debug("willMoveToPanoramaID:\(panoramaID)")
+        //debug("willMoveToPanoramaID:\(panoramaID)")
     }
 
     func panoramaView(_ view: GMSPanoramaView, error: Error) {
@@ -338,25 +338,30 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
         if(panorama != nil) {
             onStreetViewPanoramaChange(panorama: panorama!)
         }
+        //debug("panoramaView1")
     }
     
-    func panoramaView(_ view: GMSPanoramaView, didMoveTo panorama: GMSPanorama, nearCoordinate coordinate: CLLocationCoordinate2D) {
+/*     func panoramaView(_ view: GMSPanoramaView, didMoveTo panorama: GMSPanorama, nearCoordinate coordinate: CLLocationCoordinate2D) {
         onStreetViewPanoramaChange(panorama: panorama)
-    }
+        debug("panoramaView2")
+    } */
     
     func panoramaView(_ view: GMSPanoramaView, didMoveTo panorama: GMSPanorama?) {
         let panorama = view.panorama
         onStreetViewPanoramaChange(panorama: panorama)
+        //debug("panoramaView3")
     }
     
     func panoramaView(_ view: GMSPanoramaView, error: Error, onMoveToPanoramaID panoramaID: String) {
         let panorama = view.panorama
         onStreetViewPanoramaChange(panorama: panorama, error: error)
+        //debug("panoramaView4")
     }
     
     func panoramaView(_ view: GMSPanoramaView, error: Error, onMoveNearCoordinate coordinate: CLLocationCoordinate2D) {
         let panorama = view.panorama
         onStreetViewPanoramaChange(panorama: panorama, error: error)
+        //debug("panoramaView5")
     }
 
     

@@ -115,7 +115,6 @@ class _StreetViewPanoramaOptionsDemoState
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   onChanged: (newValue) {
-                                    print("newValue:$newValue");
                                     _controller!
                                         .setPanningGesturesEnabled(newValue!)
                                         .then((value) {

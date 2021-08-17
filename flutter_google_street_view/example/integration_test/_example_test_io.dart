@@ -97,13 +97,13 @@ void main() {
           onStreetViewCreated: (controller) {
             c.complete(controller);
           },
-          onPanoramaChangeListener: (location, point) {
+          onPanoramaChangeListener: (location, e) {
             l.complete(location);
           },
         )));
     StreetViewController _controller =
         await (c.future as FutureOr<StreetViewController>);
-    _controller.setPosition(position: SAN_FRAN);
+    _controller.setPosition(position: SYDNEY);
     final result = await l.future;
     expect(result, isNotNull);
   });
@@ -457,30 +457,29 @@ void main() {
         textDirection: TextDirection.ltr,
         child: FlutterGoogleStreetView(
           initPos: SAN_FRAN,
-          onStreetViewCreated: (controller) {
+          onStreetViewCreated: (controller) async {
             c.complete(controller);
           },
-          onPanoramaChangeListener: (location, point) {
+          onPanoramaChangeListener: (location, e) {
             _location.complete(location);
           },
         )));
     StreetViewController _controller =
         await (c.future as FutureOr<StreetViewController>);
     // feed LatLng data only
-    await _controller.setPosition(position: SYDNEY);
+    _controller.setPosition(position: SYDNEY);
     StreetViewPanoramaLocation? location = await _location.future;
     expect(location?.panoId, isNotNull);
     _location = Completer<StreetViewPanoramaLocation?>();
 
     // feed panoId data only
-    await _controller.setPosition(panoId: SANTORINI);
+    _controller.setPosition(panoId: SANTORINI);
     location = await _location.future;
     expect(location?.panoId, isNotNull);
     _location = Completer<StreetViewPanoramaLocation?>();
 
     // test radius param, panorama should be null in this test
-    await _controller.setPosition(
-        position: LatLng(25.074382, 121.590397), radius: 1);
+    _controller.setPosition(position: LatLng(25.074382, 121.590397), radius: 1);
     location = await _location.future;
     expect(location?.position, isNull);
     expect(location?.panoId, isNull);

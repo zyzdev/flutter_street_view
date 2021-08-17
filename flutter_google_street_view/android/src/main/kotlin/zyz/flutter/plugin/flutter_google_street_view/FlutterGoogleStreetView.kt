@@ -11,6 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.maps.StreetViewPanorama
 import com.google.android.gms.maps.StreetViewPanoramaOptions
 import com.google.android.gms.maps.StreetViewPanoramaView
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.StreetViewPanoramaCamera
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation
 import com.google.android.gms.maps.model.StreetViewPanoramaOrientation
@@ -35,6 +36,8 @@ class FlutterGoogleStreetView(
     private var streetViewPanorama: StreetViewPanorama? = null
     private val methodChannel: MethodChannel
     private var viewReadyResult: MethodChannel.Result? = null
+    private var lastMoveToPos : LatLng? = null
+    private var lastMoveToPanoId:String? = null
 
     init {
         initOptions = createInitOption(creationParams)
@@ -498,10 +501,12 @@ class FlutterGoogleStreetView(
                 //Log.d(dTag, "target:$target, panoId:$panoId, radius:$radius, source:$source")
                 if ((target != null || panoId != null) && (target == null || panoId == null)) {
                     if (target != null) {
+                        lastMoveToPos = target
                         if (radius != null) {
                             streetViewPanorama?.setPosition(target, radius, source)
                         } else streetViewPanorama?.setPosition(target, source)
                     } else if (panoId != null) {
+                        lastMoveToPanoId = panoId
                         streetViewPanorama?.setPosition(panoId)
                     }
                 }
@@ -564,12 +569,20 @@ class FlutterGoogleStreetView(
                 viewReadyResult = null
             }
         }
+        val arg = location?.let {
+            Convert.streetViewPanoramaLocationToJson(
+                it
+            )
+        } ?: mutableMapOf<String, Any>().apply {
+            val errorMsg = if (lastMoveToPos != null)
+                "Oops..., no valid panorama found with position:${lastMoveToPos!!.latitude}, ${lastMoveToPos!!.longitude}, try to change `position`, `radius` or `source`."
+            else if (lastMoveToPanoId != null)
+                "Oops..., no valid panorama found with panoId:$lastMoveToPanoId, try to change `panoId`."
+            else "onStreetViewPanoramaCameraChange, cause unknown error."
+            put("error", errorMsg)
+        }
         methodChannel.invokeMethod(
-            "pano#onChange", location?.let {
-                Convert.streetViewPanoramaLocationToJson(
-                    it
-                )
-            }
+            "pano#onChange", arg
         )
     }
 
