@@ -1,3 +1,7 @@
+## 0.2.2
+
+* Add 'log#onSend' method call to print log from native side.
+
 ## 0.2.1
 
 * Fine tune.

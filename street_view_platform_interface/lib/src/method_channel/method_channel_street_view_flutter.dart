@@ -213,6 +213,9 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
 
   Future<dynamic> _handleMethodCall(MethodCall call, int viewId) async {
     switch (call.method) {
+      case 'log#onSend':
+        print(call.arguments);
+        break;
       case 'camera#onChange':
         //print("camera#onChange:${call.arguments}");
         _streetViewEventStreamController.add(CameraChangeEvent(
