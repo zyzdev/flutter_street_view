@@ -1,4 +1,15 @@
-part of google_stree_view_flutter;
+import 'dart:math';
+
+import 'package:flutter_google_street_view/src/street_view.dart'
+    if (dart.library.html) 'web/street_view.dart'
+    if (dart.library.io) 'mobile/street_view.dart';
+import 'package:street_view_platform_interface/street_view_platform_interface.dart';
+
+/// Callback method for when the streetView is ready to be used.
+///
+/// Pass to [FlutterGoogleStreetView.onStreetViewCreated] to receive a [StreetViewController] when the
+/// street view is created.
+typedef void StreetViewCreatedCallback(StreetViewController controller);
 
 StreetViewFlutterPlatform _streetViewFlutterPlatform =
     StreetViewFlutterPlatform.instance;
@@ -10,7 +21,7 @@ class StreetViewController {
   bool _isUserNavigationEnabled = true;
   bool _isZoomGesturesEnabled = true;
 
-  final _StreetViewState _streetViewState;
+  final StreetViewState _streetViewState;
 
   StreetViewController._(this._streetViewState,
       {required this.viewId, required dynamic initSetting}) {
@@ -30,9 +41,9 @@ class StreetViewController {
   /// Mainly for internal use when instantiating a [StreetViewController] passed
   /// in [FlutterGoogleStreetView.onStreetViewCreated] callback.
   static Future<StreetViewController> init(
-      int id, _StreetViewState _streetViewState) async {
+      int id, StreetViewState streetViewState) async {
     final dynamic initSetting = await _streetViewFlutterPlatform.init(id);
-    return StreetViewController._(_streetViewState,
+    return StreetViewController._(streetViewState,
         viewId: id, initSetting: initSetting);
   }
 
@@ -157,7 +168,7 @@ class StreetViewController {
   /// platform side.
   ///
   /// The returned [Future] completes after listeners have been notified.
-  Future<dynamic> _updateStreetView(Map<String, dynamic> optionsUpdate) {
+  Future<dynamic> updateStreetView(Map<String, dynamic> optionsUpdate) {
     return _streetViewFlutterPlatform.updateStreetViewOptions(optionsUpdate,
         viewId: viewId);
   }

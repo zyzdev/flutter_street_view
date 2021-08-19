@@ -20,11 +20,16 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return _channels[viewId];
   }
 
+  static StreamController<Map<String, dynamic>> createViewArgStream =
+      StreamController();
+
+  static StreamController<int> channelReadyStream = StreamController();
+
   /// Initializes the platform interface with [id].
   ///
   /// This method is called when the plugin is first initialized.
   @override
-  Future<dynamic> init(int viewId) {
+  Future<dynamic> init(int viewId) async {
     MethodChannel? channel;
     if (!_channels.containsKey(viewId)) {
       channel = MethodChannel('flutter_google_street_view_$viewId');
@@ -50,8 +55,10 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
 
   /// Dispose of the native resources.
   @override
-  void dispose({int? viewId}) {
+  void dispose(int viewId) {
     // Noop!
+    createViewArgStream.close();
+    channelReadyStream.close();
     _streetViewEventStreamController.close();
   }
 
@@ -212,6 +219,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call, int viewId) async {
+    print("MethodChannelStreetViewFlutter:" + call.method);
     switch (call.method) {
       case 'log#onSend':
         print(call.arguments);
@@ -265,7 +273,8 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   Widget buildView(
       Map<String, dynamic> creationParams,
       Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
-      PlatformViewCreatedCallback onPlatformViewCreated) {
+      PlatformViewCreatedCallback onPlatformViewCreated,
+      {int? viewId}) {
     // This is used in the platform side to register the view.
     final String viewType = 'my_street_view';
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -282,7 +291,11 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
           creationParams: creationParams,
           gestureRecognizers: gestureRecognizers,
           creationParamsCodec: const StandardMessageCodec());
+    } else if (kIsWeb) {
+      onPlatformViewCreated(viewId!);
+      return HtmlElementView(viewType: viewType);
     }
+    print("buildViewbuildView");
     return Text(
         '$defaultTargetPlatform is not yet supported by the maps plugin');
   }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -127,7 +128,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   }
 
   /// Dispose of whatever resources the `mapId` is holding on to.
-  void dispose({required int viewId}) {
+  void dispose(int viewId) {
     throw UnimplementedError('dispose() has not been implemented.');
   }
 
@@ -171,7 +172,8 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   Widget buildView(
       Map<String, dynamic> creationParams,
       Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
-      PlatformViewCreatedCallback onPlatformViewCreated) {
+      PlatformViewCreatedCallback onPlatformViewCreated,
+      {int? viewId}) {
     throw UnimplementedError('buildView() has not been implemented.');
   }
 }

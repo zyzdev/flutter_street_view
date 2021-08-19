@@ -3,9 +3,15 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
-import 'controller.dart';
+import '../../flutter_google_street_view.dart';
+import '../../flutter_google_street_view_web.dart';
+import 'package:street_view_platform_interface/street_view_platform_interface.dart';
+import 'package:flutter_google_street_view/src/controller.dart';
+import 'package:flutter_google_street_view/src/street_view.dart';
+
+StreetViewFlutterPlatform _streetViewFlutterPlatform =
+    StreetViewFlutterPlatform.instance;
 
 class FlutterGoogleStreetView extends StatefulWidget {
   const FlutterGoogleStreetView(
@@ -111,7 +117,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    throw UnimplementedError();
+    return StreetViewState();
   }
 }
 
@@ -121,24 +127,75 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
       Completer<StreetViewController>();
   late StreetViewPanoramaOptions _streetViewOptions;
   static int webViewId = -1;
+  FlutterGoogleStreetViewPlugin? _webPlugin;
 
-  StreetViewPanoramaOptions get optionFromWidget => throw UnimplementedError();
-
-  void _updateOptions() async {
-    throw UnimplementedError();
-  }
-
-  void _onPlatformViewCreated(int id) async {
-    throw UnimplementedError();
+  @override
+  void initState() {
+    super.initState();
+    webViewId++;
+    _streetViewOptions = optionFromWidget;
   }
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    int? viewId;
+    if (kIsWeb) {
+      viewId = webViewId;
+      if (_webPlugin == null) {
+        final arg = optionFromWidget.toMap();
+        arg["viewId"] = viewId;
+        _webPlugin = FlutterGoogleStreetViewPlugin.create(arg);
+        print("buildView, viewId:$viewId");
+      }
+    }
+    return _streetViewFlutterPlatform.buildView(optionFromWidget.toMap(),
+        widget.gestureRecognizers, _onPlatformViewCreated,
+        viewId: viewId);
   }
 
   @override
   void didUpdateWidget(FlutterGoogleStreetView oldWidget) {
-    throw UnimplementedError();
+    super.didUpdateWidget(oldWidget);
+    _updateOptions();
+  }
+
+  void dispose() {
+    if (kIsWeb) _webPlugin?.dispose();
+    super.dispose();
+  }
+
+  StreetViewPanoramaOptions get optionFromWidget => StreetViewPanoramaOptions(
+      panoId: widget.initPanoId,
+      position: widget.initPos,
+      radius: widget.initRadius,
+      source: widget.initSource,
+      panoramaCamera: StreetViewPanoramaCamera(
+          bearing: widget.initBearing,
+          tilt: widget.initTilt,
+          zoom: widget.initZoom,
+          fov: widget.initFov),
+      panningGesturesEnabled: widget.panningGesturesEnabled,
+      streetNamesEnabled: widget.streetNamesEnabled,
+      userNavigationEnabled: widget.userNavigationEnabled,
+      zoomGesturesEnabled: widget.zoomGesturesEnabled);
+
+  void _updateOptions() async {
+    final StreetViewPanoramaOptions newOptions = optionFromWidget;
+    final Map<String, dynamic> updates =
+        _streetViewOptions.updatesMap(newOptions);
+    if (updates.isEmpty) {
+      return;
+    }
+    final controller = await _controller.future;
+    controller.updateStreetView(updates).then((value) => print(value));
+    _streetViewOptions = newOptions;
+  }
+
+  void _onPlatformViewCreated(int id) async {
+    final StreetViewController controller =
+        await StreetViewController.init(id, this);
+    _controller.complete(controller);
+    if (widget.onStreetViewCreated != null)
+      widget.onStreetViewCreated!(controller);
   }
 }
