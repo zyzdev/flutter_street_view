@@ -59,7 +59,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         let gestureDetector = UILongPressGestureRecognizer(target: self, action: #selector(self.onStreetViewPanoramaLongClick(_:)))
         streetViewPanorama.addGestureRecognizer(gestureDetector)
     }
-
+    
     func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let method = call.method
         let args = call.arguments
@@ -186,6 +186,8 @@ extension FlutterGoogleStreetView {
         if(!isNSDictionary(args)) {
             return
         }
+        lastMoveToPos = nil
+        lastMoveToPanoId = nil
         let param = args as! NSDictionary
         if(param["panoId"] != nil) {
             let panoId = param["panoId"] as! String
@@ -312,7 +314,7 @@ extension FlutterGoogleStreetView {
             result(FlutterError(code: "streetView#orientationToPoint", message: "param include nil!", details: "x:\(toS(x)), y:\(toS(y))"))
         }
     }
-
+    
     private func isNil(_ args : Any?) -> Bool { return args == nil }
     
     private func isNSDictionary(_ args:Any?) -> Bool {
@@ -341,14 +343,13 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
         //debug("panoramaView1")
     }
     
-/*     func panoramaView(_ view: GMSPanoramaView, didMoveTo panorama: GMSPanorama, nearCoordinate coordinate: CLLocationCoordinate2D) {
-        onStreetViewPanoramaChange(panorama: panorama)
-        debug("panoramaView2")
-    } */
+    func panoramaView(_ view: GMSPanoramaView, didMoveTo panorama: GMSPanorama, nearCoordinate coordinate: CLLocationCoordinate2D) {
+        if(streetViewInit) {onStreetViewPanoramaChange(panorama: panorama)}
+        //debug("panoramaView")
+    }
     
     func panoramaView(_ view: GMSPanoramaView, didMoveTo panorama: GMSPanorama?) {
-        let panorama = view.panorama
-        onStreetViewPanoramaChange(panorama: panorama)
+        if(streetViewInit) {onStreetViewPanoramaChange(panorama: panorama)}
         //debug("panoramaView3")
     }
     
@@ -363,7 +364,6 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
         onStreetViewPanoramaChange(panorama: panorama, error: error)
         //debug("panoramaView5")
     }
-
     
     func panoramaView(_ panoramaView: GMSPanoramaView, didMove camera: GMSPanoramaCamera) {
         //debug("didMoveCamera, \(self.toS(camera))")
@@ -431,7 +431,7 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
             //debug("onStreetViewPanoramaClick, point:\(toS(point))")
             let orientationArg = orientationToJson(streetViewPanorama.orientation(for: point))
             let pointArg = pointToJson(point)
-        
+
             let args : NSMutableDictionary = [:]
             orientationArg.forEach { (key: Any, value: Any) in
                 args[key] = value
@@ -443,11 +443,18 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
         }
     }
     
-//    func panoramaViewDidStartRendering(_ panoramaView: GMSPanoramaView) {
-//        debug("panoramaViewDidStartRendering, streetViewInit:\(streetViewInit)");
-//    }
+    //    func panoramaViewDidStartRendering(_ panoramaView: GMSPanoramaView) {
+    //        debug("panoramaViewDidStartRendering, streetViewInit:\(streetViewInit)");
+    //    }
     
-//    func panoramaViewDidFinishRendering(_ panoramaView: GMSPanoramaView) {
-//        debug("panoramaViewDidFinishRendering, streetViewInit:\(streetViewInit)");
-//    }
+    func panoramaViewDidFinishRendering(_ panoramaView: GMSPanoramaView) {
+        debug("panoramaViewDidFinishRendering, streetViewInit:\(streetViewInit)");
+        if(!streetViewInit) {
+            streetViewInit = true;
+            if(initResult != nil) {
+                streetViewIsReady(initResult!)
+                initResult = nil
+            }
+        }
+    }
 }
