@@ -578,7 +578,7 @@ class FlutterGoogleStreetView(
                 "Oops..., no valid panorama found with position:${lastMoveToPos!!.latitude}, ${lastMoveToPos!!.longitude}, try to change `position`, `radius` or `source`."
             else if (lastMoveToPanoId != null)
                 "Oops..., no valid panorama found with panoId:$lastMoveToPanoId, try to change `panoId`."
-            else "onStreetViewPanoramaCameraChange, cause unknown error."
+            else "setPosition, catch unknown error."
             put("error", errorMsg)
         }
         methodChannel.invokeMethod(
