@@ -1,14 +1,15 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
 import '../../flutter_google_street_view.dart';
-import '../../flutter_google_street_view_web.dart';
+import 'package:flutter_google_street_view/src/web/plugin.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
-import 'package:flutter_google_street_view/src/controller.dart';
-import 'package:flutter_google_street_view/src/street_view.dart';
+import 'package:flutter_google_street_view/flutter_google_street_view.dart';
+import 'shims/dart_ui.dart' as ui;
 
 StreetViewFlutterPlatform _streetViewFlutterPlatform =
     StreetViewFlutterPlatform.instance;
@@ -21,6 +22,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
       this.onPanoramaChangeListener,
       this.onPanoramaClickListener,
       this.onPanoramaLongClickListener,
+      this.onCloseClickListener,
       this.initPanoId,
       this.initPos,
       this.initRadius,
@@ -29,15 +31,38 @@ class FlutterGoogleStreetView extends StatefulWidget {
       this.initBearing,
       this.initTilt,
       this.initZoom,
-      this.panningGesturesEnabled = true, //Web not supported
+      this.panningGesturesEnabled, //Web not supported.
       this.streetNamesEnabled = true,
       this.userNavigationEnabled = true,
-      this.zoomGesturesEnabled = true,
-      this.gestureRecognizers})
+      this.zoomGesturesEnabled, //Web not supported.
+      this.gestureRecognizers, //Web not supported.
+
+      // Web only //
+      this.addressControl,
+      this.addressControlOptions,
+      this.disableDefaultUI,
+      this.disableDoubleClickZoom = false,
+      this.enableCloseButton = false,
+      this.fullscreenControl,
+      this.fullscreenControlOptions,
+      this.linksControl,
+      this.motionTracking,
+      this.motionTrackingControl,
+      this.motionTrackingControlOptions,
+      this.scrollwheel = true,
+      this.panControl,
+      this.panControlOptions,
+      this.zoomControl,
+      this.zoomControlOptions,
+      this.visible
+      // Web only //
+      })
       : assert((initPanoId != null) ^ (initPos != null)),
         assert((initTilt != null && initTilt >= -90 && initTilt <= 90) ||
             initTilt == null),
         super(key: key);
+
+  Type get _dTag => runtimeType;
 
   /// Specifies initialization position by panoramaID.
   /// [initPos] should be null while [initPanoId] was set.
@@ -84,7 +109,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
 
   /// ** Web not supported **
   /// Sets whether the user is able to use panning gestures
-  final bool panningGesturesEnabled;
+  final bool? panningGesturesEnabled;
 
   /// Sets whether the user is able to see street names on panoramas
   final bool streetNamesEnabled;
@@ -92,8 +117,9 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// Sets whether the user is able to move to another panorama
   final bool userNavigationEnabled;
 
+  /// ** Web not supported **
   /// Sets whether the user is able to use zoom gestures
-  final bool zoomGesturesEnabled;
+  final bool? zoomGesturesEnabled;
 
   /// Callback method for when the street view is ready to be used.
   ///
@@ -101,8 +127,84 @@ class FlutterGoogleStreetView extends StatefulWidget {
   final StreetViewCreatedCallback? onStreetViewCreated;
   final CameraChangeListener? onCameraChangeListener;
   final PanoramaChangeListener? onPanoramaChangeListener;
-  final PanoramaClickListener? onPanoramaClickListener;
-  final PanoramaLongClickListener? onPanoramaLongClickListener;
+  final PanoramaClickListener? onPanoramaClickListener; //Web not supported
+  final PanoramaLongClickListener?
+      onPanoramaLongClickListener; //Web not supported
+  final CloseClickListener? onCloseClickListener; //Web only
+
+  /// ** Web only **
+  /// The enabled/disabled state of the address control.
+  final bool? addressControl;
+
+  /// ** Web only **
+  /// The display position for the address control.
+  final ControlPosition? addressControlOptions;
+
+  /// ** Web only **
+  /// Enables/disables all default UI.
+  final bool? disableDefaultUI;
+
+  /// ** Web only **
+  /// Enables/disables zoom on double click. Disabled by default.
+  final bool? disableDoubleClickZoom;
+
+  /// ** Web only **
+  /// If true, the close button is displayed. Disabled by default.
+  final bool? enableCloseButton;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the fullscreen control.
+  final bool? fullscreenControl;
+
+  /// ** Web only **
+  /// The display position for the fullscreen control.
+  final ControlPosition? fullscreenControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the links control.
+  final bool? linksControl;
+
+  /// ** Web only **
+  /// Whether motion tracking is on or off.
+  /// Enabled by default when the motion tracking control is present,so that the POV (point of view) follows the orientation of the device.
+  /// This is primarily applicable to mobile devices.
+  /// If motionTracking is set to false while motionTrackingControl is enabled,
+  /// the motion tracking control appears but tracking is off. The user can tap the motion tracking control to toggle this option.
+  final bool? motionTracking;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the motion tracking control.
+  /// Enabled by default when the device has motion data, so that the control appears on the map.
+  /// This is primarily applicable to mobile devices.
+  final bool? motionTrackingControl;
+
+  /// ** Web only **
+  /// The display position for the motion tracking control.
+  final ControlPosition? motionTrackingControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the pan control.
+  final bool? panControl;
+
+  /// ** Web only **
+  /// If false, disables scrollwheel zooming in Street View. The scrollwheel is enabled by default.
+  final bool? scrollwheel;
+
+  /// ** Web only **
+  /// The display position for the pan control.
+  final ControlPosition? panControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the zoom control.
+  final bool? zoomControl;
+
+  /// ** Web only **
+  /// The display position for the zoom control.
+  final ControlPosition? zoomControlOptions;
+
+  /// ** Web only **
+  /// If true, the Street View panorama is visible on load.
+  final bool? visible;
 
   /// Which gestures should be consumed by the streetView.
   ///
@@ -117,7 +219,18 @@ class FlutterGoogleStreetView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    _checkParam();
     return StreetViewState();
+  }
+
+  /// Notice input parameter may not support.
+  void _checkParam() {
+    String message(String param) =>
+        "$_dTag: <<< Notice >>> $param is not support for Web! <<< Notice >>>";
+    if (panningGesturesEnabled != null)
+      debugPrint(message("panningGesturesEnabled"));
+    if (zoomGesturesEnabled != null) debugPrint(message("zoomGesturesEnabled"));
+    if (gestureRecognizers != null) debugPrint(message("gestureRecognizers"));
   }
 }
 
@@ -126,32 +239,56 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
   final Completer<StreetViewController> _controller =
       Completer<StreetViewController>();
   late StreetViewPanoramaOptions _streetViewOptions;
-  static int webViewId = -1;
-  FlutterGoogleStreetViewPlugin? _webPlugin;
+  static int _streetViewId = -1;
+
+  static void resetStreetVIewId() => _streetViewId = -1;
+
+  static int get webViewId => _streetViewId;
+  static Map<int, FlutterGoogleStreetViewPlugin> _plugins = {};
+  static Map<int, HtmlElement> _divs = {};
+
+  late FlutterGoogleStreetViewPlugin _webPlugin;
+  late HtmlElement _div;
+  late int _viewId;
+
+  String _getViewType(int viewId) => "my_street_view_$viewId";
+
+  // The Flutter widget that contains the rendered StreetView.
+  HtmlElementView? _widget;
+
+  /// The Flutter widget that will contain the rendered Map. Used for caching.
+  Widget get htmlWidget {
+    if (_widget == null) {
+      _widget = HtmlElementView(
+        viewType: _getViewType(_viewId),
+      );
+    }
+    return _widget!;
+  }
 
   @override
   void initState() {
     super.initState();
-    webViewId++;
     _streetViewOptions = optionFromWidget;
+    _streetViewId++;
+    _viewId = _streetViewId;
+    _divs[_viewId] ??= DivElement()
+      ..id = _getViewType(_viewId)
+      ..style.width = '100%'
+      ..style.height = '100%';
+    _div = _divs[_viewId]!;
+    ui.platformViewRegistry.registerViewFactory(
+      _getViewType(_viewId),
+      (int viewId) => _div,
+    );
+    final arg = optionFromWidget.toMap()..["viewId"] = _viewId;
+    _plugins[_viewId] ??= FlutterGoogleStreetViewPlugin(arg, _div);
+    _webPlugin = _plugins[_viewId]!;
+    _onPlatformViewCreated(_viewId);
   }
 
   @override
-  Widget build(BuildContext context) {
-    int? viewId;
-    if (kIsWeb) {
-      viewId = webViewId;
-      if (_webPlugin == null) {
-        final arg = optionFromWidget.toMap();
-        arg["viewId"] = viewId;
-        _webPlugin = FlutterGoogleStreetViewPlugin.create(arg);
-        print("buildView, viewId:$viewId");
-      }
-    }
-    return _streetViewFlutterPlatform.buildView(optionFromWidget.toMap(),
-        widget.gestureRecognizers, _onPlatformViewCreated,
-        viewId: viewId);
-  }
+  Widget build(BuildContext context) => htmlWidget;
 
   @override
   void didUpdateWidget(FlutterGoogleStreetView oldWidget) {
@@ -160,7 +297,9 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
   }
 
   void dispose() {
-    if (kIsWeb) _webPlugin?.dispose();
+    _plugins.remove(_viewId);
+    _divs.remove(_viewId);
+    _webPlugin.dispose();
     super.dispose();
   }
 
@@ -174,10 +313,29 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
           tilt: widget.initTilt,
           zoom: widget.initZoom,
           fov: widget.initFov),
-      panningGesturesEnabled: widget.panningGesturesEnabled,
       streetNamesEnabled: widget.streetNamesEnabled,
       userNavigationEnabled: widget.userNavigationEnabled,
-      zoomGesturesEnabled: widget.zoomGesturesEnabled);
+
+      // Web only //
+      addressControl: widget.addressControl,
+      addressControlOptions: widget.addressControlOptions,
+      disableDefaultUI: widget.disableDefaultUI,
+      disableDoubleClickZoom: widget.disableDoubleClickZoom,
+      enableCloseButton: widget.enableCloseButton,
+      fullscreenControl: widget.fullscreenControl,
+      fullscreenControlOptions: widget.fullscreenControlOptions,
+      linksControl: widget.linksControl,
+      motionTracking: widget.motionTracking,
+      motionTrackingControl: widget.motionTrackingControl,
+      motionTrackingControlOptions: widget.motionTrackingControlOptions,
+      panControl: widget.panControl,
+      scrollwheel: widget.scrollwheel,
+      panControlOptions: widget.panControlOptions,
+      zoomControl: widget.zoomControl,
+      zoomControlOptions: widget.zoomControlOptions,
+      visible: widget.visible
+      // Web only
+      );
 
   void _updateOptions() async {
     final StreetViewPanoramaOptions newOptions = optionFromWidget;
@@ -195,7 +353,6 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
     final StreetViewController controller =
         await StreetViewController.init(id, this);
     _controller.complete(controller);
-    if (widget.onStreetViewCreated != null)
-      widget.onStreetViewCreated!(controller);
+    if (_onStreetViewCreated != null) _onStreetViewCreated!(controller);
   }
 }

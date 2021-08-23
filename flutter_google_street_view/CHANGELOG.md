@@ -1,3 +1,8 @@
+## 2.0.0-dev.1
+
+* Add Web support.
+* bugs fix.
+
 ## 1.0.2
 
 * fix bug that onPanoramaChangeListener doesn't response on Android side, if setPosition can't find a valid panorama.

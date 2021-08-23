@@ -5,16 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
-import 'controller.dart';
-
 class FlutterGoogleStreetView extends StatefulWidget {
   const FlutterGoogleStreetView(
       {Key? key,
       this.onStreetViewCreated,
       this.onCameraChangeListener,
       this.onPanoramaChangeListener,
-      this.onPanoramaClickListener,
-      this.onPanoramaLongClickListener,
+      this.onPanoramaClickListener, //Web not supported
+      this.onPanoramaLongClickListener, //Web not supported
+      this.onCloseClickListener, //Web only
       this.initPanoId,
       this.initPos,
       this.initRadius,
@@ -27,11 +26,34 @@ class FlutterGoogleStreetView extends StatefulWidget {
       this.streetNamesEnabled = true,
       this.userNavigationEnabled = true,
       this.zoomGesturesEnabled = true,
-      this.gestureRecognizers})
+      this.gestureRecognizers,
+
+      // Web only //
+      this.addressControl,
+      this.addressControlOptions,
+      this.disableDefaultUI,
+      this.disableDoubleClickZoom,
+      this.enableCloseButton,
+      this.fullscreenControl,
+      this.fullscreenControlOptions,
+      this.linksControl,
+      this.motionTracking,
+      this.motionTrackingControl,
+      this.motionTrackingControlOptions,
+      this.scrollwheel,
+      this.panControl,
+      this.panControlOptions,
+      this.zoomControl,
+      this.zoomControlOptions,
+      this.visible
+      // Web only //
+      })
       : assert((initPanoId != null) ^ (initPos != null)),
         assert((initTilt != null && initTilt >= -90 && initTilt <= 90) ||
             initTilt == null),
         super(key: key);
+
+  Type get _dTag => runtimeType;
 
   /// Specifies initialization position by panoramaID.
   /// [initPos] should be null while [initPanoId] was set.
@@ -86,6 +108,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// Sets whether the user is able to move to another panorama
   final bool userNavigationEnabled;
 
+  /// ** Web not supported **
   /// Sets whether the user is able to use zoom gestures
   final bool zoomGesturesEnabled;
 
@@ -95,8 +118,84 @@ class FlutterGoogleStreetView extends StatefulWidget {
   final StreetViewCreatedCallback? onStreetViewCreated;
   final CameraChangeListener? onCameraChangeListener;
   final PanoramaChangeListener? onPanoramaChangeListener;
-  final PanoramaClickListener? onPanoramaClickListener;
-  final PanoramaLongClickListener? onPanoramaLongClickListener;
+  final PanoramaClickListener? onPanoramaClickListener; //Web not supported
+  final PanoramaLongClickListener?
+      onPanoramaLongClickListener; //Web not supported
+  final VoidCallback? onCloseClickListener; //Web only
+
+  /// ** Web only **
+  /// The enabled/disabled state of the address control.
+  final bool? addressControl;
+
+  /// ** Web only **
+  /// The display position for the address control.
+  final ControlPosition? addressControlOptions;
+
+  /// ** Web only **
+  /// Enables/disables all default UI. May be overridden individually.
+  final bool? disableDefaultUI;
+
+  /// ** Web only **
+  /// Enables/disables zoom on double click. Disabled by default.
+  final bool? disableDoubleClickZoom;
+
+  /// ** Web only **
+  /// If true, the close button is displayed. Disabled by default.
+  final bool? enableCloseButton;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the fullscreen control.
+  final bool? fullscreenControl;
+
+  /// ** Web only **
+  /// The display position for the fullscreen control.
+  final ControlPosition? fullscreenControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the links control.
+  final bool? linksControl;
+
+  /// ** Web only **
+  /// Whether motion tracking is on or off.
+  /// Enabled by default when the motion tracking control is present,so that the POV (point of view) follows the orientation of the device.
+  /// This is primarily applicable to mobile devices.
+  /// If motionTracking is set to false while motionTrackingControl is enabled,
+  /// the motion tracking control appears but tracking is off. The user can tap the motion tracking control to toggle this option.
+  final bool? motionTracking;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the motion tracking control.
+  /// Enabled by default when the device has motion data, so that the control appears on the map.
+  /// This is primarily applicable to mobile devices.
+  final bool? motionTrackingControl;
+
+  /// ** Web only **
+  /// The display position for the motion tracking control.
+  final ControlPosition? motionTrackingControlOptions;
+
+  /// ** Web only **
+  /// If false, disables scrollwheel zooming in Street View. The scrollwheel is enabled by default.
+  final bool? scrollwheel;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the pan control.
+  final bool? panControl;
+
+  /// ** Web only **
+  /// The display position for the pan control.
+  final ControlPosition? panControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the zoom control.
+  final bool? zoomControl;
+
+  /// ** Web only **
+  /// The display position for the zoom control.
+  final ControlPosition? zoomControlOptions;
+
+  /// ** Web only **
+  /// If true, the Street View panorama is visible on load.
+  final bool? visible;
 
   /// Which gestures should be consumed by the streetView.
   ///
@@ -113,13 +212,17 @@ class FlutterGoogleStreetView extends StatefulWidget {
   State<StatefulWidget> createState() {
     throw UnimplementedError();
   }
+
+  /// Notice input parameter may not support.
+  void _checkParam() {
+    throw UnimplementedError();
+  }
 }
 
 class StreetViewState extends State<FlutterGoogleStreetView> {
   get _onStreetViewCreated => widget.onStreetViewCreated;
   final Completer<StreetViewController> _controller =
       Completer<StreetViewController>();
-  late StreetViewPanoramaOptions _streetViewOptions;
   static int webViewId = -1;
 
   StreetViewPanoramaOptions get optionFromWidget => throw UnimplementedError();

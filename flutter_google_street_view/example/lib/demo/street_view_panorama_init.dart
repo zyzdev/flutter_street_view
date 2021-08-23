@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
-import 'package:flutter_google_street_view_example/const/const.dart';
 
 class StreetViewPanoramaInitDemo extends StatelessWidget {
   @override
@@ -24,8 +23,8 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  * choice one of initPos or initPanoId
                  * do not feed param to both of them, or you should get assert error
                  */
-                initPos: SAN_FRAN,
-                //initPos: LatLng(25.0780892, 121.5753234),
+                //initPos: SAN_FRAN,
+                initPos: LatLng(25.0780892, 121.5753234),
                 //initPanoId: SANTORINI,
 
                 /**
@@ -44,13 +43,13 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  *  It is worked while you set initPos or initPanoId.
                  *  initTilt can set default tilt of camera.
                  */
-                initTilt: 30,
+                //initTilt: 30,
 
                 /**
                  *  It is worked while you set initPos or initPanoId.
                  *  initZoom can set default zoom of camera.
                  */
-                initZoom: 1.5,
+                //initZoom: 1.5,
 
                 /**
                  *  iOS Only
@@ -60,6 +59,7 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                 //initFov: 120,
 
                 /**
+                 *  Web not support
                  *  Set street view can panning gestures or not.
                  *  default setting is true
                  */
@@ -69,30 +69,47 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  *  Set street view shows street name or not.
                  *  default setting is true
                  */
-                //streetNamesEnabled: false,
+                //streetNamesEnabled: true,
 
                 /**
                  *  Set street view can allow user move to other panorama or not.
                  *  default setting is true
                  */
-                //userNavigationEnabled: false,
+                //userNavigationEnabled: true,
 
                 /**
+                 *  Web not support
                  *  Set street view can zoom gestures or not.
                  *  default setting is true
                  */
-                //zoomGesturesEnabled: false,
+                zoomGesturesEnabled: false,
+
+                // Web only
+                //addressControl: false,
+                //addressControlOptions: ControlPosition.bottom_center,
+                //enableCloseButton: false,
+                //fullscreenControl: false,
+                //fullscreenControlOptions: ControlPosition.bottom_center,
+                //linksControl: false,
+                //scrollwheel: false,
+                //panControl: false,
+                //panControlOptions: ControlPosition.bottom_center,
+                //zoomControl: false,
+                //zoomControlOptions: ControlPosition.bottom_center,
+                //visible: false,
+                //onCloseClickListener: () {},
+                // Web only
 
                 /**
                  *  To control street view after street view was initialized.
                  *  You should set [StreetViewCreatedCallback] to onStreetViewCreated.
-                 *  And you can using [StreetViewController] object(controller) to control street view.
+                 *  And you can using [controller] to control street view.
                  */
-                onStreetViewCreated: (controller) async {
-                  controller.animateTo(
-                      duration: 50,
+                onStreetViewCreated: (StreetViewController controller) async {
+                  /*controller.animateTo(
+                      duration: 750,
                       camera: StreetViewPanoramaCamera(
-                          bearing: 15, tilt: 10, zoom: 3));
+                          bearing: 90, tilt: 30, zoom: 3));*/
                 },
               ),
             ],

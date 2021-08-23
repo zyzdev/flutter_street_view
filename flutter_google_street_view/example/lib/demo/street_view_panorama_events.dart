@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
+import 'package:kotlin_scope_function/kotlin_scope_function.dart';
 
 class StreetViewPanoramaEventsDemo extends StatefulWidget {
   StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
@@ -52,7 +51,7 @@ class _StreetViewPanoramaEventsDemoState
                 onCameraChangeListener: (camera) {
                   setState(() {
                     _onCameraChangeListenerInfo =
-                        "Camera Change:\nbearing: ${camera.bearing!.toStringAsFixed(2)}, tilt: ${camera.tilt!.toStringAsFixed(2)}, zoom: ${camera.zoom!.toStringAsFixed(2)}${Platform.isIOS ? ", fov: ${camera.fov?.toStringAsFixed(2)}" : ""}";
+                        "Camera Change:\nbearing: ${camera.bearing?.toStringAsFixed(2)}, tilt: ${camera.tilt?.toStringAsFixed(2)}, zoom: ${camera.zoom?.toStringAsFixed(2)} fov: ${camera.fov?.toStringAsFixed(2)}}";
                   });
                 },
                 onPanoramaChangeListener: (location, e) {
@@ -62,20 +61,30 @@ class _StreetViewPanoramaEventsDemoState
                         : "Pano Change:$e";
                   });
                 },
-                onPanoramaClickListener: (orientation, point) {
-                  _onPanoramaClickListenerCnt++;
-                  setState(() {
-                    _onPanoramaClickListenerInfo =
-                        "onClick:\ncnt:$_onPanoramaClickListenerCnt\norientation:[tilt:${orientation.tilt}, bearing:${orientation.bearing}]\npoint:[x:${point.x}, y:${point.y}]";
-                  });
-                },
-                onPanoramaLongClickListener: (orientation, point) {
-                  _onPanoramaLongClickListenerCnt++;
-                  setState(() {
-                    _onPanoramaLongClickListenerInfo =
-                        "onLongClick:\ncnt:$_onPanoramaLongClickListenerCnt\norientation:[tilt:${orientation.tilt}, bearing:${orientation.bearing}]\npoint:[x:${point.x}, y:${point.y}]";
-                  });
-                },
+                onPanoramaClickListener: kIsWeb
+                    ? null
+                    : (orientation, point) {
+                        _onPanoramaClickListenerCnt++;
+                        setState(() {
+                          _onPanoramaClickListenerInfo =
+                              "onClick:\ncnt:$_onPanoramaClickListenerCnt\norientation:[tilt:${orientation.tilt}, bearing:${orientation.bearing}]\npoint:[x:${point.x}, y:${point.y}]";
+                        });
+                      },
+                onPanoramaLongClickListener: kIsWeb
+                    ? null
+                    : (orientation, point) {
+                        _onPanoramaLongClickListenerCnt++;
+                        setState(() {
+                          _onPanoramaLongClickListenerInfo =
+                              "onLongClick:\ncnt:$_onPanoramaLongClickListenerCnt\norientation:[tilt:${orientation.tilt}, bearing:${orientation.bearing}]\npoint:[x:${point.x}, y:${point.y}]";
+                        });
+                      },
+                onCloseClickListener: !kIsWeb
+                    ? null
+                    : () {
+                        print("Receive onCloseClickListener event!");
+                        Navigator.pop(context);
+                      },
               ),
               if (_controller != null)
                 Container(
@@ -96,11 +105,12 @@ class _StreetViewPanoramaEventsDemoState
                           SizedBox(
                             height: 8,
                           ),
-                          Text(_onPanoramaClickListenerInfo),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(_onPanoramaLongClickListenerInfo)
+                          if (!kIsWeb) Text(_onPanoramaClickListenerInfo),
+                          if (!kIsWeb)
+                            SizedBox(
+                              height: 8,
+                            ),
+                          if (!kIsWeb) Text(_onPanoramaLongClickListenerInfo)
                         ],
                       ),
                     ),

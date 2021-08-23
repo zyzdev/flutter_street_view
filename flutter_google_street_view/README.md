@@ -1,7 +1,10 @@
 # flutter_google_street_view
 
-A Flutter widget plugin to provide [google street view](https://developers.google.com/maps/documentation/android-sdk/streetview) `android only`.
+A Flutter widget plugin to provide google street view. ([Web][web], [Android][android], [iOS][ios])
 
+[web]:https://developers.google.com/maps/documentation/javascript/streetview#StreetViewPanoramas
+[android]:https://developers.google.com/maps/documentation/android-sdk/streetview
+[ios]:https://developers.google.com/maps/documentation/ios-sdk/streetview
 ## Getting Started
 
 * Get an API key at <https://cloud.google.com/maps-platform/>.
@@ -16,6 +19,18 @@ A Flutter widget plugin to provide [google street view](https://developers.googl
   * Make sure the APIs you enabled are under the "Enabled APIs" section.
 
 For more details, see [Getting started with Google Maps Platform](https://developers.google.com/maps/gmp-get-started).
+
+### Web
+
+Specify your API key in the `web/index.html`:
+
+```html
+<head>
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+
+</head>
+```
 
 ### Android
 
@@ -81,7 +96,7 @@ The code shown below is how to init `FlutterGoogleStreetView`, and you can find 
 
 Before you run `example`, follow [Getting Started](#getting-started) to specify your API key first!
 
-```
+```dart
 class StreetViewPanoramaInitDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -104,8 +119,9 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  * choice one of initPos or initPanoId
                  * do not feed param to both of them, or you should get assert error
                  */
-                initPos: LatLng(37.769263, -122.450727),
-                //initPanoId: "WddsUw1geEoAAAQIt9RnsQ",
+                //initPos: SAN_FRAN,
+                initPos: LatLng(25.0780892, 121.5753234),
+                //initPanoId: SANTORINI,
 
                 /**
                  *  It is worked while you set initPos or initPanoId.
@@ -123,22 +139,23 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  *  It is worked while you set initPos or initPanoId.
                  *  initTilt can set default tilt of camera.
                  */
-                initTilt: 30,
+                //initTilt: 30,
 
                 /**
                  *  It is worked while you set initPos or initPanoId.
                  *  initZoom can set default zoom of camera.
                  */
-                initZoom: 1.5,
-                
+                //initZoom: 1.5,
+
                 /**
                  *  iOS Only
                  *  It is worked while you set initPos or initPanoId.
                  *  initFov can set default fov of camera.
                  */
                 //initFov: 120,
-                
+
                 /**
+                 *  Web not support
                  *  Set street view can panning gestures or not.
                  *  default setting is true
                  */
@@ -148,30 +165,47 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
                  *  Set street view shows street name or not.
                  *  default setting is true
                  */
-                //streetNamesEnabled: false,
+                //streetNamesEnabled: true,
 
                 /**
                  *  Set street view can allow user move to other panorama or not.
                  *  default setting is true
                  */
-                //userNavigationEnabled: false,
+                //userNavigationEnabled: true,
 
                 /**
+                 *  Web not support
                  *  Set street view can zoom gestures or not.
                  *  default setting is true
                  */
-                //zoomGesturesEnabled: false,
+                zoomGesturesEnabled: false,
+
+                // Web only
+                //addressControl: false,
+                //addressControlOptions: ControlPosition.bottom_center,
+                //enableCloseButton: false,
+                //fullscreenControl: false,
+                //fullscreenControlOptions: ControlPosition.bottom_center,
+                //linksControl: false,
+                //scrollwheel: false,
+                //panControl: false,
+                //panControlOptions: ControlPosition.bottom_center,
+                //zoomControl: false,
+                //zoomControlOptions: ControlPosition.bottom_center,
+                //visible: false,
+                //onCloseClickListener: () {},
+                // Web only
 
                 /**
                  *  To control street view after street view was initialized.
                  *  You should set [StreetViewCreatedCallback] to onStreetViewCreated.
-                 *  And you can using [StreetViewController] object(controller) to control street view.
+                 *  And you can using [controller] to control street view.
                  */
-                onStreetViewCreated: (controller) async {
-                  controller.animateTo(
-                      duration: 50,
+                onStreetViewCreated: (StreetViewController controller) async {
+                  /*controller.animateTo(
+                      duration: 750,
                       camera: StreetViewPanoramaCamera(
-                          bearing: 15, tilt: 10, zoom: 3));
+                          bearing: 90, tilt: 30, zoom: 3));*/
                 },
               ),
             ],
