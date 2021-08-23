@@ -66,3 +66,10 @@ class PanoramaClickData {
 
   PanoramaClickData(this.orientation, this.point);
 }
+
+class CloseClickEvent extends StreetViewEvent {
+  /// Build a CameraMoveStarted Event triggered from the map represented by `mapId`.
+  ///
+  /// The `value` of this event is a [PanoramaClickData] object with the position was long clicked by user.
+  CloseClickEvent(int viewId) : super(viewId, null);
+}

@@ -20,11 +20,6 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return _channels[viewId];
   }
 
-  static StreamController<Map<String, dynamic>> createViewArgStream =
-      StreamController();
-
-  static StreamController<int> channelReadyStream = StreamController();
-
   /// Initializes the platform interface with [id].
   ///
   /// This method is called when the plugin is first initialized.
@@ -57,8 +52,6 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   @override
   void dispose(int viewId) {
     // Noop!
-    createViewArgStream.close();
-    channelReadyStream.close();
     _streetViewEventStreamController.close();
   }
 
@@ -86,22 +79,6 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return StreetViewPanoramaCamera.fromMap(
         await channel(viewId)!.invokeMethod("streetView#getPanoramaCamera"));
   }
-
-/*  Future<bool> isPanningGesturesEnabled(int viewId) {
-    return channel(viewId).invokeMethod("streetView#isPanningGesturesEnabled");
-  }
-
-  Future<bool> isStreetNamesEnabled(int viewId) {
-    return channel(viewId).invokeMethod("streetView#isStreetNamesEnabled");
-  }
-
-  Future<bool> isUserNavigationEnabled(int viewId) {
-    return channel(viewId).invokeMethod("streetView#isUserNavigationEnabled");
-  }
-
-  Future<bool> isZoomGesturesEnabled(int viewId) {
-    return channel(viewId).invokeMethod("streetView#isZoomGesturesEnabled");
-  }*/
 
   /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
   @override
@@ -143,8 +120,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setPanningGesturesEnabled(int viewId, {bool? enable}) {
-    assert(enable != null);
+  Future<void> setPanningGesturesEnabled(int viewId, bool enable) {
     return channel(viewId)!
         .invokeMethod("streetView#setPanningGesturesEnabled", enable);
   }
@@ -153,8 +129,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setStreetNamesEnabled(int viewId, {bool? enable}) {
-    assert(enable != null);
+  Future<void> setStreetNamesEnabled(int viewId, bool enable) {
     return channel(viewId)!
         .invokeMethod("streetView#setStreetNamesEnabled", enable);
   }
@@ -163,8 +138,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setUserNavigationEnabled(int viewId, {bool? enable}) {
-    assert(enable != null);
+  Future<void> setUserNavigationEnabled(int viewId, bool enable) {
     return channel(viewId)!
         .invokeMethod("streetView#setUserNavigationEnabled", enable);
   }
@@ -173,10 +147,175 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   ///
   /// Return [Future] while the change has been made on the platform side.
   @override
-  Future<void> setZoomGesturesEnabled(int viewId, {bool? enable}) {
-    assert(enable != null);
+  Future<void> setZoomGesturesEnabled(int viewId, bool enable) {
     return channel(viewId)!
         .invokeMethod("streetView#setZoomGesturesEnabled", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using address control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setAddressControl(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setAddressControl", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets address control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setAddressControlOptions(int viewId, ControlPosition pos) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setAddressControlOptions", pos.toJson());
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using all default UI or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setDisableDefaultUI(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setDisableDefaultUI", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using zoom on double click or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setDisableDoubleClickZoom(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setDisableDoubleClickZoom", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using close button or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setEnableCloseButton(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setEnableCloseButton", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using fullscreen control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setFullscreenControl(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setFullscreenControl", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets fullscreen control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setFullscreenControlOptions(int viewId, ControlPosition pos) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setFullscreenControlOptions", pos.toJson());
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using link control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setLinksControl(int viewId, bool enable) {
+    return channel(viewId)!.invokeMethod("streetView#setLinksControl", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using motion tracking or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setMotionTracking(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setMotionTracking", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using motion tracking control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setMotionTrackingControl(int viewId, bool enable) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setMotionTrackingControl", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets motion tracking control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setMotionTrackingControlOptions(
+      int viewId, ControlPosition pos) {
+    return channel(viewId)!.invokeMethod(
+        "streetView#setMotionTrackingControlOptions", pos.toJson());
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using pan control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setPanControl(int viewId, bool enable) {
+    return channel(viewId)!.invokeMethod("streetView#setPanControl", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets pan control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setPanControlOptions(int viewId, ControlPosition pos) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setPanControlOptions", pos.toJson());
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using scrollwheel zooming or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setScrollwheel(int viewId, bool enable) {
+    return channel(viewId)!.invokeMethod("streetView#setScrollwheel", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using zoom control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setZoomControl(int viewId, bool enable) {
+    return channel(viewId)!.invokeMethod("streetView#setZoomControl", enable);
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets zoom control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setZoomControlOptions(int viewId, ControlPosition pos) {
+    return channel(viewId)!
+        .invokeMethod("streetView#setZoomControlOptions", pos.toJson());
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view is visible.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setVisible(int viewId, bool enable) {
+    return channel(viewId)!.invokeMethod("streetView#setVisible", enable);
   }
 
   /// The Camera was changed.
@@ -203,6 +342,12 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return _events(viewId).whereType<PanoramaLongClickEvent>();
   }
 
+  /// ** Web only **
+  /// The Close was clicked.
+  Stream<CloseClickEvent> onCloseClick({required int viewId}) {
+    return _events(viewId).whereType<CloseClickEvent>();
+  }
+
   /// Updates configuration options of the street view user interface.
   ///
   /// Change listeners are notified once the update has been made on the
@@ -219,7 +364,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call, int viewId) async {
-    print("MethodChannelStreetViewFlutter:" + call.method);
+    //print("MethodChannelStreetViewFlutter, ${call.method}, viewId:$viewId");
     switch (call.method) {
       case 'log#onSend':
         print(call.arguments);
@@ -260,6 +405,10 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         _streetViewEventStreamController.add(PanoramaLongClickEvent(
             viewId, PanoramaClickData(orientation, point)));
         break;
+      case 'close#onClick':
+        //print("close#onClick:${call.arguments}");
+        _streetViewEventStreamController.add(CloseClickEvent(viewId));
+        break;
       default:
         throw MissingPluginException();
     }
@@ -291,11 +440,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
           creationParams: creationParams,
           gestureRecognizers: gestureRecognizers,
           creationParamsCodec: const StandardMessageCodec());
-    } else if (kIsWeb) {
-      onPlatformViewCreated(viewId!);
-      return HtmlElementView(viewType: viewType);
     }
-    print("buildViewbuildView");
     return Text(
         '$defaultTargetPlatform is not yet supported by the maps plugin');
   }

@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Add Web support.
+
 ## 0.2.2
 
 * Add 'log#onSend' method call to print log from native side.

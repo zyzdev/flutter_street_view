@@ -10,7 +10,7 @@ import 'package:street_view_platform_interface/src/type/street_view_panorama_ori
 ///
 /// This is set at [FlutterGoogleStreetView.onCameraChangeListener].
 /// [camera], current panorama camera info.
-typedef void CameraChangeListener(StreetViewPanoramaCamera camera);
+typedef CameraChangeListener = void Function(StreetViewPanoramaCamera camera);
 
 /// Callback that receiving last panorama location and information near panoramas.
 ///
@@ -23,6 +23,7 @@ typedef void CameraChangeListener(StreetViewPanoramaCamera camera);
 typedef PanoramaChangeListener = void Function(
     StreetViewPanoramaLocation? location, Exception? e);
 
+/// ** Web not support **
 /// Callback that receiving last tap event on current panorama.
 ///
 /// The callback receive [StreetViewPanoramaOrientation] & [Point]while the panorama of the platform
@@ -35,6 +36,7 @@ typedef PanoramaChangeListener = void Function(
 typedef PanoramaClickListener = void Function(
     StreetViewPanoramaOrientation orientation, Point point);
 
+/// ** Web not support **
 /// Callback that receiving last long tap event on current panorama.
 ///
 /// The callback receive [StreetViewPanoramaOrientation] while the panorama of the platform
@@ -46,3 +48,9 @@ typedef PanoramaClickListener = void Function(
 /// [point], The point on the screen where the user tapped.
 typedef PanoramaLongClickListener = void Function(
     StreetViewPanoramaOrientation orientation, Point point);
+
+/// ** Web only **
+/// Callback that receiving last close button on click event on current panorama.
+///
+/// This is set at [FlutterGoogleStreetView.onCloseClickListener].
+typedef CloseClickListener = void Function();

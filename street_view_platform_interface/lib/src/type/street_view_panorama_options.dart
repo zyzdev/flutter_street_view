@@ -34,6 +34,80 @@ class StreetViewPanoramaOptions {
   /// Sets initialization position of camera.
   final StreetViewPanoramaCamera? panoramaCamera;
 
+  /// ** Web only **
+  /// The enabled/disabled state of the address control.
+  final bool? addressControl;
+
+  /// ** Web only **
+  /// The display position for the address control.
+  final ControlPosition? addressControlOptions;
+
+  /// ** Web only **
+  /// Enables/disables all default UI.
+  final bool? disableDefaultUI;
+
+  /// ** Web only **
+  /// Enables/disables zoom on double click. Disabled by default.
+  final bool? disableDoubleClickZoom;
+
+  /// ** Web only **
+  /// If true, the close button is displayed. Disabled by default.
+  final bool? enableCloseButton;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the fullscreen control.
+  final bool? fullscreenControl;
+
+  /// ** Web only **
+  /// The display position for the fullscreen control.
+  final ControlPosition? fullscreenControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the links control.
+  final bool? linksControl;
+
+  /// ** Web only **
+  /// Whether motion tracking is on or off.
+  /// Enabled by default when the motion tracking control is present,so that the POV (point of view) follows the orientation of the device.
+  /// This is primarily applicable to mobile devices.
+  /// If motionTracking is set to false while motionTrackingControl is enabled,
+  /// the motion tracking control appears but tracking is off. The user can tap the motion tracking control to toggle this option.
+  final bool? motionTracking;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the motion tracking control.
+  /// Enabled by default when the device has motion data, so that the control appears on the map.
+  /// This is primarily applicable to mobile devices.
+  final bool? motionTrackingControl;
+
+  /// ** Web only **
+  /// The display position for the motion tracking control.
+  final ControlPosition? motionTrackingControlOptions;
+
+  /// ** Web only **
+  /// If false, disables scrollwheel zooming in Street View. The scrollwheel is enabled by default.
+  final bool? scrollwheel;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the pan control.
+  final bool? panControl;
+
+  /// ** Web only **
+  /// The display position for the pan control.
+  final ControlPosition? panControlOptions;
+
+  /// ** Web only **
+  /// The enabled/disabled state of the zoom control.
+  final bool? zoomControl;
+
+  /// ** Web only **
+  /// The display position for the zoom control.
+  final ControlPosition? zoomControlOptions;
+
+  /// ** Web only **
+  /// If true, the Street View panorama is visible on load.
+  final bool? visible;
+
   StreetViewPanoramaOptions(
       {this.panoId,
       this.position,
@@ -43,7 +117,28 @@ class StreetViewPanoramaOptions {
       this.streetNamesEnabled,
       this.userNavigationEnabled,
       this.zoomGesturesEnabled,
-      this.panoramaCamera})
+      this.panoramaCamera,
+
+      // Web only //
+      this.addressControl,
+      this.addressControlOptions,
+      this.disableDefaultUI,
+      this.disableDoubleClickZoom,
+      this.enableCloseButton,
+      this.fullscreenControl,
+      this.fullscreenControlOptions,
+      this.linksControl,
+      this.motionTracking,
+      this.motionTrackingControl,
+      this.motionTrackingControlOptions,
+      this.scrollwheel,
+      this.panControl,
+      this.panControlOptions,
+      this.zoomControl,
+      this.zoomControlOptions,
+      this.visible
+      // Web only //
+      })
       : assert(panoId == null || position == null);
 
   /// Create [StreetViewPanoramaOptions] and put data by [map].
@@ -74,6 +169,29 @@ class StreetViewPanoramaOptions {
     putToMapIfNonNull(map, 'userNavigationEnabled', userNavigationEnabled);
     putToMapIfNonNull(map, 'zoomGesturesEnabled', zoomGesturesEnabled);
     map.addAll(panoramaCamera!.toMap());
+
+    // Web only //
+    putToMapIfNonNull(map, 'addressControl', addressControl);
+    putToMapIfNonNull(
+        map, 'addressControlOptions', addressControlOptions?.toJson());
+    putToMapIfNonNull(map, 'disableDefaultUI', disableDefaultUI);
+    putToMapIfNonNull(map, 'disableDoubleClickZoom', disableDoubleClickZoom);
+    putToMapIfNonNull(map, 'enableCloseButton', enableCloseButton);
+    putToMapIfNonNull(map, 'fullscreenControl', fullscreenControl);
+    putToMapIfNonNull(
+        map, 'fullscreenControlOptions', fullscreenControlOptions?.toJson());
+    putToMapIfNonNull(map, 'linksControl', linksControl);
+    putToMapIfNonNull(map, 'motionTracking', motionTracking);
+    putToMapIfNonNull(map, 'motionTrackingControl', motionTrackingControl);
+    putToMapIfNonNull(map, 'motionTrackingControlOptions',
+        motionTrackingControlOptions?.toJson());
+    putToMapIfNonNull(map, 'scrollwheel', scrollwheel);
+    putToMapIfNonNull(map, 'panControl', panControl);
+    putToMapIfNonNull(map, 'panControlOptions', panControlOptions?.toJson());
+    putToMapIfNonNull(map, 'zoomControl', zoomControl);
+    putToMapIfNonNull(map, 'zoomControlOptions', zoomControlOptions?.toJson());
+    putToMapIfNonNull(map, 'visible', visible);
+    // Web only //
     return map;
   }
 

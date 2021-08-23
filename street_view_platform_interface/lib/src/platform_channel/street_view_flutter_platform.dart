@@ -52,26 +52,6 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
     throw UnimplementedError('getPanoramaCamera() has not been implemented.');
   }
 
-/*  bool isPanningGesturesEnabled(int viewId) {
-    throw UnimplementedError(
-        'isPanningGesturesEnabled() has not been implemented.');
-  }
-
-  bool isStreetNamesEnabled(int viewId) {
-    throw UnimplementedError(
-        'isStreetNamesEnabled() has not been implemented.');
-  }
-
-  bool isUserNavigationEnabled(int viewId) {
-    throw UnimplementedError(
-        'isUserNavigationEnabled() has not been implemented.');
-  }
-
-  bool isZoomGesturesEnabled(int viewId) {
-    throw UnimplementedError(
-        'isZoomGesturesEnabled() has not been implemented.');
-  }*/
-
   /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
   Future<Point> orientationToPoint(int viewId,
       {required StreetViewPanoramaOrientation orientation}) {
@@ -98,7 +78,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to allow using panning gesture or not.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setPanningGesturesEnabled(int viewId, {bool? enable}) {
+  Future<void> setPanningGesturesEnabled(int viewId, bool enable) {
     throw UnimplementedError(
         'setPanningGesturesEnabled() has not been implemented.');
   }
@@ -106,7 +86,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to display street name or not.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setStreetNamesEnabled(int viewId, {bool? enable}) {
+  Future<void> setStreetNamesEnabled(int viewId, bool enable) {
     throw UnimplementedError(
         'setStreetNamesEnabled() has not been implemented.');
   }
@@ -114,7 +94,7 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to allow moving to another panorama.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setUserNavigationEnabled(int viewId, {bool? enable}) {
+  Future<void> setUserNavigationEnabled(int viewId, bool enable) {
     throw UnimplementedError(
         'setUserNavigationEnabled() has not been implemented.');
   }
@@ -122,9 +102,172 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Sets street view to allow using zoom gestures or not.
   ///
   /// Return [Future] while the change has been made on the platform side.
-  Future<void> setZoomGesturesEnabled(int viewId, {bool? enable}) {
+  Future<void> setZoomGesturesEnabled(int viewId, bool enable) {
     throw UnimplementedError(
         'setZoomGesturesEnabled() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using address control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setAddressControl(int viewId, bool enable) {
+    throw UnimplementedError('setAddressControl() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets address control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setAddressControlOptions(int viewId, ControlPosition pos) {
+    throw UnimplementedError(
+        'setAddressControlOptions() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using all default UI or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setDisableDefaultUI(int viewId, bool enable) {
+    throw UnimplementedError('setDisableDefaultUI() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using zoom on double click or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setDisableDoubleClickZoom(int viewId, bool enable) {
+    throw UnimplementedError(
+        'setDisableDoubleClickZoom() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using close button or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setEnableCloseButton(int viewId, bool enable) {
+    throw UnimplementedError(
+        'setEnableCloseButton() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using fullscreen control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setFullscreenControl(int viewId, bool enable) {
+    throw UnimplementedError(
+        'setFullscreenControl() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets fullscreen control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setFullscreenControlOptions(int viewId, ControlPosition pos) {
+    throw UnimplementedError(
+        'setFullControlOptions() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using link control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setLinksControl(int viewId, bool enable) {
+    throw UnimplementedError('setLinksControl() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using motion tracking or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setMotionTracking(int viewId, bool enable) {
+    throw UnimplementedError('setMotionTracking() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using motion tracking control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setMotionTrackingControl(int viewId, bool enable) {
+    throw UnimplementedError(
+        'setMotionTrackingControl() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets motion tracking control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setMotionTrackingControlOptions(
+      int viewId, ControlPosition pos) {
+    throw UnimplementedError(
+        'setMotionTrackingControlOptions() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using pan control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setPanControl(int viewId, bool enable) {
+    throw UnimplementedError('setPanControl() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets pan control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setPanControlOptions(int viewId, ControlPosition pos) {
+    throw UnimplementedError(
+        'setPanControlOptions() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using scrollwheel zooming or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setScrollwheel(int viewId, bool enable) {
+    throw UnimplementedError('setScrollwheel() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view to allow using zoom control or not.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setZoomControl(int viewId, bool enable) {
+    throw UnimplementedError('setZoomControl() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets zoom control display position.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setZoomControlOptions(int viewId, ControlPosition pos) {
+    throw UnimplementedError(
+        'setZoomControlOptions() has not been implemented.');
+  }
+
+  /// ** Web only **
+  ///
+  /// Sets street view is visible.
+  ///
+  /// Return [Future] while the change has been made on the platform side.
+  Future<void> setVisible(int viewId, bool enable) {
+    throw UnimplementedError('setVisible() has not been implemented.');
   }
 
   /// Dispose of whatever resources the `mapId` is holding on to.
@@ -152,6 +295,12 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// The Panorama was long clicked.
   Stream<PanoramaLongClickEvent> onPanoramaLongClick({required int viewId}) {
     throw UnimplementedError('onPanoramaLongClick() has not been implemented.');
+  }
+
+  /// ** Web only **
+  /// The Close was clicked.
+  Stream<CloseClickEvent> onCloseClick({required int viewId}) {
+    throw UnimplementedError('onCloseClick() has not been implemented.');
   }
 
   /// Updates configuration options of the street view user interface.
