@@ -1,4 +1,4 @@
-## 2.0.0-dev.1
+## 2.0.0
 
 * Add Web support.
 * bugs fix.
