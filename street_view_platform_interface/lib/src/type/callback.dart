@@ -23,8 +23,7 @@ typedef CameraChangeListener = void Function(StreetViewPanoramaCamera camera);
 typedef PanoramaChangeListener = void Function(
     StreetViewPanoramaLocation? location, Exception? e);
 
-/// ** Web not support **
-/// Callback that receiving last tap event on current panorama.
+/// Callback that receiving last tap event on current panorama. `Web not support`
 ///
 /// The callback receive [StreetViewPanoramaOrientation] & [Point]while the panorama of the platform
 /// street view was tapped.
@@ -36,8 +35,7 @@ typedef PanoramaChangeListener = void Function(
 typedef PanoramaClickListener = void Function(
     StreetViewPanoramaOrientation orientation, Point point);
 
-/// ** Web not support **
-/// Callback that receiving last long tap event on current panorama.
+/// Callback that receiving last long tap event on current panorama. `Web not support`
 ///
 /// The callback receive [StreetViewPanoramaOrientation] while the panorama of the platform
 /// street view was long tapped.
@@ -49,8 +47,7 @@ typedef PanoramaClickListener = void Function(
 typedef PanoramaLongClickListener = void Function(
     StreetViewPanoramaOrientation orientation, Point point);
 
-/// ** Web only **
-/// Callback that receiving last close button on click event on current panorama.
+/// Callback that receiving last close button on click event on current panorama. `Web only`
 ///
 /// This is set at [FlutterGoogleStreetView.onCloseClickListener].
 typedef CloseClickListener = void Function();

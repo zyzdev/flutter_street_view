@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:street_view_platform_interface/src/events/street_view_event.dart';
 import 'package:street_view_platform_interface/src/platform_channel/street_view_flutter_platform.dart';
 import 'package:street_view_platform_interface/src/type/camera.dart';
+import 'package:street_view_platform_interface/src/type/latLng.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
@@ -152,9 +152,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setZoomGesturesEnabled", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using address control or not.
+  /// Sets street view to allow using address control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setAddressControl(int viewId, bool enable) {
@@ -162,9 +160,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setAddressControl", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets address control display position.
+  /// Sets address control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setAddressControlOptions(int viewId, ControlPosition pos) {
@@ -172,9 +168,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setAddressControlOptions", pos.toJson());
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using all default UI or not.
+  /// Sets street view to allow using all default UI or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setDisableDefaultUI(int viewId, bool enable) {
@@ -182,9 +176,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setDisableDefaultUI", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using zoom on double click or not.
+  /// Sets street view to allow using zoom on double click or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setDisableDoubleClickZoom(int viewId, bool enable) {
@@ -192,9 +184,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setDisableDoubleClickZoom", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using close button or not.
+  /// Sets street view to allow using close button or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setEnableCloseButton(int viewId, bool enable) {
@@ -202,9 +192,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setEnableCloseButton", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using fullscreen control or not.
+  /// Sets street view to allow using fullscreen control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setFullscreenControl(int viewId, bool enable) {
@@ -212,9 +200,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setFullscreenControl", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets fullscreen control display position.
+  /// Sets fullscreen control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setFullscreenControlOptions(int viewId, ControlPosition pos) {
@@ -222,18 +208,14 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setFullscreenControlOptions", pos.toJson());
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using link control or not.
+  /// Sets street view to allow using link control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setLinksControl(int viewId, bool enable) {
     return channel(viewId)!.invokeMethod("streetView#setLinksControl", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using motion tracking or not.
+  /// Sets street view to allow using motion tracking or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setMotionTracking(int viewId, bool enable) {
@@ -241,9 +223,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setMotionTracking", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using motion tracking control or not.
+  /// Sets street view to allow using motion tracking control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setMotionTrackingControl(int viewId, bool enable) {
@@ -251,9 +231,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setMotionTrackingControl", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets motion tracking control display position.
+  /// Sets motion tracking control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setMotionTrackingControlOptions(
@@ -262,18 +240,14 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         "streetView#setMotionTrackingControlOptions", pos.toJson());
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using pan control or not.
+  /// Sets street view to allow using pan control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPanControl(int viewId, bool enable) {
     return channel(viewId)!.invokeMethod("streetView#setPanControl", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets pan control display position.
+  /// Sets pan control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPanControlOptions(int viewId, ControlPosition pos) {
@@ -281,27 +255,21 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setPanControlOptions", pos.toJson());
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using scrollwheel zooming or not.
+  /// Sets street view to allow using scrollwheel zooming or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setScrollwheel(int viewId, bool enable) {
     return channel(viewId)!.invokeMethod("streetView#setScrollwheel", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using zoom control or not.
+  /// Sets street view to allow using zoom control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setZoomControl(int viewId, bool enable) {
     return channel(viewId)!.invokeMethod("streetView#setZoomControl", enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets zoom control display position.
+  /// Sets zoom control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setZoomControlOptions(int viewId, ControlPosition pos) {
@@ -309,9 +277,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
         .invokeMethod("streetView#setZoomControlOptions", pos.toJson());
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view is visible.
+  /// Sets street view is visible. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setVisible(int viewId, bool enable) {
@@ -342,8 +308,7 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return _events(viewId).whereType<PanoramaLongClickEvent>();
   }
 
-  /// ** Web only **
-  /// The Close was clicked.
+  /// The Close was clicked. `Web only`
   Stream<CloseClickEvent> onCloseClick({required int viewId}) {
     return _events(viewId).whereType<CloseClickEvent>();
   }

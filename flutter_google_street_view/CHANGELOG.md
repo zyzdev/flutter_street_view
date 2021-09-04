@@ -1,3 +1,7 @@
+## 2.0.1
+
+* fine tune API ref more clear.
+
 ## 2.0.0
 
 * Add Web support.

@@ -1,8 +1,8 @@
-import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:street_view_platform_interface/src/type/street_view_panorama_link.dart';
 import 'package:street_view_platform_interface/src/type/util/misc.dart';
+import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
-import '../../street_view_platform_interface.dart';
+import 'latLng.dart';
 
 class StreetViewCameraPosition {
   StreetViewCameraPosition(
@@ -50,8 +50,7 @@ class StreetViewPanoramaCamera {
   /// for [iOS] https://developers.google.com/maps/documentation/ios-sdk/reference/interface_g_m_s_panorama_camera#adb2250d57b30987cd2d13e52fa03833d
   final double? zoom;
 
-  /// **iOS only**
-  /// The field of view (FOV) encompassed by the larger dimension (width or height) of the view in degrees at zoom 1.
+  /// The field of view (FOV) encompassed by the larger dimension (width or height) of the view in degrees at zoom 1. `iOS only`
   /// This is clamped to the range [1, 160] degrees, and has a default value of 90.
   /// more info see, [iOS] https://developers.google.com/maps/documentation/ios-sdk/reference/interface_g_m_s_panorama_camera#a64dcd1302c83a54f2d068cbb19ea5cef
   final double? fov;

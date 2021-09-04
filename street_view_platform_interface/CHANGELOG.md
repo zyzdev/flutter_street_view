@@ -1,3 +1,8 @@
+## 1.0.1
+
+* Remove dependency `google_maps_flutter_platform_interface`
+* Modify doc.
+
 ## 1.0.0
 
 * Add Web support.

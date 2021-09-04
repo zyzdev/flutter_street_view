@@ -1,8 +1,8 @@
-import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:street_view_platform_interface/src/type/camera.dart';
 import 'package:street_view_platform_interface/src/type/street_view_source.dart';
 
 import '../../street_view_platform_interface.dart';
+import 'latLng.dart';
 
 class StreetViewPanoramaOptions {
   /// Set initialization location by panorama ID.
@@ -34,110 +34,93 @@ class StreetViewPanoramaOptions {
   /// Sets initialization position of camera.
   final StreetViewPanoramaCamera? panoramaCamera;
 
-  /// ** Web only **
-  /// The enabled/disabled state of the address control.
+  /// The enabled/disabled state of the address control. `Web only`
   final bool? addressControl;
 
-  /// ** Web only **
-  /// The display position for the address control.
+  /// The display position for the address control. `Web only`
   final ControlPosition? addressControlOptions;
 
-  /// ** Web only **
-  /// Enables/disables all default UI.
+  /// Enables/disables all default UI. `Web only`
   final bool? disableDefaultUI;
 
-  /// ** Web only **
-  /// Enables/disables zoom on double click. Disabled by default.
+  /// Enables/disables zoom on double click. Disabled by default. `Web only`
   final bool? disableDoubleClickZoom;
 
-  /// ** Web only **
-  /// If true, the close button is displayed. Disabled by default.
+  /// If true, the close button is displayed. Disabled by default. `Web only`
   final bool? enableCloseButton;
 
-  /// ** Web only **
-  /// The enabled/disabled state of the fullscreen control.
+  /// The enabled/disabled state of the fullscreen control. `Web only`
   final bool? fullscreenControl;
 
-  /// ** Web only **
-  /// The display position for the fullscreen control.
+  /// The display position for the fullscreen control. `Web only`
   final ControlPosition? fullscreenControlOptions;
 
-  /// ** Web only **
-  /// The enabled/disabled state of the links control.
+  /// The enabled/disabled state of the links control. `Web only`
   final bool? linksControl;
 
-  /// ** Web only **
-  /// Whether motion tracking is on or off.
+  /// Whether motion tracking is on or off. `Web only`
   /// Enabled by default when the motion tracking control is present,so that the POV (point of view) follows the orientation of the device.
   /// This is primarily applicable to mobile devices.
   /// If motionTracking is set to false while motionTrackingControl is enabled,
   /// the motion tracking control appears but tracking is off. The user can tap the motion tracking control to toggle this option.
   final bool? motionTracking;
 
-  /// ** Web only **
-  /// The enabled/disabled state of the motion tracking control.
+  /// The enabled/disabled state of the motion tracking control. `Web only`
   /// Enabled by default when the device has motion data, so that the control appears on the map.
   /// This is primarily applicable to mobile devices.
   final bool? motionTrackingControl;
 
-  /// ** Web only **
-  /// The display position for the motion tracking control.
+  /// The display position for the motion tracking control. `Web only`
   final ControlPosition? motionTrackingControlOptions;
 
-  /// ** Web only **
-  /// If false, disables scrollwheel zooming in Street View. The scrollwheel is enabled by default.
+  /// If false, disables scrollwheel zooming in Street View. The scrollwheel is enabled by default. `Web only`
   final bool? scrollwheel;
 
-  /// ** Web only **
-  /// The enabled/disabled state of the pan control.
+  /// The enabled/disabled state of the pan control. `Web only`
   final bool? panControl;
 
-  /// ** Web only **
-  /// The display position for the pan control.
+  /// The display position for the pan control. `Web only`
   final ControlPosition? panControlOptions;
 
-  /// ** Web only **
-  /// The enabled/disabled state of the zoom control.
+  /// The enabled/disabled state of the zoom control. `Web only`
   final bool? zoomControl;
 
-  /// ** Web only **
-  /// The display position for the zoom control.
+  /// The display position for the zoom control. `Web only`
   final ControlPosition? zoomControlOptions;
 
-  /// ** Web only **
-  /// If true, the Street View panorama is visible on load.
+  /// If true, the Street View panorama is visible on load. `Web only`
   final bool? visible;
 
   StreetViewPanoramaOptions(
       {this.panoId,
-      this.position,
-      this.radius,
-      this.source,
-      this.panningGesturesEnabled,
-      this.streetNamesEnabled,
-      this.userNavigationEnabled,
-      this.zoomGesturesEnabled,
-      this.panoramaCamera,
+        this.position,
+        this.radius,
+        this.source,
+        this.panningGesturesEnabled,
+        this.streetNamesEnabled,
+        this.userNavigationEnabled,
+        this.zoomGesturesEnabled,
+        this.panoramaCamera,
 
-      // Web only //
-      this.addressControl,
-      this.addressControlOptions,
-      this.disableDefaultUI,
-      this.disableDoubleClickZoom,
-      this.enableCloseButton,
-      this.fullscreenControl,
-      this.fullscreenControlOptions,
-      this.linksControl,
-      this.motionTracking,
-      this.motionTrackingControl,
-      this.motionTrackingControlOptions,
-      this.scrollwheel,
-      this.panControl,
-      this.panControlOptions,
-      this.zoomControl,
-      this.zoomControlOptions,
-      this.visible
-      // Web only //
+        // Web only //
+        this.addressControl,
+        this.addressControlOptions,
+        this.disableDefaultUI,
+        this.disableDoubleClickZoom,
+        this.enableCloseButton,
+        this.fullscreenControl,
+        this.fullscreenControlOptions,
+        this.linksControl,
+        this.motionTracking,
+        this.motionTrackingControl,
+        this.motionTrackingControlOptions,
+        this.scrollwheel,
+        this.panControl,
+        this.panControlOptions,
+        this.zoomControl,
+        this.zoomControlOptions,
+        this.visible
+        // Web only //
       })
       : assert(panoId == null || position == null);
 
@@ -215,17 +198,17 @@ class StreetViewPanoramaOptions {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StreetViewPanoramaOptions &&
-          runtimeType == other.runtimeType &&
-          panoId == other.panoId &&
-          position == other.position &&
-          radius == other.radius &&
-          source == other.source &&
-          panningGesturesEnabled == other.panningGesturesEnabled &&
-          streetNamesEnabled == other.streetNamesEnabled &&
-          userNavigationEnabled == other.userNavigationEnabled &&
-          zoomGesturesEnabled == other.zoomGesturesEnabled &&
-          panoramaCamera == other.panoramaCamera;
+          other is StreetViewPanoramaOptions &&
+              runtimeType == other.runtimeType &&
+              panoId == other.panoId &&
+              position == other.position &&
+              radius == other.radius &&
+              source == other.source &&
+              panningGesturesEnabled == other.panningGesturesEnabled &&
+              streetNamesEnabled == other.streetNamesEnabled &&
+              userNavigationEnabled == other.userNavigationEnabled &&
+              zoomGesturesEnabled == other.zoomGesturesEnabled &&
+              panoramaCamera == other.panoramaCamera;
 
   @override
   int get hashCode =>

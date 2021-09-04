@@ -1,12 +1,16 @@
-///   +----------------+
-///   + TL    TC    TR +
-///   + LT          RT +
-///   +                +
-///   + LC          RC +
-///   +                +
-///   + LB          RB +
-///   + BL    BC    BR +
-///   +----------------+
+///   ---------------
+///
+///   -　TL　TC　TR　-
+///
+///   -　LT　  　RT　-
+///
+///   -　LC　  　RC　-
+///
+///   -　LB　  　RB　-
+///
+///   -　BL　BC　BR　-
+///
+///   ---------------
 class ControlPosition {
   const ControlPosition._(this._json);
 

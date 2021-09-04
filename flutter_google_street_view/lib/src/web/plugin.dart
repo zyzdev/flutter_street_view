@@ -1,13 +1,4 @@
-import 'dart:async';
-import 'dart:html';
-import 'dart:math';
-
-import 'package:flutter_google_street_view/src/web/street_view.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_google_street_view/src/web/convert.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:google_maps/google_maps.dart' as gmaps;
-import 'package:kotlin_scope_function/kotlin_scope_function.dart';
+part of 'package:flutter_google_street_view/flutter_google_street_view_web.dart';
 
 class FlutterGoogleStreetViewPlugin {
   static bool _debug = false;
@@ -24,43 +15,43 @@ class FlutterGoogleStreetViewPlugin {
     final viewId = arg["viewId"];
     toStreetViewPanoramaOptions(arg).then((options) {
       Completer<bool> initDone = Completer();
-      streetViewPanorama = gmaps.StreetViewPanorama(div, options);
+      _streetViewPanorama = gmaps.StreetViewPanorama(div, options);
       if (options.visible != null && !options.visible!) {
         //visible set to false can't trigger onStatusChanged
         //just set initDone to true
         initDone.complete(true);
       } else {
         late StreamSubscription initWatchDog;
-        initWatchDog = streetViewPanorama.onStatusChanged.listen((event) {
+        initWatchDog = _streetViewPanorama.onStatusChanged.listen((event) {
           initWatchDog.cancel();
           initDone.complete(true);
         });
       }
       initDone.future.then((done) {
         _updateStatus(options);
-        streetViewInit = true;
-        setupListener();
+        _streetViewInit = true;
+        _setupListener();
         if (_viewReadyResult != null) {
           _viewReadyResult!.complete(_streetViewIsReady());
           _viewReadyResult = null;
         }
       });
     });
-    methodChannel = MethodChannel(
+    _methodChannel = MethodChannel(
       'flutter_google_street_view_$viewId',
       const StandardMethodCodec(),
       registrar,
     );
-    methodChannel.setMethodCallHandler(handleMethodCall);
+    _methodChannel.setMethodCallHandler(_handleMethodCall);
   }
 
   Type get _dTag => runtimeType;
-  late gmaps.StreetViewPanorama streetViewPanorama;
-  late MethodChannel methodChannel;
+  late gmaps.StreetViewPanorama _streetViewPanorama;
+  late MethodChannel _methodChannel;
   Timer? _animator;
   DateTime? _animatorRunTimestame;
 
-  bool streetViewInit = false;
+  bool _streetViewInit = false;
   Completer? _viewReadyResult;
   bool _isStreetNamesEnabled = true;
   bool _isUserNavigationEnabled = true;
@@ -81,31 +72,31 @@ class FlutterGoogleStreetViewPlugin {
     _animator?.cancel();
   }
 
-  void setupListener() {
-    streetViewPanorama.onStatusChanged.listen((event) {
-      methodChannel.invokeMethod("pano#onChange", _getLocation());
+  void _setupListener() {
+    _streetViewPanorama.onStatusChanged.listen((event) {
+      _methodChannel.invokeMethod("pano#onChange", _getLocation());
     });
-    streetViewPanorama.onPovChanged.listen((event) {
-      methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
+    _streetViewPanorama.onPovChanged.listen((event) {
+      _methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
     });
-    streetViewPanorama.onZoomChanged.listen((event) {
-      methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
+    _streetViewPanorama.onZoomChanged.listen((event) {
+      _methodChannel.invokeMethod("camera#onChange", _getPanoramaCamera());
     });
     //callback fun not match doc(https://developers.google.com/maps/documentation/javascript/reference/3.44/street-view#StreetViewPanorama-Events)
     //no param is no error.
-    streetViewPanorama.addListener("closeclick", () {
-      methodChannel.invokeMethod("close#onClick", true);
+    _streetViewPanorama.addListener("closeclick", () {
+      _methodChannel.invokeMethod("close#onClick", true);
     });
   }
 
-  Future<dynamic> handleMethodCall(MethodCall call) async {
+  Future<dynamic> _handleMethodCall(MethodCall call) async {
     final arg = call.arguments;
     debug("FlutterGoogleStreetViewPlugin:${call.method}, arg:$arg");
     Completer result = Completer();
 
     switch (call.method) {
       case 'streetView#waitForStreetView':
-        return streetViewInit
+        return _streetViewInit
             ? _streetViewIsReady()
             : result.let((it) {
                 _viewReadyResult = result;
@@ -192,7 +183,8 @@ class FlutterGoogleStreetViewPlugin {
   }
 }
 
-extension FlutterGoogleStreetViewPluginE on FlutterGoogleStreetViewPlugin {
+extension FlutterGoogleStreetViewPluginExtension
+    on FlutterGoogleStreetViewPlugin {
   void debug(String log) {
     if (FlutterGoogleStreetViewPlugin._debug) print("$_dTag: $log");
   }
@@ -246,10 +238,10 @@ extension FlutterGoogleStreetViewPluginE on FlutterGoogleStreetViewPlugin {
   gmaps.StreetViewPanoramaOptions _animateTo(Map arg,
       {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) {
     final _options = options ?? gmaps.StreetViewPanoramaOptions();
-    final currentPov = streetViewPanorama.pov!;
+    final currentPov = _streetViewPanorama.pov!;
     final bearingDef = currentPov.heading ?? 0;
     final tiltDef = currentPov.pitch ?? 0;
-    final zoomDef = streetViewPanorama.zoom ?? 0;
+    final zoomDef = _streetViewPanorama.zoom ?? 0;
     final bearingTarget = arg['bearing'] as double? ?? bearingDef;
     final tiltTarget = arg['tilt'] as double? ?? tiltDef;
     final zoomTarget = arg['zoom'] as double? ?? zoomDef;
@@ -281,8 +273,8 @@ extension FlutterGoogleStreetViewPluginE on FlutterGoogleStreetViewPlugin {
           final povTarget = gmaps.StreetViewPov()
             ..heading = bearingTarget
             ..pitch = tiltTarget;
-          streetViewPanorama.pov = povTarget;
-          streetViewPanorama.zoom = zoomTarget;
+          _streetViewPanorama.pov = povTarget;
+          _streetViewPanorama.zoom = zoomTarget;
 
           if (percent == 1) {
             timer.cancel();
@@ -295,10 +287,10 @@ extension FlutterGoogleStreetViewPluginE on FlutterGoogleStreetViewPlugin {
   }
 
   Map<String, dynamic> _getLocation() =>
-      streetViewPanoramaLocationToJson(streetViewPanorama);
+      streetViewPanoramaLocationToJson(_streetViewPanorama);
 
   Map<String, dynamic> _getPanoramaCamera() =>
-      streetViewPanoramaCameraToJson(streetViewPanorama);
+      streetViewPanoramaCameraToJson(_streetViewPanorama);
 
   Future<gmaps.StreetViewPanoramaOptions> _setPosition(Map arg,
       {gmaps.StreetViewPanoramaOptions? options, bool toApply = true}) async {
@@ -338,7 +330,7 @@ extension FlutterGoogleStreetViewPluginE on FlutterGoogleStreetViewPlugin {
             : pano != null
                 ? "Oops..., no valid panorama found with panoId:$pano, try to change `panoId`."
                 : "setPosition, catch unknown error.";
-        methodChannel.invokeMethod("pano#onChange", {"error": errorMsg});
+        _methodChannel.invokeMethod("pano#onChange", {"error": errorMsg});
       }
       check.complete(find);
     }
@@ -577,7 +569,7 @@ extension FlutterGoogleStreetViewPluginE on FlutterGoogleStreetViewPlugin {
   }
 
   void _apply(gmaps.StreetViewPanoramaOptions options) {
-    streetViewPanorama.options = options;
+    _streetViewPanorama.options = options;
     _updateStatus(options);
   }
 

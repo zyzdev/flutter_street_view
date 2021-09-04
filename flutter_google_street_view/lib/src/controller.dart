@@ -1,4 +1,10 @@
-part of 'package:flutter_google_street_view/flutter_google_street_view.dart';
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter_google_street_view/src/street_view_state.dart'
+    if (dart.library.html) 'web/street_view_state.dart'
+    if (dart.library.io) 'mobile/street_view_state.dart';
+import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 /// Callback method for when the streetView is ready to be used.
 ///
@@ -82,7 +88,8 @@ class StreetViewController {
 
   /// Animate camera to a given position over a specified duration.
   ///
-  /// [duration] unit is ms, ** Web not support **
+  /// [duration] unit is ms.
+  ///
   /// Return [Future] while the change has been started on the platform side.
   Future<void> animateTo(
       {required StreetViewPanoramaCamera camera, required int duration}) {
@@ -101,8 +108,7 @@ class StreetViewController {
     return _streetViewFlutterPlatform.getPanoramaCamera(viewId);
   }
 
-  /// ** Web not support [setPanningGesturesEnabled] and [isPanningGesturesEnabled] always be true **
-  /// Return street view is able to use panning gestures.
+  /// Return street view is able to use panning gestures. `Web not support`, [setPanningGesturesEnabled] and [isPanningGesturesEnabled] always be true
   bool get isPanningGesturesEnabled => _isPanningGesturesEnabled;
 
   /// Return street view is displaying street name or not.
@@ -114,21 +120,43 @@ class StreetViewController {
   /// Return street view is able to use zoom gestures.
   bool get isZoomGesturesEnabled => _isZoomGesturesEnabled;
 
+  /// Return street view is able to use address control. `Web only`
   bool get isAddressControl => _isAddressControl;
+
+  /// Return street view is able to use all default UI. `Web only`
   bool get isDisableDefaultUI => _isDisableDefaultUI;
+
+  /// Return street view is able to zoom on double click. `Web only`
   bool get isDisableDoubleClickZoom => _isDisableDoubleClickZoom;
+
+  /// Return street view is able to use close button. `Web only`
   bool get isEnableCloseButton => _isEnableCloseButton;
+
+  /// Return street view is able to use fullscreen control. `Web only`
   bool get isFullscreenControl => _isFullscreenControl;
+
+  /// Return street view is able to use links control. `Web only`
   bool get isLinksControl => _isLinksControl;
+
+  /// Return street view is able to use motion tracking. `Web only`
   bool get isMotionTracking => _isMotionTracking;
+
+  /// Return street view is able to use motion tracking control. `Web only`
   bool get isMotionTrackingControl => _isMotionTrackingControl;
+
+  /// Return street view is able to use scrollwheel zooming. `Web only`
   bool get isScrollwheel => _isScrollwheel;
+
+  /// Return street view is able to use pan control. `Web only`
   bool get isPanControl => _isPanControl;
+
+  /// Return street view is able to use zoom control. `Web only`
   bool get isZoomControl => _isZoomControl;
+
+  /// Return street view is visible on load. `Web only`
   bool get isVisible => _isVisible;
 
-  /// ** Web not support **
-  /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation].
+  /// Returns a screen location that corresponds to an orientation[StreetViewPanoramaOrientation]. `Web not support`
   Future<Point> orientationToPoint(StreetViewPanoramaOrientation orientation) {
     if (kIsWeb)
       throw UnsupportedError(
@@ -137,8 +165,7 @@ class StreetViewController {
         orientation: orientation);
   }
 
-  /// ** Web not support **
-  /// Return the orientation[StreetViewPanoramaOrientation] that corresponds to a screen location.
+  /// Return the orientation[StreetViewPanoramaOrientation] that corresponds to a screen location. `Web not support`
   Future<StreetViewPanoramaOrientation> pointToOrientation(Point point) {
     if (kIsWeb)
       throw UnsupportedError(
@@ -160,8 +187,7 @@ class StreetViewController {
         position: position, panoId: panoId, radius: radius, source: source);
   }
 
-  /// ** Web not support and [isPanningGesturesEnabled] always be true **
-  /// Sets street view to allow using panning gesture or not.
+  /// Sets street view to allow using panning gesture or not. `Web not support` and [isPanningGesturesEnabled] always be true
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPanningGesturesEnabled(bool enable) {
@@ -196,8 +222,7 @@ class StreetViewController {
         .then((value) => _isUserNavigationEnabled = enable);
   }
 
-  /// ** Web not support and [isZoomGesturesEnabled] always be true **
-  /// Sets street view to allow using zoom gestures or not.
+  /// Sets street view to allow using zoom gestures or not. `Web not support` and [isZoomGesturesEnabled] always be true
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setZoomGesturesEnabled(bool enable) {
@@ -210,9 +235,7 @@ class StreetViewController {
         .then((value) => _isZoomGesturesEnabled = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using address control or not.
+  /// Sets street view to allow using address control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setAddressControl(bool enable) {
@@ -227,9 +250,7 @@ class StreetViewController {
     });
   }
 
-  /// ** Web only **
-  ///
-  /// Sets address control display position.
+  /// Sets address control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setAddressControlOptions(ControlPosition pos) {
@@ -239,9 +260,7 @@ class StreetViewController {
     return _streetViewFlutterPlatform.setAddressControlOptions(viewId, pos);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using all default UI or not.
+  /// Sets street view to allow using all default UI or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setDisableDefaultUI(bool enable) {
@@ -254,9 +273,7 @@ class StreetViewController {
         .then((value) => _isDisableDefaultUI = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using zoom on double click or not.
+  /// Sets street view to allow using zoom on double click or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setDisableDoubleClickZoom(bool enable) {
@@ -270,9 +287,7 @@ class StreetViewController {
         .then((value) => _isDisableDoubleClickZoom = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using close button or not.
+  /// Sets street view to allow using close button or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setEnableCloseButton(bool enable) {
@@ -285,9 +300,7 @@ class StreetViewController {
         .then((value) => _isEnableCloseButton = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using fullscreen control or not.
+  /// Sets street view to allow using fullscreen control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setFullscreenControl(bool enable) {
@@ -300,9 +313,7 @@ class StreetViewController {
         .then((value) => _isFullscreenControl = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets fullscreen control display position.
+  /// Sets fullscreen control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setFullscreenControlOptions(ControlPosition pos) {
@@ -312,9 +323,7 @@ class StreetViewController {
     return _streetViewFlutterPlatform.setFullscreenControlOptions(viewId, pos);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using link control or not.
+  /// Sets street view to allow using link control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setLinksControl(bool enable) {
@@ -326,9 +335,7 @@ class StreetViewController {
         .then((value) => _isLinksControl = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using motion tracking or not.
+  /// Sets street view to allow using motion tracking or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setMotionTracking(bool enable) {
@@ -341,9 +348,7 @@ class StreetViewController {
         .then((value) => _isMotionTracking = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using motion tracking control or not.
+  /// Sets street view to allow using motion tracking control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setMotionTrackingControl(bool enable) {
@@ -357,9 +362,7 @@ class StreetViewController {
         .then((value) => _isMotionTrackingControl = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets motion tracking control display position.
+  /// Sets motion tracking control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setMotionTrackingControlOptions(ControlPosition pos) {
@@ -370,9 +373,7 @@ class StreetViewController {
         viewId, pos);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using pan control or not.
+  /// Sets street view to allow using pan control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPanControl(bool enable) {
@@ -384,9 +385,7 @@ class StreetViewController {
         .then((value) => _isPanControl = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets pan control display position.
+  /// Sets pan control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPanControlOptions(ControlPosition pos) {
@@ -396,9 +395,7 @@ class StreetViewController {
     return _streetViewFlutterPlatform.setPanControlOptions(viewId, pos);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using scrollwheel zooming or not.
+  /// Sets street view to allow using scrollwheel zooming or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setScrollwheel(bool enable) {
@@ -410,9 +407,7 @@ class StreetViewController {
         .then((value) => _isScrollwheel = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view to allow using zoom control or not.
+  /// Sets street view to allow using zoom control or not. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setZoomControl(bool enable) {
@@ -424,9 +419,7 @@ class StreetViewController {
         .then((value) => _isZoomControl = enable);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets zoom control display position.
+  /// Sets zoom control display position. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setZoomControlOptions(ControlPosition pos) {
@@ -436,9 +429,7 @@ class StreetViewController {
     return _streetViewFlutterPlatform.setZoomControlOptions(viewId, pos);
   }
 
-  /// ** Web only **
-  ///
-  /// Sets street view is visible.
+  /// Sets street view is visible. `Web only`
   ///
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setVisible(bool enable) {
