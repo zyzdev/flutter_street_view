@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
-import 'package:kotlin_scope_function/kotlin_scope_function.dart';
 
 class StreetViewPanoramaEventsDemo extends StatefulWidget {
   StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
