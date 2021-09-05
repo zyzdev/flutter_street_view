@@ -1,68 +1,31 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
+import 'package:flutter_google_street_view/flutter_google_street_view_web.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
-
-import '../../flutter_google_street_view_web.dart';
-import 'shims/dart_ui.dart' as ui;
 
 class StreetViewState extends State<FlutterGoogleStreetView> {
   get _onStreetViewCreated => widget.onStreetViewCreated;
-  final Completer<StreetViewController> _controller =
+  final Completer<StreetViewController> _controllerCompleter =
       Completer<StreetViewController>();
+  late StreetViewController _controller;
   late StreetViewPanoramaOptions _streetViewOptions;
-  static int _streetViewId = -1;
 
-  static void resetStreetVIewId() => _streetViewId = -1;
-
-  static int get webViewId => _streetViewId;
-  static Map<int, FlutterGoogleStreetViewPlugin> _plugins = {};
-  static Map<int, HtmlElement> _divs = {};
-
-  late FlutterGoogleStreetViewPlugin _webPlugin;
-  late HtmlElement _div;
+  late FlutterGoogleStreetViewPlugin _plugin;
   late int _viewId;
-
-  String _getViewType(int viewId) => "my_street_view_$viewId";
-
-  // The Flutter widget that contains the rendered StreetView.
-  HtmlElementView? _widget;
-
-  /// The Flutter widget that will contain the rendered Map. Used for caching.
-  Widget get htmlWidget {
-    if (_widget == null) {
-      _widget = HtmlElementView(
-        viewType: _getViewType(_viewId),
-      );
-    }
-    return _widget!;
-  }
 
   @override
   void initState() {
     super.initState();
     _streetViewOptions = optionFromWidget;
-    _streetViewId++;
-    _viewId = _streetViewId;
-    _divs[_viewId] ??= DivElement()
-      ..id = _getViewType(_viewId)
-      ..style.width = '100%'
-      ..style.height = '100%';
-    _div = _divs[_viewId]!;
-    ui.platformViewRegistry.registerViewFactory(
-      _getViewType(_viewId),
-      (int viewId) => _div,
-    );
-    final arg = optionFromWidget.toMap()..["viewId"] = _viewId;
-    _plugins[_viewId] ??= FlutterGoogleStreetViewPlugin(arg, _div);
-    _webPlugin = _plugins[_viewId]!;
+    _plugin = FlutterGoogleStreetViewPlugin.init(_streetViewOptions.toMap());
+    _viewId = _plugin.viewId;
     _onPlatformViewCreated(_viewId);
   }
 
   @override
-  Widget build(BuildContext context) => htmlWidget;
+  Widget build(BuildContext context) => _plugin.htmlWidget;
 
   @override
   void didUpdateWidget(FlutterGoogleStreetView oldWidget) {
@@ -71,9 +34,8 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
   }
 
   void dispose() {
-    _plugins.remove(_viewId);
-    _divs.remove(_viewId);
-    _webPlugin.dispose();
+    _plugin.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -118,7 +80,7 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
     if (updates.isEmpty) {
       return;
     }
-    final controller = await _controller.future;
+    final controller = await _controllerCompleter.future;
     controller.updateStreetView(updates).then((value) => print(value));
     _streetViewOptions = newOptions;
   }
@@ -126,7 +88,8 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
   void _onPlatformViewCreated(int id) async {
     final StreetViewController controller =
         await StreetViewController.init(id, this);
-    _controller.complete(controller);
+    _controller = controller;
+    _controllerCompleter.complete(controller);
     if (_onStreetViewCreated != null) _onStreetViewCreated!(controller);
   }
 }

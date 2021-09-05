@@ -1,3 +1,7 @@
+## 2.1.0-dev.1
+
+* `Web`, reuse StreetViewPanorama to reduce instantiation count for saving [billing](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-street-view).
+
 ## 2.0.1
 
 * fine tune API ref more clear.

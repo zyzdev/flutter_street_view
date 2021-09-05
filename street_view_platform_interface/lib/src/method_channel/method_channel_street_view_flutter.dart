@@ -31,7 +31,8 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
       channel.setMethodCallHandler(
           (MethodCall call) => _handleMethodCall(call, viewId));
       _channels[viewId] = channel;
-    }
+    } else
+      channel = _channels[viewId];
     return channel!.invokeMethod<void>('streetView#waitForStreetView');
   }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -36,6 +37,12 @@ class StreetViewController {
   bool _isVisible = true;
 
   final StreetViewState _streetViewState;
+
+  StreamSubscription? _onCameraChange;
+  StreamSubscription? _onPanoramaChange;
+  StreamSubscription? _onPanoramaClick;
+  StreamSubscription? _onPanoramaLongClick;
+  StreamSubscription? _onCloseClickListener;
 
   StreetViewController._(this._streetViewState,
       {required this.viewId, required dynamic initSetting}) {
@@ -454,25 +461,41 @@ class StreetViewController {
 
   void _connectStreams(int viewId) {
     if (_streetViewState.widget.onCameraChangeListener != null)
-      _streetViewFlutterPlatform.onCameraChange(viewId: viewId).listen(
-          (CameraChangeEvent e) =>
+      _onCameraChange = _streetViewFlutterPlatform
+          .onCameraChange(viewId: viewId)
+          .listen((CameraChangeEvent e) =>
               _streetViewState.widget.onCameraChangeListener!(e.value));
 
     if (_streetViewState.widget.onPanoramaChangeListener != null)
-      _streetViewFlutterPlatform.onPanoramaChange(viewId: viewId).listen((e) =>
-          _streetViewState.widget.onPanoramaChangeListener!(
+      _onPanoramaChange = _streetViewFlutterPlatform
+          .onPanoramaChange(viewId: viewId)
+          .listen((e) => _streetViewState.widget.onPanoramaChangeListener!(
               e.value.location, e.value.exception));
     if (_streetViewState.widget.onPanoramaClickListener != null)
-      _streetViewFlutterPlatform.onPanoramaClick(viewId: viewId).listen((e) =>
-          _streetViewState.widget.onPanoramaClickListener!(
+      _onPanoramaClick = _streetViewFlutterPlatform
+          .onPanoramaClick(viewId: viewId)
+          .listen((e) => _streetViewState.widget.onPanoramaClickListener!(
               e.value.orientation, e.value.point));
     if (_streetViewState.widget.onPanoramaLongClickListener != null)
-      _streetViewFlutterPlatform.onPanoramaLongClick(viewId: viewId).listen(
-          (e) => _streetViewState.widget.onPanoramaLongClickListener!(
+      _onPanoramaLongClick = _streetViewFlutterPlatform
+          .onPanoramaLongClick(viewId: viewId)
+          .listen((e) => _streetViewState.widget.onPanoramaLongClickListener!(
               e.value.orientation, e.value.point));
     if (kIsWeb && _streetViewState.widget.onCloseClickListener != null)
-      _streetViewFlutterPlatform
+      _onCloseClickListener = _streetViewFlutterPlatform
           .onCloseClick(viewId: viewId)
           .listen((e) => _streetViewState.widget.onCloseClickListener!());
+  }
+
+  void dispose() {
+    _disconnectStreams();
+  }
+
+  void _disconnectStreams() {
+    _onCameraChange?.cancel();
+    _onPanoramaChange?.cancel();
+    _onPanoramaClick?.cancel();
+    _onPanoramaLongClick?.cancel();
+    _onCloseClickListener?.cancel();
   }
 }
