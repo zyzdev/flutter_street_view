@@ -1,10 +1,10 @@
 # street_view_platform_interface
 
-A view platform interface for the [google_flutter_street_view][1] plugin.
+A view platform interface for the [flutter_google_street_view][1] plugin.
 
 # Usage
 
-To implement a new platform-specific implementation of `google_flutter_street_view`, extend
+To implement a new platform-specific implementation of `flutter_google_street_view`, extend
 [`StreetViewFlutterPlatform`][2] with an implementation that performs the
 platform-specific behavior, and when you register your plugin, set the default
 `StreetViewFlutterPlatform` by calling

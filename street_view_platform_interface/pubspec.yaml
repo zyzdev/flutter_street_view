@@ -1,6 +1,6 @@
 name: street_view_platform_interface
 description: A Flutter package of street view platform interface.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/zyzdev/flutter_street_view/tree/master/street_view_platform_interface
 
 environment:
