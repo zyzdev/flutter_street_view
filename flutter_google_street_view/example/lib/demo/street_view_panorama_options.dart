@@ -33,7 +33,7 @@ class _StreetViewPanoramaOptionsDemoState
           child: Stack(
             children: <Widget>[
               FlutterGoogleStreetView(
-                initPos: SAN_FRAN,
+                initPos: SYDNEY,
                 addressControlOptions:
                     kIsWeb ? ControlPosition.top_center : null,
                 onStreetViewCreated: (controller) {

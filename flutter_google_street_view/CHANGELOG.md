@@ -1,4 +1,4 @@
-## 2.2.0-dev.1
+## 2.2.0
 
 * `iOS`. Add feature `putting marker to street view`, iOS only.
 * `example`. Add demo of feature `putting marker to street view` to `Street View Panorama init(demo/street_view_panorama_init.dart)`.
