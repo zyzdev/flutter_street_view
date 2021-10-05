@@ -1,10 +1,14 @@
+## 1.0.4
+
+* `iOS only`. Add feature `putting markers to street view`.
+
 ## 1.0.3
 
 * Modify README.
 
 ## 1.0.2
 
-* `Web`, fine tune for [billing](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-street-view) of Street View panorama. 
+* `Web`. Fine tune for [billing](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-street-view) of Street View panorama. 
 
 ## 1.0.1
 

@@ -73,3 +73,11 @@ class CloseClickEvent extends StreetViewEvent {
   /// The `value` of this event is a [PanoramaClickData] object with the position was long clicked by user.
   CloseClickEvent(int viewId) : super(viewId, null);
 }
+
+/// An event fired when a [Marker] is tapped.
+class MarkerTapEvent extends StreetViewEvent<MarkerId> {
+  /// Build a MarkerTap Event triggered from the map represented by `mapId`.
+  ///
+  /// The `value` of this event is a [MarkerId] object that represents the tapped Marker.
+  MarkerTapEvent(int viewId, MarkerId markerId) : super(viewId, markerId);
+}

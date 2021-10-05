@@ -68,9 +68,9 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   /// Return [Future] while the change has been made on the platform side.
   Future<void> setPosition(int viewId,
       {LatLng? position,
-        String? panoId,
-        int? radius,
-        StreetViewSource? source}) {
+      String? panoId,
+      int? radius,
+      StreetViewSource? source}) {
     throw UnimplementedError('setPosition() has not been implemented.');
   }
 
@@ -267,6 +267,11 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
     throw UnimplementedError('onCloseClick() has not been implemented.');
   }
 
+  /// A [Marker] has been tapped.
+  Stream<MarkerTapEvent> onMarkerTap({required int viewId}) {
+    throw UnimplementedError('onMarkerTap() has not been implemented.');
+  }
+
   /// Updates configuration options of the street view user interface.
   ///
   /// Change listeners are notified once the update has been made on the
@@ -274,11 +279,24 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<dynamic> updateStreetViewOptions(
-      Map<String, dynamic> optionsUpdate, {
-        required int viewId,
-      }) {
+    Map<String, dynamic> optionsUpdate, {
+    required int viewId,
+  }) {
     throw UnimplementedError(
         'updateStreetViewOptions() has not been implemented.');
+  }
+
+  /// Updates marker configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> updateMarkers(
+    MarkerUpdates markerUpdates, {
+    required int viewId,
+  }) {
+    throw UnimplementedError('updateMarkers() has not been implemented.');
   }
 
   /// Returns a widget displaying the street view

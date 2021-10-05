@@ -34,6 +34,9 @@ class StreetViewPanoramaOptions {
   /// Sets initialization position of camera.
   final StreetViewPanoramaCamera? panoramaCamera;
 
+  /// Markers to be placed on the map. `iOS only`
+  final Set<Marker>? markers;
+
   /// The enabled/disabled state of the address control. `Web only`
   final bool? addressControl;
 
@@ -93,34 +96,35 @@ class StreetViewPanoramaOptions {
 
   StreetViewPanoramaOptions(
       {this.panoId,
-        this.position,
-        this.radius,
-        this.source,
-        this.panningGesturesEnabled,
-        this.streetNamesEnabled,
-        this.userNavigationEnabled,
-        this.zoomGesturesEnabled,
-        this.panoramaCamera,
+      this.position,
+      this.radius,
+      this.source,
+      this.panningGesturesEnabled,
+      this.streetNamesEnabled,
+      this.userNavigationEnabled,
+      this.zoomGesturesEnabled,
+      this.panoramaCamera,
+      this.markers,
 
-        // Web only //
-        this.addressControl,
-        this.addressControlOptions,
-        this.disableDefaultUI,
-        this.disableDoubleClickZoom,
-        this.enableCloseButton,
-        this.fullscreenControl,
-        this.fullscreenControlOptions,
-        this.linksControl,
-        this.motionTracking,
-        this.motionTrackingControl,
-        this.motionTrackingControlOptions,
-        this.scrollwheel,
-        this.panControl,
-        this.panControlOptions,
-        this.zoomControl,
-        this.zoomControlOptions,
-        this.visible
-        // Web only //
+      // Web only //
+      this.addressControl,
+      this.addressControlOptions,
+      this.disableDefaultUI,
+      this.disableDoubleClickZoom,
+      this.enableCloseButton,
+      this.fullscreenControl,
+      this.fullscreenControlOptions,
+      this.linksControl,
+      this.motionTracking,
+      this.motionTrackingControl,
+      this.motionTrackingControlOptions,
+      this.scrollwheel,
+      this.panControl,
+      this.panControlOptions,
+      this.zoomControl,
+      this.zoomControlOptions,
+      this.visible
+      // Web only //
       })
       : assert(panoId == null || position == null);
 
@@ -198,17 +202,17 @@ class StreetViewPanoramaOptions {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is StreetViewPanoramaOptions &&
-              runtimeType == other.runtimeType &&
-              panoId == other.panoId &&
-              position == other.position &&
-              radius == other.radius &&
-              source == other.source &&
-              panningGesturesEnabled == other.panningGesturesEnabled &&
-              streetNamesEnabled == other.streetNamesEnabled &&
-              userNavigationEnabled == other.userNavigationEnabled &&
-              zoomGesturesEnabled == other.zoomGesturesEnabled &&
-              panoramaCamera == other.panoramaCamera;
+      other is StreetViewPanoramaOptions &&
+          runtimeType == other.runtimeType &&
+          panoId == other.panoId &&
+          position == other.position &&
+          radius == other.radius &&
+          source == other.source &&
+          panningGesturesEnabled == other.panningGesturesEnabled &&
+          streetNamesEnabled == other.streetNamesEnabled &&
+          userNavigationEnabled == other.userNavigationEnabled &&
+          zoomGesturesEnabled == other.zoomGesturesEnabled &&
+          panoramaCamera == other.panoramaCamera;
 
   @override
   int get hashCode =>

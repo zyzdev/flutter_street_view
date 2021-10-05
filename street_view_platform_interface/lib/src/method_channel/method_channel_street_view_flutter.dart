@@ -314,6 +314,22 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return _events(viewId).whereType<CloseClickEvent>();
   }
 
+  /// A [Marker] has been tapped.
+  Stream<MarkerTapEvent> onMarkerTap({required int viewId}) {
+    return _events(viewId).whereType<MarkerTapEvent>();
+  }
+
+  @override
+  Future<void> updateMarkers(
+    MarkerUpdates markerUpdates, {
+    required int viewId,
+  }) {
+    return channel(viewId)!.invokeMethod<void>(
+      'markers#update',
+      markerUpdates.toJson(),
+    );
+  }
+
   /// Updates configuration options of the street view user interface.
   ///
   /// Change listeners are notified once the update has been made on the
@@ -374,6 +390,12 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
       case 'close#onClick':
         //print("close#onClick:${call.arguments}");
         _streetViewEventStreamController.add(CloseClickEvent(viewId));
+        break;
+      case 'marker#onTap':
+        _streetViewEventStreamController.add(MarkerTapEvent(
+          viewId,
+          MarkerId(call.arguments['markerId']),
+        ));
         break;
       default:
         throw MissingPluginException();
