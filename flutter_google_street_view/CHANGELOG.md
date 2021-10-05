@@ -1,6 +1,11 @@
+## 2.2.0
+
+* `iOS`. Add feature `putting marker to street view`, iOS only.
+* `example`. Add demo of feature `putting marker to street view` to `Street View Panorama init(demo/street_view_panorama_init.dart)`.
+
 ## 2.1.0
 
-* `Web`, reuse StreetViewPanorama to reduce instantiation count for saving [billing](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-street-view).
+* `Web`. reuse StreetViewPanorama to reduce instantiation count for saving [billing](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-street-view).
 
 ## 2.0.1
 
@@ -17,7 +22,7 @@
 
 ## 1.0.1
 
-* Remove `Android only.` in README
+* Remove `Android only`. in README
 
 ## 1.0.0
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view_example/const/const.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class StreetViewPanoramaEventsDemo extends StatefulWidget {
   StreetViewPanoramaEventsDemo({Key? key}) : super(key: key);
@@ -88,7 +89,8 @@ class _StreetViewPanoramaEventsDemoState
               if (_controller != null)
                 Container(
                   alignment: Alignment.topCenter,
-                  child: Card(
+                  child: PointerInterceptor(
+                      child: Card(
                     color: Colors.white.withOpacity(0.8),
                     child: Padding(
                       padding: EdgeInsets.all(8),
@@ -109,16 +111,34 @@ class _StreetViewPanoramaEventsDemoState
                             SizedBox(
                               height: 8,
                             ),
-                          if (!kIsWeb) Text(_onPanoramaLongClickListenerInfo)
+                          if (!kIsWeb) Text(_onPanoramaLongClickListenerInfo),
+                          _moveButton(
+                            "GO TO INVALID POINT",
+                            () {
+                              _controller!.setPosition(position: INVALID);
+                            },
+                          )
                         ],
                       ),
                     ),
-                  ),
-                )
+                  )),
+                ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _moveButton(String locationName, VoidCallback onClick) {
+    return OutlinedButton(
+        onPressed: onClick,
+        child: Text(locationName),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.white.withOpacity(0.8),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              side: BorderSide(width: 1, color: Colors.grey)),
+        ));
   }
 }

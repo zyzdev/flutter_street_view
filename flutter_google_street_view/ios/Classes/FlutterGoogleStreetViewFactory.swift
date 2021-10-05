@@ -2,10 +2,12 @@ import Flutter
 import UIKit
 
 class FlutterGoogleStreetViewFactory: NSObject, FlutterPlatformViewFactory {
+    private var _registrar: FlutterPluginRegistrar
     private var messenger: FlutterBinaryMessenger
 
-    init(messenger: FlutterBinaryMessenger) {
-        self.messenger = messenger
+    init(registrar: FlutterPluginRegistrar) {
+        _registrar = registrar;
+        self.messenger = registrar.messenger()
         super.init()
     }
 
@@ -18,7 +20,8 @@ class FlutterGoogleStreetViewFactory: NSObject, FlutterPlatformViewFactory {
             frame: frame,
             viewIdentifier: viewId,
             arguments: args,
-            binaryMessenger: messenger)
+            binaryMessenger: messenger,
+            flutterPluginRegistrar: _registrar)
     }
     
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -10,49 +12,49 @@ import 'package:flutter_google_street_view/src/street_view_state.dart'
     if (dart.library.io) 'mobile/street_view_state.dart';
 
 class FlutterGoogleStreetView extends StatefulWidget {
-  const FlutterGoogleStreetView(
-      {Key? key,
-      this.onStreetViewCreated,
-      this.onCameraChangeListener,
-      this.onPanoramaChangeListener,
-      this.onPanoramaClickListener,
-      this.onPanoramaLongClickListener,
-      this.onCloseClickListener,
-      this.initPanoId,
-      this.initPos,
-      this.initRadius,
-      this.initSource,
-      this.initFov = 90, //iOS only
-      this.initBearing,
-      this.initTilt,
-      this.initZoom,
-      this.panningGesturesEnabled, //Web not supported.
-      this.streetNamesEnabled = true,
-      this.userNavigationEnabled = true,
-      this.zoomGesturesEnabled, //Web not supported.
-      this.gestureRecognizers, //Web not supported.
+  const FlutterGoogleStreetView({
+    Key? key,
+    this.onStreetViewCreated,
+    this.onCameraChangeListener,
+    this.onPanoramaChangeListener,
+    this.onPanoramaClickListener,
+    this.onPanoramaLongClickListener,
+    this.onCloseClickListener,
+    this.initPanoId,
+    this.initPos,
+    this.initRadius,
+    this.initSource,
+    this.initFov, //iOS only
+    this.initBearing,
+    this.initTilt,
+    this.initZoom,
+    this.panningGesturesEnabled, //Web not supported.
+    this.streetNamesEnabled = true,
+    this.userNavigationEnabled = true,
+    this.zoomGesturesEnabled, //Web not supported.
+    this.gestureRecognizers, //Web not supported.
+    this.markers, //iOS only
 
-      // Web only //
-      this.addressControl,
-      this.addressControlOptions,
-      this.disableDefaultUI,
-      this.disableDoubleClickZoom = false,
-      this.enableCloseButton = false,
-      this.fullscreenControl,
-      this.fullscreenControlOptions,
-      this.linksControl,
-      this.motionTracking,
-      this.motionTrackingControl,
-      this.motionTrackingControlOptions,
-      this.scrollwheel = true,
-      this.panControl,
-      this.panControlOptions,
-      this.zoomControl,
-      this.zoomControlOptions,
-      this.visible
-      // Web only //
-      })
-      : assert((initPanoId != null) ^ (initPos != null)),
+    // Web only //
+    this.addressControl,
+    this.addressControlOptions,
+    this.disableDefaultUI,
+    this.disableDoubleClickZoom = kIsWeb ? false : null,
+    this.enableCloseButton = kIsWeb ? false : null,
+    this.fullscreenControl,
+    this.fullscreenControlOptions,
+    this.linksControl,
+    this.motionTracking,
+    this.motionTrackingControl,
+    this.motionTrackingControlOptions,
+    this.scrollwheel = kIsWeb ? true : null,
+    this.panControl,
+    this.panControlOptions,
+    this.zoomControl,
+    this.zoomControlOptions,
+    this.visible,
+    // Web only //
+  })  : assert((initPanoId != null) ^ (initPos != null)),
         assert((initTilt != null && initTilt >= -90 && initTilt <= 90) ||
             initTilt == null),
         super(key: key);
@@ -122,6 +124,10 @@ class FlutterGoogleStreetView extends StatefulWidget {
   final PanoramaClickListener? onPanoramaClickListener; //Web not supported
   final PanoramaLongClickListener?
       onPanoramaLongClickListener; //Web not supported
+
+  /// Markers to be placed on the street view. `iOS only`
+  final Set<Marker>? markers;
+
   final CloseClickListener? onCloseClickListener; //Web only
 
   /// The enabled/disabled state of the address control. `Web only`
@@ -156,7 +162,7 @@ class FlutterGoogleStreetView extends StatefulWidget {
   final bool? motionTracking;
 
   /// The enabled/disabled state of the motion tracking control. `Web only`
-  /// Enabled by default when the device has motion data, so that the control appears on the map.
+  /// Enabled by default when the device has motion data, so that the control appears on the street view.
   /// This is primarily applicable to mobile devices.
   final bool? motionTrackingControl;
 
@@ -201,10 +207,42 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// Notice input parameter may not support.
   void _checkParam() {
     String message(String param) =>
-        "$_dTag: <<< Notice >>> $param is not support for Web! <<< Notice >>>";
-    if (panningGesturesEnabled != null)
-      debugPrint(message("panningGesturesEnabled"));
-    if (zoomGesturesEnabled != null) debugPrint(message("zoomGesturesEnabled"));
-    if (gestureRecognizers != null) debugPrint(message("gestureRecognizers"));
+        "$_dTag: <<< Notice >>> $param is not support for ${kIsWeb ? "Web" : Platform.isAndroid ? "Android" : Platform.isIOS ? "iOS" : "Other Platform"}! <<< Notice >>>";
+    if (kIsWeb) {
+      if (initFov != null) debugPrint(message("initFov"));
+      if (markers != null) debugPrint(message("markers"));
+      if (panningGesturesEnabled != null)
+        debugPrint(message("panningGesturesEnabled"));
+      if (zoomGesturesEnabled != null)
+        debugPrint(message("zoomGesturesEnabled"));
+      if (gestureRecognizers != null) debugPrint(message("gestureRecognizers"));
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      if (Platform.isAndroid) {
+        if (initFov != null) debugPrint(message("initFov"));
+        if (markers != null) debugPrint(message("markers"));
+      }
+      if (addressControl != null) debugPrint(message("addressControl"));
+      if (addressControlOptions != null)
+        debugPrint(message("addressControlOptions"));
+      if (disableDefaultUI != null) debugPrint(message("disableDefaultUI"));
+      if (disableDoubleClickZoom != null)
+        debugPrint(message("disableDoubleClickZoom"));
+      if (enableCloseButton != null) debugPrint(message("enableCloseButton"));
+      if (fullscreenControl != null) debugPrint(message("fullscreenControl"));
+      if (fullscreenControlOptions != null)
+        debugPrint(message("fullscreenControlOptions"));
+      if (linksControl != null) debugPrint(message("linksControl"));
+      if (motionTracking != null) debugPrint(message("motionTracking"));
+      if (motionTrackingControl != null)
+        debugPrint(message("motionTrackingControl"));
+      if (motionTrackingControlOptions != null)
+        debugPrint(message("motionTrackingControlOptions"));
+      if (scrollwheel != null) debugPrint(message("scrollwheel"));
+      if (panControl != null) debugPrint(message("panControl"));
+      if (panControlOptions != null) debugPrint(message("panControlOptions"));
+      if (zoomControl != null) debugPrint(message("zoomControl"));
+      if (zoomControlOptions != null) debugPrint(message("zoomControlOptions"));
+      if (visible != null) debugPrint(message("visible"));
+    }
   }
 }

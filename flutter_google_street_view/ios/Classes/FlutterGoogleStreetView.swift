@@ -7,20 +7,25 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
     
     private let DEBUG = false;
     
+    private var registrar: FlutterPluginRegistrar
     private var streetViewPanorama:GMSPanoramaView
     private var methodChannel: FlutterMethodChannel
     private var initResult:FlutterResult? = nil
     private var streetViewInit = false
     private var lastMoveToPos :CLLocationCoordinate2D? = nil
     private var lastMoveToPanoId : String? = nil
+    private var _markersController:FLTMarkersController
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
         arguments args: Any?,
-        binaryMessenger messenger: FlutterBinaryMessenger
+        binaryMessenger messenger: FlutterBinaryMessenger,
+        flutterPluginRegistrar: FlutterPluginRegistrar
     ) {
+        registrar = flutterPluginRegistrar
         streetViewPanorama = GMSPanoramaView(frame: .zero)
         methodChannel = FlutterMethodChannel(name: "flutter_google_street_view_\(viewId)", binaryMessenger: messenger)
+        _markersController = FLTMarkersController(methodChannel, streetViewPanorama: streetViewPanorama, registrar: registrar)
         super.init()
         methodChannel.setMethodCallHandler(handle)
         // iOS views can be created here
@@ -41,6 +46,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
             setStreetNamesEnabled(initParam)
             setUserNavigationEnabled(initParam)
             setZoomGesturesEnabled(initParam)
+            markerUpdate(args)
             
             let camera = streetViewPanorama.camera
             let zoom = Float((initParam["zoom"] as? Double ?? 1.0))
@@ -48,9 +54,9 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
             let heading = initParam["bearing"] as? CLLocationDirection ?? camera.orientation.heading
             let fov = initParam["fov"] as? Double ?? camera.fov
             animateTo(["zoom" : zoom, "tilt" : pitch, "bearing" : heading, "fov" : fov, "douation" : 0])
-//            initParam.forEach { (key: Any, value: Any) in
-//                debug("key:\(String(describing: key)), value:\(String(describing: value))")
-//            }
+            //            initParam.forEach { (key: Any, value: Any) in
+            //                debug("key:\(String(describing: key)), value:\(String(describing: value))")
+            //            }
         }
     }
     
@@ -101,11 +107,12 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
             setUserNavigationEnabled(args,result)
         case "streetView#setZoomGesturesEnabled":
             setZoomGesturesEnabled(args, result)
+        case "markers#update":
+            markerUpdate(args, result)
         default:
             print()
         }
     }
-    
 }
 
 extension FlutterGoogleStreetView {
@@ -315,6 +322,26 @@ extension FlutterGoogleStreetView {
         }
     }
     
+    private func markerUpdate(_ args:Any?, _ result:FlutterResult? = nil) {
+        if(!isNSDictionary(args)) {
+            return
+        }
+        let param = args as! NSDictionary
+        if(param["markersToAdd"] is NSArray) {
+            let markersToAdd = param["markersToAdd"] as! [Any];
+            _markersController.addMarkers(markersToAdd)
+        }
+        if(param["markersToChange"] is NSArray) {
+            let markersToChange = param["markersToChange"] as! [Any];
+            _markersController.changeMarkers(markersToChange)
+        }
+        if(param["markerIdsToRemove"] is NSArray) {
+            let markerIdsToRemove = param["markerIdsToRemove"] as! [Any];
+            _markersController.removeMarkerIds(markerIdsToRemove)
+        }
+        result?.self(nil)
+    }
+    
     private func isNil(_ args : Any?) -> Bool { return args == nil }
     
     private func isNSDictionary(_ args:Any?) -> Bool {
@@ -334,7 +361,7 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
     func panoramaView(_ view: GMSPanoramaView, willMoveToPanoramaID panoramaID: String) {
         //debug("willMoveToPanoramaID:\(panoramaID)")
     }
-
+    
     func panoramaView(_ view: GMSPanoramaView, error: Error) {
         let panorama = view.panorama
         if(panorama != nil) {
@@ -376,10 +403,11 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
     }
     
     func panoramaView(_ panoramaView: GMSPanoramaView, didTap marker: GMSMarker) -> Bool {
-        //debug("didTapmMarker:\(self.toS(marker))")
-        return false
+        //debug("didTapmMarker:\(marker)")
+        let markerId = "\((marker.userData as! NSArray)[0])"
+        return _markersController.onMarkerTap(markerId)
     }
-
+    
     func onStreetViewPanoramaChange(panorama :GMSPanorama?, error: Error? = nil) {
         var errorMsg :String?
         if(error != nil) {
@@ -390,9 +418,9 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
             }
         }
         let args = streetViewPanoramaLocationToJson(panorama, errorMsg)
-//        args.forEach { (key: Any, value: Any) in
-//            debug("onStreetViewPanoramaCameraChange, key:\(key), value:\(value)")
-//        }
+        //        args.forEach { (key: Any, value: Any) in
+        //            debug("onStreetViewPanoramaCameraChange, key:\(key), value:\(value)")
+        //        }
         if(!streetViewInit) {
             streetViewInit = true;
             if(initResult != nil) {
@@ -401,7 +429,7 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
             }
         }
         methodChannel.invokeMethod("pano#onChange", arguments: args)
-
+        
         lastMoveToPos = nil
         lastMoveToPanoId = nil
     }
@@ -431,7 +459,7 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
             //debug("onStreetViewPanoramaClick, point:\(toS(point))")
             let orientationArg = orientationToJson(streetViewPanorama.orientation(for: point))
             let pointArg = pointToJson(point)
-
+            
             let args : NSMutableDictionary = [:]
             orientationArg.forEach { (key: Any, value: Any) in
                 args[key] = value

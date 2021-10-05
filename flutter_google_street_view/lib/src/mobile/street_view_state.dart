@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
@@ -12,25 +13,32 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
   final Completer<StreetViewController> _controller =
       Completer<StreetViewController>();
   late StreetViewPanoramaOptions _streetViewOptions;
-  static int webViewId = -1;
+  Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
 
   @override
   void initState() {
     super.initState();
-    webViewId++;
+    if (Platform.isIOS && widget.markers != null)
+      _markers = keyByMarkerId(widget.markers!);
     _streetViewOptions = optionFromWidget;
   }
 
   @override
   Widget build(BuildContext context) {
-    return _streetViewFlutterPlatform.buildView(optionFromWidget.toMap(),
-        widget.gestureRecognizers, _onPlatformViewCreated);
+    Map<String, dynamic> creationParams = optionFromWidget.toMap();
+    if (Platform.isIOS && widget.markers != null) {
+      putToMapIfNonNull(
+          creationParams, 'markersToAdd', serializeMarkerSet(widget.markers!));
+    }
+    return _streetViewFlutterPlatform.buildView(
+        creationParams, widget.gestureRecognizers, _onPlatformViewCreated);
   }
 
   @override
   void didUpdateWidget(FlutterGoogleStreetView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateOptions();
+    _updateMarkers();
   }
 
   StreetViewPanoramaOptions get optionFromWidget => StreetViewPanoramaOptions(
@@ -46,7 +54,8 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
       panningGesturesEnabled: widget.panningGesturesEnabled,
       streetNamesEnabled: widget.streetNamesEnabled,
       userNavigationEnabled: widget.userNavigationEnabled,
-      zoomGesturesEnabled: widget.zoomGesturesEnabled);
+      zoomGesturesEnabled: widget.zoomGesturesEnabled,
+      markers: widget.markers);
 
   void _updateOptions() async {
     final StreetViewPanoramaOptions newOptions = optionFromWidget;
@@ -58,6 +67,28 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
     final controller = await _controller.future;
     controller.updateStreetView(updates).then((value) => print(value));
     _streetViewOptions = newOptions;
+  }
+
+  void onMarkerTap(MarkerId markerId) {
+    final Marker? marker = _markers[markerId];
+    if (marker == null) {
+      throw Exception(
+          'onMarkerTap, no marker can be found with markerId:$markerId');
+    }
+    final VoidCallback? onTap = marker.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+
+  void _updateMarkers() async {
+    if (!Platform.isIOS) return;
+    if (widget.markers == null) return;
+    final StreetViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller.updateMarkers(
+        MarkerUpdates.from(_markers.values.toSet(), widget.markers!));
+    _markers = keyByMarkerId(widget.markers!);
   }
 
   void _onPlatformViewCreated(int id) async {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -485,6 +486,9 @@ class StreetViewController {
       _onCloseClickListener = _streetViewFlutterPlatform
           .onCloseClick(viewId: viewId)
           .listen((e) => _streetViewState.widget.onCloseClickListener!());
+    _streetViewFlutterPlatform
+        .onMarkerTap(viewId: viewId)
+        .listen((MarkerTapEvent e) => _streetViewState.onMarkerTap(e.value));
   }
 
   void dispose() {
@@ -497,5 +501,16 @@ class StreetViewController {
     _onPanoramaClick?.cancel();
     _onPanoramaLongClick?.cancel();
     _onCloseClickListener?.cancel();
+  }
+
+  /// Updates marker configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> updateMarkers(MarkerUpdates markerUpdates) {
+    return _streetViewFlutterPlatform.updateMarkers(markerUpdates,
+        viewId: viewId);
   }
 }

@@ -13,4 +13,8 @@ class StreetViewState extends State<FlutterGoogleStreetView> {
   }
 
   void _onPlatformViewCreated(int id) async {}
+
+  void onMarkerTap(MarkerId markerId) {
+    throw UnimplementedError();
+  }
 }
