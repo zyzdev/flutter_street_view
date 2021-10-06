@@ -1,3 +1,7 @@
+## 2.2.1
+
+* bugs fix.
+
 ## 2.2.0
 
 * `iOS`. Add feature `putting marker to street view`, iOS only.

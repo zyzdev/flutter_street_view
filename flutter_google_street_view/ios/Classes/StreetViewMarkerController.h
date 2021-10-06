@@ -8,7 +8,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Defines marker UI options writable from Flutter.
-@protocol FLTGoogleMapMarkerOptionsSink
+@protocol FLTStreetViewMarkerOptionsSink
 - (void)setAlpha:(float)alpha;
 - (void)setAnchor:(CGPoint)anchor;
 - (void)setConsumeTapEvents:(BOOL)consume;
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // Defines marker controllable by Flutter.
-@interface FLTGoogleMapMarkerController : NSObject <FLTGoogleMapMarkerOptionsSink>
+@interface FLTStreetViewMarkerController : NSObject <FLTStreetViewMarkerOptionsSink>
 @property(atomic, readonly) NSString* markerId;
 - (instancetype)initMarkerWithPosition:(CLLocationCoordinate2D)position
                               markerId:(NSString*)markerId
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeMarker;
 @end
 
-@interface FLTMarkersController : NSObject
+@interface FLTStreetViewMarkersController : NSObject
 - (instancetype)init:(FlutterMethodChannel*)methodChannel
              streetViewPanorama:(GMSPanoramaView*)streetViewPanorama
            registrar:(NSObject<FlutterPluginRegistrar>*)registrar;

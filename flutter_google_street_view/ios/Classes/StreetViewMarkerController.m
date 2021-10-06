@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "GoogleMapMarkerController.h"
-#import "JsonConversions.h"
+#import "StreetViewMarkerController.h"
+#import "StreetViewJsonConversions.h"
 
 static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray* icon);
-static void InterpretInfoWindow(id<FLTGoogleMapMarkerOptionsSink> sink, NSDictionary* data);
+static void InterpretInfoWindow(id<FLTStreetViewMarkerOptionsSink> sink, NSDictionary* data);
 
-@implementation FLTGoogleMapMarkerController {
+@implementation FLTStreetViewMarkerController {
   GMSMarker* _marker;
   GMSPanoramaView* _streetViewPanorama;
   BOOL _consumeTapEvents;
@@ -33,7 +33,7 @@ static void InterpretInfoWindow(id<FLTGoogleMapMarkerOptionsSink> sink, NSDictio
   _marker.panoramaView = nil;
 }
 
-#pragma mark - FLTGoogleMapMarkerOptionsSink methods
+#pragma mark - FLTStreetViewMarkerOptionsSink methods
 
 - (void)setAlpha:(float)alpha {
   _marker.opacity = alpha;
@@ -74,25 +74,25 @@ static void InterpretInfoWindow(id<FLTGoogleMapMarkerOptionsSink> sink, NSDictio
 }
 @end
 
-static double ToDouble(NSNumber* data) { return [FLTGoogleMapJsonConversions toDouble:data]; }
+static double ToDouble(NSNumber* data) { return [FLTStreetViewJsonConversions toDouble:data]; }
 
-static float ToFloat(NSNumber* data) { return [FLTGoogleMapJsonConversions toFloat:data]; }
+static float ToFloat(NSNumber* data) { return [FLTStreetViewJsonConversions toFloat:data]; }
 
 static CLLocationCoordinate2D ToLocation(NSArray* data) {
-  return [FLTGoogleMapJsonConversions toLocation:data];
+  return [FLTStreetViewJsonConversions toLocation:data];
 }
 
-static int ToInt(NSNumber* data) { return [FLTGoogleMapJsonConversions toInt:data]; }
+static int ToInt(NSNumber* data) { return [FLTStreetViewJsonConversions toInt:data]; }
 
-static BOOL ToBool(NSNumber* data) { return [FLTGoogleMapJsonConversions toBool:data]; }
+static BOOL ToBool(NSNumber* data) { return [FLTStreetViewJsonConversions toBool:data]; }
 
-static CGPoint ToPoint(NSArray* data) { return [FLTGoogleMapJsonConversions toPoint:data]; }
+static CGPoint ToPoint(NSArray* data) { return [FLTStreetViewJsonConversions toPoint:data]; }
 
 static NSArray* PositionToJson(CLLocationCoordinate2D data) {
-  return [FLTGoogleMapJsonConversions positionToJson:data];
+  return [FLTStreetViewJsonConversions positionToJson:data];
 }
 
-static void InterpretMarkerOptions(NSDictionary* data, id<FLTGoogleMapMarkerOptionsSink> sink,
+static void InterpretMarkerOptions(NSDictionary* data, id<FLTStreetViewMarkerOptionsSink> sink,
                                    NSObject<FlutterPluginRegistrar>* registrar) {
   NSNumber* alpha = data[@"alpha"];
   if (alpha != nil) {
@@ -138,7 +138,7 @@ static void InterpretMarkerOptions(NSDictionary* data, id<FLTGoogleMapMarkerOpti
   }
 }
 
-static void InterpretInfoWindow(id<FLTGoogleMapMarkerOptionsSink> sink, NSDictionary* data) {
+static void InterpretInfoWindow(id<FLTStreetViewMarkerOptionsSink> sink, NSDictionary* data) {
   NSDictionary* infoWindow = data[@"infoWindow"];
   if (infoWindow) {
     NSString* title = infoWindow[@"title"];
@@ -220,7 +220,7 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
   return image;
 }
 
-@implementation FLTMarkersController {
+@implementation FLTStreetViewMarkersController {
   NSMutableDictionary* _markerIdToController;
   FlutterMethodChannel* _methodChannel;
   NSObject<FlutterPluginRegistrar>* _registrar;
@@ -240,10 +240,10 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
 }
 - (void)addMarkers:(NSArray*)markersToAdd {
   for (NSDictionary* marker in markersToAdd) {
-    CLLocationCoordinate2D position = [FLTMarkersController getPosition:marker];
-    NSString* markerId = [FLTMarkersController getMarkerId:marker];
-    FLTGoogleMapMarkerController* controller =
-        [[FLTGoogleMapMarkerController alloc] initMarkerWithPosition:position
+    CLLocationCoordinate2D position = [FLTStreetViewMarkersController getPosition:marker];
+    NSString* markerId = [FLTStreetViewMarkersController getMarkerId:marker];
+    FLTStreetViewMarkerController* controller =
+        [[FLTStreetViewMarkerController alloc] initMarkerWithPosition:position
                                                             markerId:markerId
                                                              streetViewPanorama:_streetViewPanorama];
     InterpretMarkerOptions(marker, controller, _registrar);
@@ -252,8 +252,8 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
 }
 - (void)changeMarkers:(NSArray*)markersToChange {
   for (NSDictionary* marker in markersToChange) {
-    NSString* markerId = [FLTMarkersController getMarkerId:marker];
-    FLTGoogleMapMarkerController* controller = _markerIdToController[markerId];
+    NSString* markerId = [FLTStreetViewMarkersController getMarkerId:marker];
+    FLTStreetViewMarkerController* controller = _markerIdToController[markerId];
     if (!controller) {
       continue;
     }
@@ -265,7 +265,7 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
     if (!markerId) {
       continue;
     }
-    FLTGoogleMapMarkerController* controller = _markerIdToController[markerId];
+    FLTStreetViewMarkerController* controller = _markerIdToController[markerId];
     if (!controller) {
       continue;
     }
@@ -277,7 +277,7 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
   if (!markerId) {
     return NO;
   }
-  FLTGoogleMapMarkerController* controller = _markerIdToController[markerId];
+  FLTStreetViewMarkerController* controller = _markerIdToController[markerId];
   if (!controller) {
     return NO;
   }
@@ -288,7 +288,7 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
   if (!markerId) {
     return;
   }
-  FLTGoogleMapMarkerController* controller = _markerIdToController[markerId];
+  FLTStreetViewMarkerController* controller = _markerIdToController[markerId];
   if (!controller) {
     return;
   }

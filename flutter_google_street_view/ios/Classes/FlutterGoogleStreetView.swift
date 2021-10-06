@@ -14,7 +14,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
     private var streetViewInit = false
     private var lastMoveToPos :CLLocationCoordinate2D? = nil
     private var lastMoveToPanoId : String? = nil
-    private var _markersController:FLTMarkersController
+    private var _markersController:FLTStreetViewMarkersController
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
@@ -25,7 +25,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         registrar = flutterPluginRegistrar
         streetViewPanorama = GMSPanoramaView(frame: .zero)
         methodChannel = FlutterMethodChannel(name: "flutter_google_street_view_\(viewId)", binaryMessenger: messenger)
-        _markersController = FLTMarkersController(methodChannel, streetViewPanorama: streetViewPanorama, registrar: registrar)
+        _markersController = FLTStreetViewMarkersController(methodChannel, streetViewPanorama: streetViewPanorama, registrar: registrar)
         super.init()
         methodChannel.setMethodCallHandler(handle)
         // iOS views can be created here

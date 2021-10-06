@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "JsonConversions.h"
+#import "StreetViewJsonConversions.h"
 
-@implementation FLTGoogleMapJsonConversions
+@implementation FLTStreetViewJsonConversions
 
 + (bool)toBool:(NSNumber*)data {
   return data.boolValue;
@@ -23,13 +23,13 @@
 }
 
 + (CLLocationCoordinate2D)toLocation:(NSArray*)data {
-  return CLLocationCoordinate2DMake([FLTGoogleMapJsonConversions toDouble:data[0]],
-                                    [FLTGoogleMapJsonConversions toDouble:data[1]]);
+  return CLLocationCoordinate2DMake([FLTStreetViewJsonConversions toDouble:data[0]],
+                                    [FLTStreetViewJsonConversions toDouble:data[1]]);
 }
 
 + (CGPoint)toPoint:(NSArray*)data {
-  return CGPointMake([FLTGoogleMapJsonConversions toDouble:data[0]],
-                     [FLTGoogleMapJsonConversions toDouble:data[1]]);
+  return CGPointMake([FLTStreetViewJsonConversions toDouble:data[0]],
+                     [FLTStreetViewJsonConversions toDouble:data[1]]);
 }
 
 + (NSArray*)positionToJson:(CLLocationCoordinate2D)position {
@@ -50,8 +50,8 @@
     NSNumber* latitude = data[i][0];
     NSNumber* longitude = data[i][1];
     CLLocation* point =
-        [[CLLocation alloc] initWithLatitude:[FLTGoogleMapJsonConversions toDouble:latitude]
-                                   longitude:[FLTGoogleMapJsonConversions toDouble:longitude]];
+        [[CLLocation alloc] initWithLatitude:[FLTStreetViewJsonConversions toDouble:latitude]
+                                   longitude:[FLTStreetViewJsonConversions toDouble:longitude]];
     [points addObject:point];
   }
 
@@ -61,7 +61,7 @@
 + (NSArray<NSArray<CLLocation*>*>*)toHoles:(NSArray*)data {
   NSMutableArray<NSArray<CLLocation*>*>* holes = [[[NSMutableArray alloc] init] init];
   for (unsigned i = 0; i < [data count]; i++) {
-    NSArray<CLLocation*>* points = [FLTGoogleMapJsonConversions toPoints:data[i]];
+    NSArray<CLLocation*>* points = [FLTStreetViewJsonConversions toPoints:data[i]];
     [holes addObject:points];
   }
 
