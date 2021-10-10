@@ -1,3 +1,7 @@
+## 2.2.2
+
+* Modify description.
+
 ## 2.2.1
 
 * bugs fix.
