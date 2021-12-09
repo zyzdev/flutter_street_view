@@ -45,7 +45,6 @@ class FlutterGoogleStreetView(
             this.id = id
             this.getStreetViewPanoramaAsync {
                 streetViewPanorama = it
-                //it.setPosition(LatLng(25.081243, 121.572105))
                 setupListener(it)
                 val hasInitLocation = initOptions?.let { it1 ->
                     it1.panoramaId != null || it1.position != null
@@ -58,19 +57,22 @@ class FlutterGoogleStreetView(
         }
         methodChannel = MethodChannel(binaryMessenger, "flutter_google_street_view_$id")
         methodChannel.setMethodCallHandler(this)
-        //Log.d(dTag, "reg method channel, flutter_google_street_view_$id")
         lifecycleProvider.addObserver(this)
     }
 
     private fun createInitOption(creationParams: Map<String?, Any?>?): StreetViewPanoramaOptions? =
         if (creationParams != null) StreetViewPanoramaOptions().apply {
             if (creationParams.containsKey("panoId")) {
-                panoramaId((creationParams["panoId"] ?: error("")) as String)
+                val panoId = (creationParams["panoId"] ?: error("")) as String
+                lastMoveToPanoId = panoId
+                panoramaId(panoId)
             } else if (creationParams.containsKey("position")) {
                 val pos = if (creationParams.containsKey("position")) {
-                    Convert.toLatLng(
+                    val posTmp = Convert.toLatLng(
                         creationParams["position"] ?: error("position data is null!")
                     )
+                    lastMoveToPos = posTmp
+                    posTmp
                 } else null
                 val radius = if (creationParams.containsKey("radius")) {
                     Convert.toInt(creationParams["radius"] ?: error("radius data is null!"))
@@ -118,16 +120,6 @@ class FlutterGoogleStreetView(
         if (disposed) {
             return
         }
-        /*streetView = StreetViewPanoramaView(context).apply {
-            getStreetViewPanoramaAsync {
-                Log.d(dTag, "street view is ready!")
-                //it.setPosition(LatLng(25.081243, 121.572105))
-                it.setOnStreetViewPanoramaCameraChangeListener {
-                    Toast.makeText(context, "456", Toast.LENGTH_LONG).show()
-                }
-            }
-            //this.id = id
-        }*/
         streetView?.onCreate(null)
     }
 
@@ -210,7 +202,6 @@ class FlutterGoogleStreetView(
             "streetView#updateOptions" -> updateInitOptions(call.arguments, result)
             "streetView#animateTo" -> {
                 if (streetView != null) {
-                    //result.success(true)
                     animateTo(call.arguments)
                     result.success(null)
                 } else {
@@ -524,31 +515,25 @@ class FlutterGoogleStreetView(
 
     private fun setStreetNamesEnabled(arg: Any?) {
         arg?.apply {
-            //Log.d(dTag, "arg:$this, ${streetViewPanorama?.isStreetNamesEnabled}")
             if (this is Boolean) {
                 streetViewPanorama?.isStreetNamesEnabled = this
             }
-            //Log.d(dTag, "arg:$this, ${streetViewPanorama?.isStreetNamesEnabled}")
         }
     }
 
     private fun setUserNavigationEnabled(arg: Any?) {
         arg?.apply {
-            //Log.d(dTag, "arg:$this, ${streetViewPanorama?.isUserNavigationEnabled}")
             if (this is Boolean) {
                 streetViewPanorama?.isUserNavigationEnabled = this
             }
-            //Log.d(dTag, "arg:$this, ${streetViewPanorama?.isUserNavigationEnabled}")
         }
     }
 
     private fun setZoomGesturesEnabled(arg: Any?) {
         arg?.apply {
-            //Log.d(dTag, "arg:$this, ${streetViewPanorama?.isZoomGesturesEnabled}")
             if (this is Boolean) {
                 streetViewPanorama?.isZoomGesturesEnabled = this
             }
-            //Log.d(dTag, "arg:$this, ${streetViewPanorama?.isZoomGesturesEnabled}")
         }
     }
 
@@ -578,7 +563,7 @@ class FlutterGoogleStreetView(
                 "Oops..., no valid panorama found with position:${lastMoveToPos!!.latitude}, ${lastMoveToPos!!.longitude}, try to change `position`, `radius` or `source`."
             else if (lastMoveToPanoId != null)
                 "Oops..., no valid panorama found with panoId:$lastMoveToPanoId, try to change `panoId`."
-            else "setPosition, catch unknown error."
+            else "Oops..., no valid panorama found."
             put("error", errorMsg)
         }
         methodChannel.invokeMethod(

@@ -469,7 +469,7 @@ void main() {
     expect(svpc == testSetting, isTrue);
   });
 
-  testWidgets("Test setPosition is workable.", (WidgetTester tester) async {
+/*  testWidgets("Test setPosition is workable.", (WidgetTester tester) async {
     Completer _location = Completer<StreetViewPanoramaLocation?>();
     await tester.pumpWidget(Directionality(
         textDirection: TextDirection.ltr,
@@ -512,7 +512,7 @@ void main() {
     location = await _location.future;
     expect(location?.panoId, isNotNull);
     _location = Completer<StreetViewPanoramaLocation>();
-  });
+  });*/
 
   testWidgets("Test getLocation is workable.", (WidgetTester tester) async {
     await tester.pumpWidget(Directionality(

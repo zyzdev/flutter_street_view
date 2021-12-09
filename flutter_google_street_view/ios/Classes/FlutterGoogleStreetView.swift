@@ -41,12 +41,12 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
     func createNativeView(_ args: NSDictionary?){
         if(args != nil) {
             let initParam = args!
-            setPosition(args)
+            setPosition(initParam)
             setPanningGesturesEnabled(initParam)
             setStreetNamesEnabled(initParam)
             setUserNavigationEnabled(initParam)
             setZoomGesturesEnabled(initParam)
-            markerUpdate(args)
+            markerUpdate(initParam)
             
             let camera = streetViewPanorama.camera
             let zoom = Float((initParam["zoom"] as? Double ?? 1.0))

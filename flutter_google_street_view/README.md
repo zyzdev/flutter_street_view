@@ -82,6 +82,12 @@ import GoogleMaps
   }
 }
 ```
+
+### ScreenShot
+| Android  | Web | iOS |
+| ------------- | ------------- | ------------- |
+| <img title="Android" src="https://user-images.githubusercontent.com/16483162/145322579-e9f6e838-9b81-480c-a808-5d3ec67de3b6.png" width="300" />  | <img title="Web"  src="https://user-images.githubusercontent.com/16483162/145323571-c8acff70-5e33-4225-8627-b2e92ef7db36.png" width="650"/> |<img title="iOS"  src="https://user-images.githubusercontent.com/16483162/145323552-86f27e40-6334-4e5f-8382-c6b73ceb2ddb.png" width="300"/> |
+
 ### Control street view widget
 
 Add FlutterGoogleStreetView widget to your widget tree.
