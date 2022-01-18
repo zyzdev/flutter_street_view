@@ -15,14 +15,14 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
 
   static StreetViewFlutterPlatform _instance = MethodChannelStreetViewFlutter();
 
-  static const Object _token = Object();
+  static final Object _token = Object();
 
   static StreetViewFlutterPlatform get instance => _instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
   /// class that extends [UrlLauncherPlatform] when they register themselves.
   static set instance(StreetViewFlutterPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

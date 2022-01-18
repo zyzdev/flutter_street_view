@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Fix bug that token should be `final` instead of `const`.
+
 ## 1.0.4
 
 * `iOS only`. Add feature `putting markers to street view`.
