@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -81,6 +80,8 @@ class StreetViewController {
       _isZoomControl = initSetting['isZoomControl']!;
     if (initSetting['isVisible'] != null)
       _isVisible = initSetting['isVisible']!;
+
+    StreetViewFlutterPlatform.instance = _streetViewFlutterPlatform;
   }
 
   /// Initialize control of a [FlutterGoogleStreetView] with [id].
