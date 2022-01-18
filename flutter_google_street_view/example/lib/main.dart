@@ -65,7 +65,33 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               title: Text("Street View Panorama events"),
-              subtitle: Text("An example of street view event handling."),
+              subtitle: Column(
+                children: [
+                  Text.rich(TextSpan(children: [
+                    TextSpan(text: "An example of street view event handling."),
+                    TextSpan(
+                        text: " Include invalid panorama event.",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ])),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  DefaultTextStyle(
+                      style: TextStyle(
+                          color: Colors.redAccent, fontWeight: FontWeight.bold),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            "Notice! Developers should care this demo and learn how to receive event.",
+                          )),
+                          Text(
+                            "🙏",
+                          )
+                        ],
+                      ))
+                ],
+              ),
               onTap: () {
                 Navigator.push(
                   context,
