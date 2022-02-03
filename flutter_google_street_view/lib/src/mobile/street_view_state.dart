@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view/src/state/street_view_base_state.dart';
-import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 class StreetViewState extends StreetViewBaseState {
   StreetViewFlutterPlatform _streetViewFlutterPlatform =

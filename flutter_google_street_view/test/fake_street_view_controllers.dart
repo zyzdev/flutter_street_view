@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class FakePlatformStreetView {
-  FakePlatformStreetView(int? id, Map<dynamic, dynamic>? params) {}
+  FakePlatformStreetView(int? id, Map<dynamic, dynamic>? params);
 
   MethodChannel? channel;
 
