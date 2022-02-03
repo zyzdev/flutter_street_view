@@ -117,7 +117,7 @@ class FlutterGoogleStreetViewPlugin {
       ..style.height = '100%';
     _divs[_viewId] = _div;
     _plugins[_viewId] ??= this;
-    ui.platformViewRegistry.registerViewFactory(
+    ui.PlatformViewRegistry.registerViewFactory(
       _getViewType(_viewId),
       (int viewId) => _div,
     );

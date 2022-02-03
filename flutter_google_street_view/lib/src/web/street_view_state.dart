@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view_web.dart';
+import 'package:flutter_google_street_view/src/state/street_view_base_state.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
-class StreetViewState extends State<FlutterGoogleStreetView> {
+class StreetViewState extends StreetViewBaseState {
   get _onStreetViewCreated => widget.onStreetViewCreated;
   final Completer<StreetViewController> _controllerCompleter =
       Completer<StreetViewController>();

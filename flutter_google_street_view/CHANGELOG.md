@@ -1,3 +1,7 @@
+## 2.2.5-dev.1.
+
+* bugs fix
+
 ## 2.2.4
 
 * Upgrade street_view_platform_interface to v1.0.5

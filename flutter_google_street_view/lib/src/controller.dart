@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_google_street_view/src/street_view_state.dart'
-    if (dart.library.html) 'web/street_view_state.dart'
-    if (dart.library.io) 'mobile/street_view_state.dart';
+import 'package:flutter_google_street_view/src/state/street_view_base_state.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 /// Callback method for when the streetView is ready to be used.
@@ -36,7 +34,7 @@ class StreetViewController {
   bool _isZoomControl = true;
   bool _isVisible = true;
 
-  final StreetViewState _streetViewState;
+  final StreetViewBaseState _streetViewState;
 
   StreamSubscription? _onCameraChange;
   StreamSubscription? _onPanoramaChange;
@@ -89,7 +87,7 @@ class StreetViewController {
   /// Mainly for internal use when instantiating a [StreetViewController] passed
   /// in [FlutterGoogleStreetView.onStreetViewCreated] callback.
   static Future<StreetViewController> init(
-      int id, StreetViewState streetViewState) async {
+      int id, StreetViewBaseState streetViewState) async {
     final dynamic initSetting = await _streetViewFlutterPlatform.init(id);
     return StreetViewController._(streetViewState,
         viewId: id, initSetting: initSetting);

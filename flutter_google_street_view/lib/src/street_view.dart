@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-
-import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
-
-import 'package:flutter_google_street_view/src/street_view_state.dart'
+import 'package:flutter_google_street_view/src/state/street_view_state.dart'
     if (dart.library.html) 'web/street_view_state.dart'
     if (dart.library.io) 'mobile/street_view_state.dart';
+import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 class FlutterGoogleStreetView extends StatefulWidget {
   const FlutterGoogleStreetView({

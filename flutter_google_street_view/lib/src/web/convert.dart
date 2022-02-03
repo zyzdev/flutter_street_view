@@ -2,7 +2,6 @@ import 'dart:core';
 
 import 'package:google_maps/google_maps.dart' as gmaps;
 import 'package:google_maps/google_maps.dart';
-import 'package:kotlin_scope_function/kotlin_scope_function.dart';
 
 /// Convert StreetViewPanoramaOptions to StreetViewPanoramaOptions of gmap
 Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(

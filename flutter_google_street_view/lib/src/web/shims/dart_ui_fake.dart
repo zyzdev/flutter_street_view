@@ -9,7 +9,7 @@ import 'dart:html' as html;
 
 /// Shim for web_ui engine.PlatformViewRegistry
 /// https://github.com/flutter/engine/blob/master/lib/web_ui/lib/ui.dart#L62
-class platformViewRegistry {
+class PlatformViewRegistry {
   /// Shim for registerViewFactory
   /// https://github.com/flutter/engine/blob/master/lib/web_ui/lib/ui.dart#L72
   static registerViewFactory(
@@ -18,7 +18,7 @@ class platformViewRegistry {
 
 /// Shim for web_ui engine.AssetManager.
 /// https://github.com/flutter/engine/blob/master/lib/web_ui/lib/src/engine/assets.dart#L12
-class webOnlyAssetManager {
+class WebOnlyAssetManager {
   /// Shim for getAssetUrl.
   /// https://github.com/flutter/engine/blob/master/lib/web_ui/lib/src/engine/assets.dart#L45
   static getAssetUrl(String asset) {}
