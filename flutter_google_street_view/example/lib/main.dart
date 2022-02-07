@@ -66,13 +66,17 @@ class HomePage extends StatelessWidget {
             ListTile(
               title: Text("Street View Panorama events"),
               subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text.rich(TextSpan(children: [
-                    TextSpan(text: "An example of street view event handling."),
-                    TextSpan(
-                        text: " Include invalid panorama event.",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ])),
+                  Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                          text: "An example of street view event handling."),
+                      TextSpan(
+                          text: " Include invalid panorama event.",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ]),
+                  ),
                   SizedBox(
                     height: 8,
                   ),
