@@ -1,4 +1,4 @@
-## 2.2.8-dev.1
+## 2.2.8
 
 * Migrate to flutter 3.0.0
 
