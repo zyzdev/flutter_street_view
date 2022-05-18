@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Migrate to flutter 3.0.0
+
 ## 1.0.5
 
 * Fix bug that token should be `final` instead of `const`.

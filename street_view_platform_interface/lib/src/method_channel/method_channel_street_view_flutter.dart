@@ -3,13 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stream_transform/stream_transform.dart';
-import 'package:street_view_platform_interface/src/events/street_view_event.dart';
-import 'package:street_view_platform_interface/src/platform_channel/street_view_flutter_platform.dart';
-import 'package:street_view_platform_interface/src/type/camera.dart';
-import 'package:street_view_platform_interface/src/type/latLng.dart';
 import 'package:street_view_platform_interface/street_view_platform_interface.dart';
 
 class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
@@ -415,12 +412,32 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     // This is used in the platform side to register the view.
     final String viewType = 'my_street_view';
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AndroidView(
+      return PlatformViewLink(
           viewType: viewType,
-          onPlatformViewCreated: onPlatformViewCreated,
-          creationParams: creationParams,
-          gestureRecognizers: gestureRecognizers,
-          creationParamsCodec: const StandardMessageCodec());
+          surfaceFactory:
+              (BuildContext context, PlatformViewController controller) {
+            return AndroidViewSurface(
+              controller: controller as AndroidViewController,
+              gestureRecognizers: gestureRecognizers ??
+                  const <Factory<OneSequenceGestureRecognizer>>{},
+              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+            );
+          },
+          onCreatePlatformView: (PlatformViewCreationParams params) {
+            return PlatformViewsService.initExpensiveAndroidView(
+              id: params.id,
+              viewType: viewType,
+              layoutDirection: TextDirection.ltr,
+              creationParams: creationParams,
+              creationParamsCodec: const StandardMessageCodec(),
+              onFocus: () {
+                params.onFocusChanged(true);
+              },
+            )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..addOnPlatformViewCreatedListener(onPlatformViewCreated)
+              ..create();
+          });
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return UiKitView(
           viewType: viewType,
