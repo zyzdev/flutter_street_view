@@ -235,7 +235,12 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
     throw UnimplementedError('setVisible() has not been implemented.');
   }
 
-  /// Dispose of whatever resources the `mapId` is holding on to.
+  /// FlutterGoogleStreetView is deactivated
+  void deactivate(int viewId) {
+    throw UnimplementedError('deactivate() has not been implemented.');
+  }
+
+  /// Dispose of whatever resources the `viewId` is holding on to.
   void dispose(int viewId) {
     throw UnimplementedError('dispose() has not been implemented.');
   }

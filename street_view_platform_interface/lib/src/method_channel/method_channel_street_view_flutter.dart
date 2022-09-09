@@ -46,6 +46,11 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
       _streetViewEventStreamController.stream
           .where((event) => event.viewId == viewId);
 
+  /// FlutterGoogleStreetView is deactivated
+  void deactivate(int viewId) {
+    _channels[viewId]?.invokeMethod<void>('streetView#deactivate');
+  }
+
   /// Dispose of the native resources.
   @override
   void dispose(int viewId) {
