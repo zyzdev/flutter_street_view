@@ -1,3 +1,7 @@
+## 3.0.0
+
+* `Android` & `iOS`, reuse StreetViewPanorama to reduce instantiation count for saving billing([android](https://developers.google.com/maps/documentation/android-sdk/usage-and-billing#dynamic-street-view), [iOS](https://developers.google.com/maps/documentation/ios-sdk/usage-and-billing#dynamic-street-view))
+
 ## 2.2.8
 
 * Migrate to flutter 3.0.0
