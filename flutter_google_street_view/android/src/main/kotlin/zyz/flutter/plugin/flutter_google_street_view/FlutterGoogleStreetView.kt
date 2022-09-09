@@ -29,6 +29,11 @@ class FlutterGoogleStreetView(
     lifecycleProvider: Lifecycle
 ) : DefaultLifecycleObserver, OnSaveInstanceStateListener, PlatformView, MethodChannel.MethodCallHandler, StreetViewListener {
 
+    companion object {
+        private val lockStreetView = HashMap<StreetViewPanoramaView, Boolean>()
+        private val lockPanorama = HashMap<StreetViewPanoramaView, StreetViewPanorama>()
+    }
+
     private val dTag = javaClass.simpleName
     private var disposed = false
     private val initOptions: StreetViewPanoramaOptions?
@@ -38,23 +43,44 @@ class FlutterGoogleStreetView(
     private var viewReadyResult: MethodChannel.Result? = null
     private var lastMoveToPos : LatLng? = null
     private var lastMoveToPanoId:String? = null
-
+    private var creationParams: Map<String?, Any?>? = null
+    private var reuseStreetView = false
     init {
+        this.creationParams = creationParams
         initOptions = createInitOption(creationParams)
-        streetView = StreetViewPanoramaView(context, initOptions).apply {
-            this.id = id
-            this.getStreetViewPanoramaAsync {
-                streetViewPanorama = it
-                setupListener(it)
-                val hasInitLocation = initOptions?.let { it1 ->
-                    it1.panoramaId != null || it1.position != null
-                }  ?: false
-                if (viewReadyResult != null && !hasInitLocation) {
-                    viewReadyResult?.success(streetViewIsReady())
-                    viewReadyResult = null
+        for (it in lockStreetView) {
+            Log.d(dTag, "try reuse streetView:${lockStreetView.size}")
+            val sv:StreetViewPanoramaView = it.key
+            val inUse:Boolean = it.value
+            if(!inUse) {
+                reuseStreetView = true
+                sv.id = id
+                streetView = sv
+                streetViewPanorama = lockPanorama[sv]
+                setupListener(streetViewPanorama!!)
+                Log.d(dTag, "reuse streetView:$streetViewPanorama")
+                break
+            }
+        }
+
+        if (streetView == null) {
+            streetView = StreetViewPanoramaView(context, initOptions).apply {
+                this.id = id
+                this.getStreetViewPanoramaAsync {
+                    lockPanorama[this] = it
+                    streetViewPanorama = it
+                    setupListener(it)
+                    val hasInitLocation = initOptions?.let { it1 ->
+                        it1.panoramaId != null || it1.position != null
+                    } ?: false
+                    if (viewReadyResult != null && !hasInitLocation) {
+                        viewReadyResult?.success(streetViewIsReady())
+                        viewReadyResult = null
+                    }
                 }
             }
         }
+        lockStreetView[streetView!!] = true
         methodChannel = MethodChannel(binaryMessenger, "flutter_google_street_view_$id")
         methodChannel.setMethodCallHandler(this)
         lifecycleProvider.addObserver(this)
@@ -109,6 +135,13 @@ class FlutterGoogleStreetView(
         methodChannel.setMethodCallHandler(null)
     }
 
+    private fun removeListener() {
+        streetViewPanorama?.setOnStreetViewPanoramaCameraChangeListener(null)
+        streetViewPanorama?.setOnStreetViewPanoramaChangeListener(null)
+        streetViewPanorama?.setOnStreetViewPanoramaClickListener(null)
+        streetViewPanorama?.setOnStreetViewPanoramaLongClickListener(null)
+    }
+
     private fun setupListener(streetViewPanorama: StreetViewPanorama) {
         streetViewPanorama.setOnStreetViewPanoramaCameraChangeListener(this)
         streetViewPanorama.setOnStreetViewPanoramaChangeListener(this)
@@ -120,18 +153,22 @@ class FlutterGoogleStreetView(
         if (disposed) {
             return
         }
+        if(reuseStreetView){
+            streetView?.onResume()
+            return
+        }
         streetView?.onCreate(null)
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        if (disposed) {
+        if (disposed || reuseStreetView) {
             return
         }
         streetView!!.onStart()
     }
 
     override fun onResume(owner: LifecycleOwner) {
-        if (disposed) {
+        if (disposed || reuseStreetView) {
             return
         }
         streetView?.onResume()
@@ -193,11 +230,15 @@ class FlutterGoogleStreetView(
                 } ?: false
                 //We callback while no init location should
                 //otherwise, callback while the
-                if (streetView != null && !hasInitLocation) {
-                    result.success(streetViewIsReady())
-                    return
+                if (!reuseStreetView) {
+                    if (streetView != null && !hasInitLocation) {
+                        result.success(streetViewIsReady())
+                        return
+                    }
+                    viewReadyResult = result
+                } else {
+                    updateInitOptions(creationParams, result)
                 }
-                viewReadyResult = result
             }
             "streetView#updateOptions" -> updateInitOptions(call.arguments, result)
             "streetView#animateTo" -> {
@@ -364,6 +405,10 @@ class FlutterGoogleStreetView(
                     )
                 }
             }
+            "streetView#deactivate" -> {
+                dactiviteStreetView()
+                result.success(null)
+            }
         }
     }
 
@@ -377,7 +422,7 @@ class FlutterGoogleStreetView(
     private fun updateInitOptions(arg: Any?, result: MethodChannel.Result) {
         arg?.apply {
             if (this is Map<*, *>) {
-                this as Map<String, Double?>
+                this as Map<String, Any?>
 
                 Log.d(dTag, this.toString())
                 setPosition(arg)
@@ -403,7 +448,7 @@ class FlutterGoogleStreetView(
     private fun animateTo(arg: Any?) {
         arg?.apply {
             if (this is Map<*, *>) {
-                this as Map<String, Double?>
+                this as Map<String, Any?>
                 val streetViewPanoramaCamera = StreetViewPanoramaCamera.builder().also {
                     this["bearing"]?.let { it1 ->
                         it.bearing(Convert.toFloat(it1))
@@ -535,6 +580,14 @@ class FlutterGoogleStreetView(
                 streetViewPanorama?.isZoomGesturesEnabled = this
             }
         }
+    }
+
+    private fun dactiviteStreetView() {
+        removeListener()
+        lockStreetView[streetView!!] = false
+        // set the position with panorama to make a black view
+        streetViewPanorama?.setPosition(LatLng(-45.125783, 151.276417))
+        streetView?.onStop()
     }
 
     override fun onStreetViewPanoramaCameraChange(camera: StreetViewPanoramaCamera) {
