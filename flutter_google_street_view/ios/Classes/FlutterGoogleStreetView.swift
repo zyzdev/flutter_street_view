@@ -5,16 +5,20 @@ import os.log
 
 class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
     
+    private static var lockStreetView:[GMSPanoramaView : Bool] = [:]
     private let DEBUG = false;
     
     private var registrar: FlutterPluginRegistrar
-    private var streetViewPanorama:GMSPanoramaView
+    private var streetViewPanorama:GMSPanoramaView!
     private var methodChannel: FlutterMethodChannel
     private var initResult:FlutterResult? = nil
     private var streetViewInit = false
     private var lastMoveToPos :CLLocationCoordinate2D? = nil
     private var lastMoveToPanoId : String? = nil
     private var _markersController:FLTStreetViewMarkersController
+    private var gestureDetector:UILongPressGestureRecognizer?
+    private var creationParams: Any?
+    private var reuseStreetView:Bool = false
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
@@ -23,47 +27,42 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         flutterPluginRegistrar: FlutterPluginRegistrar
     ) {
         registrar = flutterPluginRegistrar
-        streetViewPanorama = GMSPanoramaView(frame: .zero)
+        for it in FlutterGoogleStreetView.lockStreetView {
+            let sv:GMSPanoramaView = it.key
+            let inUse:Bool = it.value
+            if(!inUse) {
+                streetViewPanorama = sv
+                FlutterGoogleStreetView.lockStreetView[streetViewPanorama] = true
+                reuseStreetView = true
+                break
+            }
+        }
+        if(!reuseStreetView){
+            streetViewPanorama = GMSPanoramaView(frame: .zero)
+            FlutterGoogleStreetView.lockStreetView[streetViewPanorama] = true
+        }
         methodChannel = FlutterMethodChannel(name: "flutter_google_street_view_\(viewId)", binaryMessenger: messenger)
         _markersController = FLTStreetViewMarkersController(methodChannel, streetViewPanorama: streetViewPanorama, registrar: registrar)
         super.init()
         methodChannel.setMethodCallHandler(handle)
+        debug("reuseStreetView:\(reuseStreetView)")
         // iOS views can be created here
         let initParam = args as? NSDictionary
+        creationParams = initParam
         setupListener()
-        createNativeView(initParam)
+        if(!reuseStreetView) {
+            updateInitOptions(initParam, nil)
+        }
     }
     
     func view() -> UIView {
         return streetViewPanorama
     }
     
-    func createNativeView(_ args: NSDictionary?){
-        if(args != nil) {
-            let initParam = args!
-            setPosition(initParam)
-            setPanningGesturesEnabled(initParam)
-            setStreetNamesEnabled(initParam)
-            setUserNavigationEnabled(initParam)
-            setZoomGesturesEnabled(initParam)
-            markerUpdate(initParam)
-            
-            let camera = streetViewPanorama.camera
-            let zoom = Float((initParam["zoom"] as? Double ?? 1.0))
-            let pitch = initParam["tilt"] as? Double ?? camera.orientation.heading
-            let heading = initParam["bearing"] as? CLLocationDirection ?? camera.orientation.heading
-            let fov = initParam["fov"] as? Double ?? camera.fov
-            animateTo(["zoom" : zoom, "tilt" : pitch, "bearing" : heading, "fov" : fov, "douation" : 0])
-            //            initParam.forEach { (key: Any, value: Any) in
-            //                debug("key:\(String(describing: key)), value:\(String(describing: value))")
-            //            }
-        }
-    }
-    
     private func setupListener() {
+        gestureDetector = UILongPressGestureRecognizer(target: self, action: #selector(self.onStreetViewPanoramaLongClick(_:)))
         streetViewPanorama.delegate = self
-        let gestureDetector = UILongPressGestureRecognizer(target: self, action: #selector(self.onStreetViewPanoramaLongClick(_:)))
-        streetViewPanorama.addGestureRecognizer(gestureDetector)
+        streetViewPanorama.addGestureRecognizer(gestureDetector!)
     }
     
     func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -76,6 +75,10 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
                 streetViewIsReady(result)
             } else {
                 initResult = result
+            }
+            if(reuseStreetView) {
+                updateInitOptions(creationParams, result)
+                streetViewPanorama.alpha = 1
             }
         case "streetView#updateOptions":
             updateInitOptions(args, result)
@@ -109,6 +112,8 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
             setZoomGesturesEnabled(args, result)
         case "markers#update":
             markerUpdate(args, result)
+        case "streetView#deactivate":
+            dactiviteStreetView(result)
         default:
             print()
         }
@@ -134,34 +139,35 @@ extension FlutterGoogleStreetView {
         )
     }
     
-    private func updateInitOptions(_ args:Any?, _ result:FlutterResult) {
-        debug("updateInitOptions:\(isNSDictionary(args))")
+    private func updateInitOptions(_ args:Any?, _ result:FlutterResult?) {
+        //debug("updateInitOptions:\(isNSDictionary(args))")
         if(!isNSDictionary(args)) {
             return
         }
         
-        let param = args as! NSDictionary
-        param.forEach { (key: Any, value: Any) in
-            debug("key:\(String(describing: key)), value:\(String(describing: value))")
-        }
+        //let param = args as! NSDictionary
+        //param.forEach { (key: Any, value: Any) in
+        //    debug("key:\(String(describing: key)), value:\(String(describing: value))")
+        //}
         setPosition(args)
         setPanningGesturesEnabled(args)
         setStreetNamesEnabled(args)
         setUserNavigationEnabled(args)
         setZoomGesturesEnabled(args)
         animateTo(args)
-        streetViewIsReady(result)
+        if(result != nil) {
+            streetViewIsReady(result!)
+        }
     }
     
     private func animateTo(_ args: Any?, _ result:FlutterResult? = nil) {
         if(!isNSDictionary(args)) {
             return
         }
-        
         let param = args as! NSDictionary
         let camera = streetViewPanorama.camera
         let zoom = Float((param["zoom"] as? Double ?? 1.0))
-        let pitch = param["tilt"] as? Double ?? camera.orientation.heading
+        let pitch = param["tilt"] as? Double ?? camera.orientation.pitch
         let heading = param["bearing"] as? CLLocationDirection ?? camera.orientation.heading
         let fov = param["fov"] as? Double ?? camera.fov
         let orientation = GMSOrientation(heading: heading, pitch: pitch)
@@ -342,6 +348,15 @@ extension FlutterGoogleStreetView {
         result?.self(nil)
     }
     
+    private func dactiviteStreetView(_ result:FlutterResult) {
+        streetViewPanorama.alpha = 0
+        streetViewPanorama.delegate = nil
+        streetViewPanorama.removeGestureRecognizer(gestureDetector!)
+        streetViewPanorama.camera = GMSPanoramaCamera.init(orientation: GMSOrientation(heading: 0, pitch: 0), zoom: 1.0, fov: 90)
+        FlutterGoogleStreetView.lockStreetView[streetViewPanorama] = false
+        result(nil)
+    }
+    
     private func isNil(_ args : Any?) -> Bool { return args == nil }
     
     private func isNSDictionary(_ args:Any?) -> Bool {
@@ -421,6 +436,7 @@ extension FlutterGoogleStreetView: GMSPanoramaViewDelegate, UIGestureRecognizerD
         //        args.forEach { (key: Any, value: Any) in
         //            debug("onStreetViewPanoramaCameraChange, key:\(key), value:\(value)")
         //        }
+        
         if(!streetViewInit) {
             streetViewInit = true;
             if(initResult != nil) {
