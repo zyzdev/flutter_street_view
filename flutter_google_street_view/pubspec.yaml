@@ -16,7 +16,7 @@ dependencies:
   kotlin_scope_function: ^1.0.0
   flutter_plugin_android_lifecycle: ^2.0.1
   google_maps: ^6.1.0
-  street_view_platform_interface: ^1.0.6
+  street_view_platform_interface: ^1.0.7
 
 dev_dependencies:
   flutter_test:

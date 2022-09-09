@@ -14,6 +14,7 @@ class StreetViewState extends StreetViewBaseState {
       Completer<StreetViewController>();
   late StreetViewPanoramaOptions _streetViewOptions;
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
+  int? _viewId;
 
   @override
   void initState() {
@@ -39,6 +40,11 @@ class StreetViewState extends StreetViewBaseState {
     super.didUpdateWidget(oldWidget);
     _updateOptions();
     _updateMarkers();
+  }
+
+  void deactivate() {
+    _streetViewFlutterPlatform.deactivate(_viewId!);
+    super.deactivate();
   }
 
   StreetViewPanoramaOptions get optionFromWidget => StreetViewPanoramaOptions(
@@ -92,6 +98,7 @@ class StreetViewState extends StreetViewBaseState {
   }
 
   void _onPlatformViewCreated(int id) async {
+    _viewId = id;
     final StreetViewController controller =
         await StreetViewController.init(id, this);
     _controller.complete(controller);
