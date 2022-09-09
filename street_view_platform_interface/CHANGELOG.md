@@ -1,3 +1,7 @@
+## 1.0.7
+
+* Add fun deactivate to reuse street view for platform `Android` and `iOS`.
+
 ## 1.0.6
 
 * Migrate to flutter 3.0.0
