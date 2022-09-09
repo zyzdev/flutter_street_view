@@ -16,6 +16,7 @@
             android:value="YOUR KEY HERE" />
 
         <activity
+            android:exported="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
