@@ -585,6 +585,15 @@ class FlutterGoogleStreetView(
     private fun deactivateStreetView() {
         removeListener()
         lockStreetView[streetView!!] = false
+        // reset pitch, heading and zoom
+        streetViewPanorama?.animateTo(
+            StreetViewPanoramaCamera.builder().also {
+                it.bearing(0f)
+                it.tilt(0f)
+                it.zoom(0f)
+            }.build(),
+            10
+        )
         // set the position with panorama to make a black view
         streetViewPanorama?.setPosition(LatLng(-45.125783, 151.276417))
         streetView?.onStop()
