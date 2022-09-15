@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view_example/demo/street_view_panorama_events.dart';
 import 'package:flutter_google_street_view_example/demo/street_view_panorama_navigation.dart';
 
+import 'demo/street_view_panorama_in_listview.dart';
 import 'demo/street_view_panorama_init.dart';
 import 'demo/street_view_panorama_options.dart';
 
@@ -40,7 +41,6 @@ class _MyAppState extends State<MyApp> {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: const Text('Street View Example'),
@@ -132,6 +132,22 @@ class HomePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => StreetViewPanoramaOptionsDemo()),
+                );
+              },
+            ),
+            Divider(
+              height: 1,
+              thickness: 1,
+            ),
+            ListTile(
+              title: Text("Street View Panorama in ListView"),
+              subtitle: Text(
+                  "A example to show how to feed touch event when street view is a child of ListView."),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StreetViewPanoramaInListViewDemo()),
                 );
               },
             ),
