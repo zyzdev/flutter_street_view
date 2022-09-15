@@ -45,7 +45,6 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         _markersController = FLTStreetViewMarkersController(methodChannel, streetViewPanorama: streetViewPanorama, registrar: registrar)
         super.init()
         methodChannel.setMethodCallHandler(handle)
-        debug("reuseStreetView:\(reuseStreetView)")
         // iOS views can be created here
         let initParam = args as? NSDictionary
         creationParams = initParam
