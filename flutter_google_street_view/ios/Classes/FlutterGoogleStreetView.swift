@@ -112,7 +112,7 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
         case "markers#update":
             markerUpdate(args, result)
         case "streetView#deactivate":
-            dactiviteStreetView(result)
+            deactivateStreetView(result)
         default:
             print()
         }
@@ -347,7 +347,7 @@ extension FlutterGoogleStreetView {
         result?.self(nil)
     }
     
-    private func dactiviteStreetView(_ result:FlutterResult) {
+    private func deactivateStreetView(_ result:FlutterResult) {
         streetViewPanorama.alpha = 0
         streetViewPanorama.delegate = nil
         streetViewPanorama.removeGestureRecognizer(gestureDetector!)

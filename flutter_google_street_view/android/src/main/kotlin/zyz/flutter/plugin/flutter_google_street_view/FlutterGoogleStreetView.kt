@@ -406,7 +406,7 @@ class FlutterGoogleStreetView(
                 }
             }
             "streetView#deactivate" -> {
-                dactiviteStreetView()
+                deactivateStreetView()
                 result.success(null)
             }
         }
@@ -582,7 +582,7 @@ class FlutterGoogleStreetView(
         }
     }
 
-    private fun dactiviteStreetView() {
+    private fun deactivateStreetView() {
         removeListener()
         lockStreetView[streetView!!] = false
         // set the position with panorama to make a black view
