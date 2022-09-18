@@ -1,3 +1,7 @@
+## 1.0.8
+
+* Add get fun nativeStreetViewCreatedCount, record created count of native street view.
+
 ## 1.0.7
 
 * Add fun deactivate to reuse street view for platform `Android` and `iOS`.
