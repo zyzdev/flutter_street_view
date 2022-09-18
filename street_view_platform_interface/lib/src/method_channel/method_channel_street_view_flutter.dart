@@ -12,6 +12,8 @@ import 'package:street_view_platform_interface/street_view_platform_interface.da
 class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
   final Map<int, MethodChannel?> _channels = {};
 
+  int _nativeStreetViewCreatedCount = 0;
+
   /// Accesses the MethodChannel associated to the passed viewId.
   MethodChannel? channel(int viewId) {
     return _channels[viewId];
@@ -30,7 +32,11 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
       _channels[viewId] = channel;
     } else
       channel = _channels[viewId];
-    return channel!.invokeMethod<void>('streetView#waitForStreetView');
+    final data = await channel!.invokeMethod('streetView#waitForStreetView');
+    if (data.containsKey('streetViewCount')) {
+      _nativeStreetViewCreatedCount = data['streetViewCount'];
+    }
+    return data;
   }
 
   // The controller we need to broadcast the different events coming
@@ -454,4 +460,8 @@ class MethodChannelStreetViewFlutter extends StreetViewFlutterPlatform {
     return Text(
         '$defaultTargetPlatform is not yet supported by the maps plugin');
   }
+
+  /// The created count of native street view.
+  @override
+  int get nativeStreetViewCreatedCount => _nativeStreetViewCreatedCount;
 }

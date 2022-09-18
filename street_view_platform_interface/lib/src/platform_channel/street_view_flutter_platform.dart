@@ -19,6 +19,9 @@ abstract class StreetViewFlutterPlatform extends PlatformInterface {
 
   static StreetViewFlutterPlatform get instance => _instance;
 
+  /// The created count of native street view.
+  int get nativeStreetViewCreatedCount;
+
   /// Platform-specific plugins should set this with their own platform-specific
   /// class that extends [UrlLauncherPlatform] when they register themselves.
   static set instance(StreetViewFlutterPlatform instance) {
