@@ -83,18 +83,18 @@ import GoogleMaps
 }
 ```
 
-### ScreenShot
+## ScreenShot
 | Android  | Web | iOS |
 | ------------- | ------------- | ------------- |
 | <img title="Android" src="https://user-images.githubusercontent.com/16483162/145322579-e9f6e838-9b81-480c-a808-5d3ec67de3b6.png" width="300" />  | <img title="Web"  src="https://user-images.githubusercontent.com/16483162/145323571-c8acff70-5e33-4225-8627-b2e92ef7db36.png" width="650"/> |<img title="iOS"  src="https://user-images.githubusercontent.com/16483162/145323552-86f27e40-6334-4e5f-8382-c6b73ceb2ddb.png" width="300"/> |
 
-### Control street view widget
+## Control street view widget
 
 Add FlutterGoogleStreetView widget to your widget tree.
 
 You can control street view by `StreetViewController` that is received at `onStreetViewCreated` callback. 
 
-### Sample Usage
+## Sample Usage
 
 For more usage, please run `example` to get complete sample app. 
 
@@ -221,4 +221,11 @@ class StreetViewPanoramaInitDemo extends StatelessWidget {
     );
   }
 }
+```
+## Created Count
+Google is starting billing when instantiation panorama for all platform. ([JavaScript](https://developers.google.com/maps/documentation/javascript/usage-and-billing#dynamic-street-view), [Android](https://developers.google.com/maps/documentation/android-sdk/usage-and-billing#dynamic-street-view), [iOS](https://developers.google.com/maps/documentation/ios-sdk/usage-and-billing#dynamic-street-view))
+
+To known the created count of street view, you can call api:
+```Dart
+int count = FlutterGoogleStreetView.createdCount;
 ```
