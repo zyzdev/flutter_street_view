@@ -1,3 +1,8 @@
+## 3.1.0
+
+* Add feature, call API `FlutterGoogleStreetView.createdCount` to get created count of native street view.
+* bugs fix
+
 ## 3.0.1
 
 * Add example `Street View In ListView Demo`.
