@@ -134,7 +134,7 @@ extension FlutterGoogleStreetView {
         debug("streetViewIsReady")
         result(
             ["isPanningGesturesEnabled" : streetViewPanorama.orientationGestures,
-             "isStreetNamesEnabled" : !streetViewPanorama.streetNamesHidden, "isUserNavigationEnabled" : streetViewPanorama.navigationGestures, "isZoomGesturesEnabled":streetViewPanorama.zoomGestures]
+             "isStreetNamesEnabled" : !streetViewPanorama.streetNamesHidden, "isUserNavigationEnabled" : streetViewPanorama.navigationGestures, "isZoomGesturesEnabled":streetViewPanorama.zoomGestures, "streetViewCount":FlutterGoogleStreetView.lockStreetView.count]
         )
     }
 

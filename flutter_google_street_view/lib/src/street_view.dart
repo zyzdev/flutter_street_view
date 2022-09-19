@@ -195,6 +195,10 @@ class FlutterGoogleStreetView extends StatefulWidget {
   /// were not claimed by any other gesture recognizer.
   final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
 
+  /// The created count of native street view.
+  static int get createdCount =>
+      StreetViewFlutterPlatform.instance.nativeStreetViewCreatedCount;
+
   @override
   State<StatefulWidget> createState() {
     _checkParam();

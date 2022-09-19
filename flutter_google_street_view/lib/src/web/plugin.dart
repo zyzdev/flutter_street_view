@@ -319,7 +319,7 @@ extension FlutterGoogleStreetViewPluginExtension
     if (FlutterGoogleStreetViewPlugin._debug) print("$_dTag: $log");
   }
 
-  Future<Map<String, bool>> _streetViewIsReady() => Future.value({
+  Future<Map<String, dynamic>> _streetViewIsReady() => Future.value({
         "isStreetNamesEnabled": _isStreetNamesEnabled,
         "isUserNavigationEnabled": _isUserNavigationEnabled,
         "isAddressControl": _isAddressControl,
@@ -334,6 +334,7 @@ extension FlutterGoogleStreetViewPluginExtension
         "isPanControl": _isPanControl,
         "isZoomControl": _isZoomControl,
         "isVisible": _isVisible,
+        "streetViewCount": FlutterGoogleStreetViewPlugin._plugins.length,
       });
 
   Future<Map<String, dynamic>> _updateInitOptions(Map arg) async {

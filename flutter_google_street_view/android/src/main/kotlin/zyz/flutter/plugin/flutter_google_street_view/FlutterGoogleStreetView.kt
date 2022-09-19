@@ -412,11 +412,12 @@ class FlutterGoogleStreetView(
         }
     }
 
-    private fun streetViewIsReady() = HashMap<String, Boolean>().apply {
+    private fun streetViewIsReady() = HashMap<String, Any>().apply {
         isPanningGesturesEnabled()?.let { put("isPanningGesturesEnabled", it) }
         isStreetNamesEnabled()?.let { put("isStreetNamesEnabled", it) }
         isUserNavigationEnabled()?.let { put("isUserNavigationEnabled", it) }
         isZoomGesturesEnabled()?.let { put("isZoomGesturesEnabled", it) }
+        put("streetViewCount", lockPanorama.size)
     }
 
     private fun updateInitOptions(arg: Any?, result: MethodChannel.Result) {
