@@ -4,10 +4,10 @@ import GoogleMaps
 import os.log
 
 class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
-    
+
     private static var lockStreetView:[GMSPanoramaView : Bool] = [:]
     private let DEBUG = false;
-    
+
     private var registrar: FlutterPluginRegistrar
     private var streetViewPanorama:GMSPanoramaView!
     private var methodChannel: FlutterMethodChannel
@@ -53,17 +53,17 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
             updateInitOptions(initParam, nil)
         }
     }
-    
+
     func view() -> UIView {
         return streetViewPanorama
     }
-    
+
     private func setupListener() {
         gestureDetector = UILongPressGestureRecognizer(target: self, action: #selector(self.onStreetViewPanoramaLongClick(_:)))
         streetViewPanorama.delegate = self
         streetViewPanorama.addGestureRecognizer(gestureDetector!)
     }
-    
+
     func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let method = call.method
         let args = call.arguments
@@ -120,16 +120,16 @@ class FlutterGoogleStreetView: NSObject, FlutterPlatformView {
 }
 
 extension FlutterGoogleStreetView {
-    
+
     private func toS(_ arg:Any?) -> String {
         return arg != nil ? String(describing: arg) : ""
     }
-    
+
     private func debug(_ log:Any?,_ debug:Bool = false) {
         if(!DEBUG && !debug) {return}
         methodChannel.invokeMethod("log#onSend", arguments: "iOS flutter_google_street_view: \((log is String ? log as! String : self.toS(log)))")
     }
-    
+
     private func streetViewIsReady(_ result:FlutterResult) {
         debug("streetViewIsReady")
         result(
@@ -137,13 +137,13 @@ extension FlutterGoogleStreetView {
              "isStreetNamesEnabled" : !streetViewPanorama.streetNamesHidden, "isUserNavigationEnabled" : streetViewPanorama.navigationGestures, "isZoomGesturesEnabled":streetViewPanorama.zoomGestures]
         )
     }
-    
+
     private func updateInitOptions(_ args:Any?, _ result:FlutterResult?) {
         //debug("updateInitOptions:\(isNSDictionary(args))")
         if(!isNSDictionary(args)) {
             return
         }
-        
+
         //let param = args as! NSDictionary
         //param.forEach { (key: Any, value: Any) in
         //    debug("key:\(String(describing: key)), value:\(String(describing: value))")
@@ -158,7 +158,7 @@ extension FlutterGoogleStreetView {
             streetViewIsReady(result!)
         }
     }
-    
+
     private func animateTo(_ args: Any?, _ result:FlutterResult? = nil) {
         if(!isNSDictionary(args)) {
             return
@@ -177,7 +177,7 @@ extension FlutterGoogleStreetView {
         streetViewPanorama.animate(to:to, animationDuration: duration)
         result?.self("animateTo done")
     }
-    
+
     private func getLocation(_ result:FlutterResult) {
         let panorama = streetViewPanorama.panorama
         if(panorama != nil) {
@@ -189,11 +189,11 @@ extension FlutterGoogleStreetView {
             result(nil)
         }
     }
-    
+
     private func getPanoramaCamera(_ result:FlutterResult) {
         result(streetViewPanoramaCameraToJson(streetViewPanorama.camera))
     }
-    
+
     private func setPosition(_ args:Any?, _ result:FlutterResult? = nil) {
         if(!isNSDictionary(args)) {
             return
@@ -226,7 +226,7 @@ extension FlutterGoogleStreetView {
         }
         result?.self(["setPosition done"])
     }
-    
+
     private func setPanningGesturesEnabled(_ arg: Any?, _ result:FlutterResult? = nil) {
         var panningGesturesEnabled: Bool?
         if(!isNSDictionary(arg) && !isBool(arg)) {return}
@@ -244,7 +244,7 @@ extension FlutterGoogleStreetView {
             result!("setPanningGesturesEnabled done")
         }
     }
-    
+
     private func setStreetNamesEnabled(_ arg: Any?, _ result:FlutterResult? = nil) {
         var streetNamesEnabled: Bool?
         if(!isNSDictionary(arg) && !isBool(arg)) {return}
@@ -260,7 +260,7 @@ extension FlutterGoogleStreetView {
         }
         result?.self("setStreetNamesEnabled done")
     }
-    
+
     private func setUserNavigationEnabled(_ arg: Any?, _ result:FlutterResult? = nil) {
         var userNavigationEnabled: Bool?
         if(!isNSDictionary(arg) && !isBool(arg)) {return}
@@ -276,7 +276,7 @@ extension FlutterGoogleStreetView {
         }
         result?.self("setUserNavigationEnabled done")
     }
-    
+
     private func setZoomGesturesEnabled(_ arg: Any?, _ result:FlutterResult? = nil) {
         var zoomGesturesEnabled: Bool?
         if(!isNSDictionary(arg) && !isBool(arg)) {return}
@@ -292,16 +292,16 @@ extension FlutterGoogleStreetView {
         }
         result?.self("setZoomGesturesEnabled done")
     }
-    
+
     private func isPanningGesturesEnabled() -> Bool{return streetViewPanorama.orientationGestures}
-    
+
     private func isStreetNamesEnabled()-> Bool{return !streetViewPanorama.streetNamesHidden}
-    
+
     private func isUserNavigationEnabled()-> Bool{return streetViewPanorama.navigationGestures}
-    
+
     private func isZoomGesturesEnabled()-> Bool{return streetViewPanorama.zoomGestures}
-    
-    
+
+
     private func orientationToPoint(_ arg: Any?,_ result:FlutterResult) {
         if(!isNSDictionary(arg)) {return}
         let param = arg as! NSDictionary
@@ -313,8 +313,8 @@ extension FlutterGoogleStreetView {
             result(FlutterError(code: "streetView#orientationToPoint", message: "param include nil!", details: "bearing:\(toS(bearing)), tilt:\(toS(tilt))"))
         }
     }
-    
-    
+
+
     private func pointToOrientation(_ arg: Any?,_ result:FlutterResult) {
         if(!isNSArray(arg)) {return}
         let param = arg as! NSArray
@@ -326,7 +326,7 @@ extension FlutterGoogleStreetView {
             result(FlutterError(code: "streetView#orientationToPoint", message: "param include nil!", details: "x:\(toS(x)), y:\(toS(y))"))
         }
     }
-    
+
     private func markerUpdate(_ args:Any?, _ result:FlutterResult? = nil) {
         if(!isNSDictionary(args)) {
             return
@@ -346,11 +346,19 @@ extension FlutterGoogleStreetView {
         }
         result?.self(nil)
     }
-    
+
     private func deactivateStreetView(_ result:FlutterResult) {
+        // set to invisible like black screen
         streetViewPanorama.alpha = 0
+        // remove listener
         streetViewPanorama.delegate = nil
         streetViewPanorama.removeGestureRecognizer(gestureDetector!)
+        // reset control setting
+        streetViewPanorama.zoomGestures = true
+        streetViewPanorama.orientationGestures = true
+        streetViewPanorama.streetNamesHidden = true
+        streetViewPanorama.navigationGestures = true
+        // reset pitch, heading and zoom
         streetViewPanorama.camera = GMSPanoramaCamera.init(orientation: GMSOrientation(heading: 0, pitch: 0), zoom: 1.0, fov: 90)
         FlutterGoogleStreetView.lockStreetView[streetViewPanorama] = false
         result(nil)

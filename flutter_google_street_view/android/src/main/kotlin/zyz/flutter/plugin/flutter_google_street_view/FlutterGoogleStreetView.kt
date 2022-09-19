@@ -585,6 +585,11 @@ class FlutterGoogleStreetView(
     private fun deactivateStreetView() {
         removeListener()
         lockStreetView[streetView!!] = false
+        // reset control setting
+        streetViewPanorama?.isZoomGesturesEnabled = true
+        streetViewPanorama?.isPanningGesturesEnabled = true
+        streetViewPanorama?.isStreetNamesEnabled = true
+        streetViewPanorama?.isUserNavigationEnabled = true
         // reset pitch, heading and zoom
         streetViewPanorama?.animateTo(
             StreetViewPanoramaCamera.builder().also {

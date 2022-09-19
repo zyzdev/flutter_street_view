@@ -59,7 +59,7 @@ class FlutterGoogleStreetViewPlugin {
         _streetViewPanorama = gmaps.StreetViewPanorama(_div, options);
       else {
         //reuse _streetViewPanorama
-        //set to invible before init, then set visible after init done.
+        //set to invisible before init, then set visible after init done.
         final fakeOptions = await toStreetViewPanoramaOptions(arg)
           ..visible = false;
         _streetViewPanorama.options = fakeOptions;
@@ -157,11 +157,29 @@ class FlutterGoogleStreetViewPlugin {
     _animator?.cancel();
     _releaseListener();
     _lockMap[viewId] = false;
-    //set to invisible
     _streetViewPanorama.options = gmaps.StreetViewPanoramaOptions()
+      //set to invisible
       ..visible = false
+      // reset control setting
       ..position = null
-      ..pano = null;
+      ..pano = null
+      ..showRoadLabels = true
+      ..clickToGo = true
+      ..addressControl = true
+      ..disableDefaultUI = true
+      ..disableDoubleClickZoom = false
+      ..enableCloseButton = false
+      ..fullscreenControl = true
+      ..linksControl = true
+      ..motionTracking = true
+      ..motionTrackingControl = true
+      ..scrollwheel = true
+      ..panControl = true
+      ..zoomControl = true
+      ..pov = (gmaps.StreetViewPov()
+        ..heading = 0
+        ..pitch = 0)
+      ..zoom = 1;
   }
 
   //callback fun doc(https://developers.google.com/maps/documentation/javascript/reference/3.44/street-view#StreetViewPanorama-Events)
