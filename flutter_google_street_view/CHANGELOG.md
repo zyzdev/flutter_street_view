@@ -1,3 +1,7 @@
+## 3.1.1
+
+* `Android`, upgrade Kotlin gradle plugin version to `1.6.10`.
+
 ## 3.1.0
 
 * Add feature, call API `FlutterGoogleStreetView.createdCount` to get created count of native street view.
