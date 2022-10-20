@@ -52,43 +52,62 @@ class FlutterGoogleStreetViewPlugin {
   MapsEventListener? _zoomChangedListener;
   MapsEventListener? _closeclickListener;
 
-  void _setup(Map<String, dynamic> arg, [bool isReuse = false]) {
-    toStreetViewPanoramaOptions(arg).then((options) async {
-      Completer<bool> initDone = Completer();
-      if (!isReuse)
-        _streetViewPanorama = gmaps.StreetViewPanorama(_div, options);
-      else {
-        //reuse _streetViewPanorama
-        //set to invisible before init, then set visible after init done.
-        final fakeOptions = await toStreetViewPanoramaOptions(arg)
+  Future<void> _setup(Map<String, dynamic> arg, [bool isReuse = false]) async {
+    StreetViewPanoramaOptions options;
+    String? errorMsg;
+    try {
+      options = await toStreetViewPanoramaOptions(arg);
+    } catch (error, _) {
+      List items = (error as List);
+      options = (items[0] as StreetViewPanoramaOptions)..visible = false;
+      errorMsg = items[1] as String?;
+    }
+
+    Completer<bool> initDone = Completer();
+    if (!isReuse)
+      _streetViewPanorama = gmaps.StreetViewPanorama(_div, options);
+    else {
+      //reuse _streetViewPanorama
+      //set to invisible before init, then set visible after init done.
+      StreetViewPanoramaOptions fakeOptions;
+      try {
+        fakeOptions = await toStreetViewPanoramaOptions(arg)
           ..visible = false;
-        _streetViewPanorama.options = fakeOptions;
+      } catch (error, _) {
+        List items = (error as List);
+        fakeOptions = (items[0] as StreetViewPanoramaOptions)..visible = false;
+        errorMsg = items[1] as String?;
       }
-      if (options.visible != null && !options.visible!) {
-        //visible set to false can't trigger onStatusChanged
-        //just set initDone to true
+      _streetViewPanorama.options = fakeOptions;
+    }
+    if (options.visible != null && !options.visible!) {
+      //visible set to false can't trigger onStatusChanged
+      //just set initDone to true
+      initDone.complete(true);
+    } else {
+      late StreamSubscription initWatchDog;
+      initWatchDog = _streetViewPanorama.onStatusChanged.listen((event) {
+        initWatchDog.cancel();
         initDone.complete(true);
-      } else {
-        late StreamSubscription initWatchDog;
-        initWatchDog = _streetViewPanorama.onStatusChanged.listen((event) {
-          initWatchDog.cancel();
-          initDone.complete(true);
-          //delay visible to avoid show pre-pano
-          if (isReuse && options.visible!)
-            _streetViewPanorama.options = gmaps.StreetViewPanoramaOptions()
-              ..visible = options.visible;
-        });
-      }
-      initDone.future.then((done) {
-        _updateStatus(options);
-        _streetViewInit = true;
-        _setupListener();
-        if (_viewReadyResult != null) {
-          _viewReadyResult!.complete(_streetViewIsReady());
-          _viewReadyResult = null;
-        }
+        //delay visible to avoid show pre-pano
+        if (isReuse && options.visible!)
+          _streetViewPanorama.options = gmaps.StreetViewPanoramaOptions()
+            ..visible = options.visible;
       });
+    }
+    initDone.future.then((done) {
+      _updateStatus(options);
+      _streetViewInit = true;
+      _setupListener();
+      if (_viewReadyResult != null) {
+        _viewReadyResult!.complete(_streetViewIsReady());
+        _viewReadyResult = null;
+      }
     });
+    // init position or pano is invalid
+    if (errorMsg != null) {
+      _methodChannel.invokeMethod("pano#onChange", {"error": errorMsg});
+    }
   }
 
   factory FlutterGoogleStreetViewPlugin.init(Map<String, dynamic> arg) =>
@@ -468,11 +487,8 @@ extension FlutterGoogleStreetViewPluginExtension
       check.complete(find);
     }
 
-    if (location != null && (raduis != null || source != null)) {
-      gmaps.StreetViewService().getPanorama(request, error);
-    } else {
-      gmaps.StreetViewService().getPanorama(request, error);
-    }
+    gmaps.StreetViewService().getPanorama(request, error);
+
     await check.future;
     if (toApply) _apply(_options);
     return _options;

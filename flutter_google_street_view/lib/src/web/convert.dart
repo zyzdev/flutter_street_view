@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 
 import 'package:google_maps/google_maps.dart' as gmaps;
@@ -8,26 +9,48 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
     Map<String, dynamic> arg,
     {gmaps.StreetViewPanorama? current}) async {
   final result = gmaps.StreetViewPanoramaOptions();
-  result.pano = arg['panoId'];
-  if (arg['position'] is List<double>) {
-    final location = gmaps.LatLng(arg['position'][0], arg['position'][1]);
-    if (arg['radius'] != null || arg['source'] != null) {
-      double? raduis = arg['radius'] as double?;
-      final source = toStreetSource(arg);
-      final request = gmaps.StreetViewLocationRequest()
-        ..location = location
-        ..radius = raduis
-        ..source = source;
-      try {
-        final response = await gmaps.StreetViewService().getPanorama(request);
-        result.position = response.data?.location?.latLng;
-      } catch (e) {
-        result.position = location;
+  String? errorMsg;
+  var request;
+  double? raduis = arg['radius'] as double?;
+  String? source = arg['source'] as String?;
+  gmaps.LatLng? location;
+  String? pano;
+  if (arg['panoId'] != null) {
+    pano = arg['panoId'];
+    request = gmaps.StreetViewPanoRequest()..pano = pano;
+  } else {
+    location = gmaps.LatLng(arg['position'][0], arg['position'][1]);
+    final sourceTmp = source == "outdoor"
+        ? gmaps.StreetViewSource.OUTDOOR
+        : gmaps.StreetViewSource.DEFAULT;
+    request = gmaps.StreetViewLocationRequest()
+      ..location = location
+      ..radius = raduis
+      ..source = sourceTmp;
+  }
+  Completer<bool> check = Completer();
+
+  void error(gmaps.StreetViewPanoramaData? data, status) {
+    final find = status == "OK";
+    if (find) {
+      if (location != null) {
+        result.position = data!.location!.latLng;
+      } else {
+        result.pano = data!.location!.pano;
       }
     } else {
-      result.position = location;
+      errorMsg = location != null
+          ? "Oops..., no valid panorama found with position:${location.lat}, ${location.lng}, try to change `position`, `radius` or `source`."
+          : pano != null
+              ? "Oops..., no valid panorama found with panoId:$pano, try to change `panoId`."
+              : "setPosition, catch unknown error.";
     }
+    check.complete(find);
   }
+
+  gmaps.StreetViewService().getPanorama(request, error);
+  await check.future;
+
   result.showRoadLabels = arg['streetNamesEnabled'] as bool? ?? true;
   result.clickToGo = arg['clickToGo'] as bool? ?? true;
   result.zoomControl = arg['zoomControl'] as bool? ?? true;
@@ -55,8 +78,11 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
     ..heading = arg['bearing'] ?? currentPov?.heading ?? 0
     ..pitch = arg['tilt'] ?? currentPov?.pitch ?? 0;
   result.zoom = arg['zoom'] as double?;
-
-  return result;
+  if (errorMsg != null) {
+    return Future.error([result, errorMsg]);
+  } else {
+    return result;
+  }
 }
 
 gmaps.StreetViewSource toStreetSource(Map<String, dynamic> arg) {
