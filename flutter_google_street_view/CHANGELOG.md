@@ -1,3 +1,7 @@
+## 3.1.2
+
+* `Web`, fix issue [#21](https://github.com/zyzdev/flutter_street_view/issues/21)
+
 ## 3.1.1
 
 * `Android`, upgrade Kotlin gradle plugin version to `1.6.10`.
