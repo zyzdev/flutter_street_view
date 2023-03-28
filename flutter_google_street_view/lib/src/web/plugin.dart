@@ -57,10 +57,10 @@ class FlutterGoogleStreetViewPlugin {
     String? errorMsg;
     try {
       options = await toStreetViewPanoramaOptions(arg);
-    } catch (error, _) {
-      List items = (error as List);
-      options = (items[0] as StreetViewPanoramaOptions)..visible = false;
-      errorMsg = items[1] as String?;
+    } catch (exception) {
+      NoStreetViewException noStreetViewException = (exception as NoStreetViewException);
+      options = noStreetViewException.options..visible = false;
+      errorMsg = noStreetViewException.errorMsg;
     }
 
     Completer<bool> initDone = Completer();
@@ -73,10 +73,10 @@ class FlutterGoogleStreetViewPlugin {
       try {
         fakeOptions = await toStreetViewPanoramaOptions(arg)
           ..visible = false;
-      } catch (error, _) {
-        List items = (error as List);
-        fakeOptions = (items[0] as StreetViewPanoramaOptions)..visible = false;
-        errorMsg = items[1] as String?;
+      } catch (exception) {
+        NoStreetViewException noStreetViewException = (exception as NoStreetViewException);
+        fakeOptions = noStreetViewException.options..visible = false;
+        errorMsg = noStreetViewException.errorMsg;
       }
       _streetViewPanorama.options = fakeOptions;
     }

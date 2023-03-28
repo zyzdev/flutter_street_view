@@ -31,7 +31,7 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
   Completer<bool> check = Completer();
 
   void error(gmaps.StreetViewPanoramaData? data, status) {
-    final find = status == "OK";
+    final bool find = (status.toString() == "OK");
     if (find) {
       if (location != null) {
         result.position = data!.location!.latLng;
@@ -79,7 +79,7 @@ Future<gmaps.StreetViewPanoramaOptions> toStreetViewPanoramaOptions(
     ..pitch = arg['tilt'] ?? currentPov?.pitch ?? 0;
   result.zoom = arg['zoom'] as double?;
   if (errorMsg != null) {
-    return Future.error([result, errorMsg]);
+    throw NoStreetViewException(options: result, errorMsg: errorMsg!);
   } else {
     return result;
   }
@@ -176,4 +176,11 @@ Map<String, dynamic> linkToJson(List<gmaps.StreetViewLink?>? links) {
     });
   }
   return {"links": links1};
+}
+
+class NoStreetViewException implements Exception {
+  final gmaps.StreetViewPanoramaOptions options;
+  final String errorMsg;
+
+  NoStreetViewException({required this.options, required this.errorMsg});
 }
