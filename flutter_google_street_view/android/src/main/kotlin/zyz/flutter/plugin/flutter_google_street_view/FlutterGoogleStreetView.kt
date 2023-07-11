@@ -215,6 +215,8 @@ class FlutterGoogleStreetView(
             return
         }
         streetView?.onDestroy()
+        lockPanorama.remove(streetView)
+        lockStreetView.remove(streetView)
         streetView = null
     }
 
@@ -612,7 +614,7 @@ class FlutterGoogleStreetView(
         )
     }
 
-    override fun onStreetViewPanoramaChange(location: StreetViewPanoramaLocation?) {
+    override fun onStreetViewPanoramaChange(location: StreetViewPanoramaLocation) {
         if (viewReadyResult != null) {
             val hasInitLocation = initOptions?.let { it1 ->
                 it1.panoramaId != null || it1.position != null
