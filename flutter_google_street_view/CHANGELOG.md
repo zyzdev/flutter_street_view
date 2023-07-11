@@ -1,3 +1,11 @@
+## 3.1.4
+
+* `Android`:
+    - fix issue [#17](https://github.com/zyzdev/flutter_street_view/issues/17).
+    - upgrade com.google.android.gms:play-services-maps to `18.1.0`.
+    - set android SDK min version to `19`, compile version to `33`.
+
+
 ## 3.1.3
 
 * `Web`, fix issue [#23](https://github.com/zyzdev/flutter_street_view/issues/23).
