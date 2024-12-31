@@ -113,9 +113,12 @@ class MapsObjectUpdates<T extends MapsObject> {
         setEquals(_objectsToChange, other._objectsToChange);
   }
 
-  @override
-  int get hashCode => hashValues(hashList(_objectsToAdd),
-      hashList(_objectIdsToRemove), hashList(_objectsToChange));
+@override
+int get hashCode => Object.hash(
+  Object.hashAll(_objectsToAdd),
+  Object.hashAll(_objectIdsToRemove),
+  Object.hashAll(_objectsToChange),
+);
 
   @override
   String toString() {
