@@ -4,7 +4,7 @@ version: 1.0.8
 homepage: https://github.com/zyzdev/flutter_street_view/tree/master/street_view_platform_interface
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.14.0 <3.0.0'
   flutter: ">=3.0.0"
 
 dependencies:

@@ -16,8 +16,7 @@ import 'package:integration_test/integration_test.dart';
 
 void main() {
   final IntegrationTestWidgetsFlutterBinding binding =
-      IntegrationTestWidgetsFlutterBinding.ensureInitialized()
-          as IntegrationTestWidgetsFlutterBinding;
+      IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   // George St, Sydney
   const LatLng SYDNEY = LatLng(-33.87365, 151.20689);
 
@@ -102,7 +101,7 @@ void main() {
             c.complete(controller);
           },
           onPanoramaChangeListener: (location, e) {
-            if(!l.isCompleted) l.complete(location);
+            if (!l.isCompleted) l.complete(location);
           },
         )));
     await tester.pumpAndSettle();

@@ -5,8 +5,6 @@
 import 'package:flutter/foundation.dart' show VoidCallback;
 import 'package:meta/meta.dart' show immutable;
 
-import 'bitmap.dart';
-import 'maps_object.dart';
 import 'types.dart';
 
 /// Uniquely identifies a [Marker] among [StreetView] markers.
